@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-int main(int argc, char const *argv[])
+int main()
 {
-    printf("Yohann er en rotte.");
+    printf("Trym er ikke så flink med docker");    
     return 0;
 }
