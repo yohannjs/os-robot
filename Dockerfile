@@ -1,7 +1,17 @@
+# Use EV3 cross compilation platform as base
 FROM ev3dev/debian-jessie-cross 
 
+# Update apt repo list
+RUN sudo apt-get update
+
+# Install unit testing framework for C (CUnit)
+RUN sudo apt-get install libcunit1 libcunit1-doc libcunit1-dev
+
+# Copy source code from host computer
 COPY src . 
 
+# Compile source code
 RUN make
 
+# Run source code
 CMD ["./wall-e"]
