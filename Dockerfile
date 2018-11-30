@@ -1,7 +1,7 @@
 FROM ev3dev/debian-jessie-cross 
 
-COPY src src
+COPY src . 
 
-RUN arm-linux-gnueabi-gcc -Wall -o wall-e src/main.c
+RUN make
 
 CMD ["./wall-e"]
