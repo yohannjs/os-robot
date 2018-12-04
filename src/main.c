@@ -1,6 +1,8 @@
 #include <stdio.h>
 
-int main(int argc, char const *argv[])
+#include "motors.h"
+
+int main()
 {
     printf("Yohann er en rotte.\n");
     return 0;
