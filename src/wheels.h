@@ -4,4 +4,4 @@ int initTachos();
 void turnDegRight(int deg);
 void turnRight();
 void turnLeft();
-void gyroTurn();
+void gyroTurn(int deg);
