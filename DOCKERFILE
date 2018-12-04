@@ -1,5 +1,0 @@
-FROM ev3dev/debian-jessie-cross as ev3cc
-
-COPY src src
-
-RUN arm-linux-gnueabi-gcc -o robot src/wheels.c
