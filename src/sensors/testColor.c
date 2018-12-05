@@ -39,7 +39,13 @@ int main( void )
   
   ev3_sensor_init();
   if ( ev3_init() == -1 ) return ( 1 );
-  
+  if (ev3_search_sensor(LEGO_EV3_COLOR, &sn_color, 0)){
+    //set_sensor_mode(sn_color, "COL-REFLECT")
+    set_sensor_mode(sn_color, "COL-COLOR");
+    //set_sensor_mode(sn_color, "RGB-RAW");
+    printf("Color sensor detected, set in WHITE mode.\n"); // Sets LED color to white (all LEDs rapidly cycling)
+  }
+
   for ( i = 0; i < DESC_LIMIT; i++ ) {
     if ( ev3_sensor[ i ].type_inx != SENSOR_TYPE__NONE_ ) {
       printf( "  type = %s\n", ev3_sensor_type( ev3_sensor[ i ].type_inx ));
