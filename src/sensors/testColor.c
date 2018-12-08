@@ -12,34 +12,25 @@
 const char const *color[] = { "?", "BLACK", "BLUE", "GREEN", "YELLOW", "RED", "WHITE", "BROWN" };
 #define COLOR_COUNT  (( int )( sizeof( color ) / sizeof( color[ 0 ])))
 
-static bool _check_pressed( uint8_t sn )
-{
-  int val;
-    
-  if ( sn == SENSOR__NONE_ ) {
-    return ( ev3_read_keys(( uint8_t *) &val ) && ( val & EV3_KEY_UP ));
-    }
-    return ( get_sensor_value( 0, sn, &val ) && ( val != 0 ));
-}
-
-
-
-
 int main( void )
 {
   int i;
-  uint8_t sn;
-  FLAGS_T state;
-  uint8_t sn_touch;
   uint8_t sn_color;
   char s[ 256 ];
   int val;
-  float value;
   uint32_t n, ii;
   
   ev3_sensor_init();
   if ( ev3_init() == -1 ) return ( 1 );
-  
+  if (ev3_search_sensor(LEGO_EV3_COLOR, &sn_color, 0)){
+    //set_sensor_mode(sn_color, "COL-REFLECT")
+    //printf("Color sensor detected, set in INTENSITY mode.\n")
+    set_sensor_mode(sn_color, "COL-COLOR");
+    printf("Color sensor detected, set in WHITE mode.\n"); // Sets LED color to white (all LEDs rapidly cycling)
+    //set_sensor_mode(sn_color, "RGB-RAW");
+    //printf("Color sensor detected, set in RAW mode.\n");
+  }
+
   for ( i = 0; i < DESC_LIMIT; i++ ) {
     if ( ev3_sensor[ i ].type_inx != SENSOR_TYPE__NONE_ ) {
       printf( "  type = %s\n", ev3_sensor_type( ev3_sensor[ i ].type_inx ));
@@ -56,10 +47,6 @@ int main( void )
       }
     }
   }
-  
-  if ( ev3_search_sensor( LEGO_EV3_TOUCH, &sn_touch, 0 )) {
-    printf( "TOUCH sensor is found, press BUTTON for EXIT...\n" );
-  }
     
   for ( ; ; ){
     if ( ev3_search_sensor( LEGO_EV3_COLOR, &sn_color, 0 )) {
@@ -67,15 +54,10 @@ int main( void )
       if ( !get_sensor_value( 0, sn_color, &val ) || ( val < 0 ) || ( val >= COLOR_COUNT )) {
         val = 0;
       }
-      printf( "\r(%s) \n", color[ val ]);
+      printf( "\r Color detected: %s \n", color[ val ]);
       fflush( stdout );
+      Sleep( 200 );
     }
-    if ( _check_pressed( sn_touch )) break;
-    Sleep( 200 );
-    printf( "\r        " );
-    fflush( stdout );
-    if ( _check_pressed( sn_touch )) break;
-    Sleep( 200 );
   }
   
   ev3_uninit();
