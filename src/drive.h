@@ -13,7 +13,4 @@ void stop();
 
 //sensor functions
 int get_gyro_value();
-
-//maybe delete these after some time
-void turnLeftInterval();
-void turnRightInterval();
+int getApproxHeading();

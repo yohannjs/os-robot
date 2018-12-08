@@ -6,24 +6,14 @@
 #include "ev3_tacho.h"
 #include <unistd.h>
 #include "ev3_sensor.h"
-#include "wheels.h"
+#include "drive.h"
 
 uint8_t rsn;
 uint8_t lsn;
-int right_port = 66;
-int left_port = 67;
+int right_port = 65;
+int left_port = 68;
 int max_speed;
 
-void turnLeft();
-void gyroTurnInterval(int deg);
-void turnLeftInterval();
-void turnRightInterval();
-void forward();
-void backward();
-void stop();
-
-void sensorInit();
-int get_gyro_value();
 uint8_t gyro_sn;
 
 int main(){
@@ -68,13 +58,16 @@ int initTachos(){
   printf( "Tacho is now ready \n" );
   return 0;
 }
+
 void gyroTurn(int deg){
   int current_pos;
   current_pos = get_gyro_value();
   int end_pos = current_pos+deg;
   bool left = false;
   bool right = false;
+
   while(current_pos > end_pos +3 || current_pos < end_pos -3){
+
     if (current_pos < end_pos +2 && right == false){
       turnLeft();
       right = true;
@@ -90,10 +83,12 @@ void gyroTurn(int deg){
       right = false;
       //return;
     }
+
     current_pos = get_gyro_value();
   }
   set_tacho_command_inx( rsn, TACHO_STOP);
   set_tacho_command_inx( lsn, TACHO_STOP);
+  Sleep(200);
 }
 
 void turnLeft(){
@@ -103,6 +98,7 @@ void turnLeft(){
   set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
   set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
+
 void turnRight(){
   set_tacho_speed_sp( rsn, -max_speed * 1 / 3 );
   set_tacho_speed_sp( lsn, max_speed * 1 / 3 );
@@ -126,6 +122,7 @@ void backward(){
   set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
   set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
+
 void stop(){
   set_tacho_command_inx( rsn, TACHO_STOP);
   set_tacho_command_inx( lsn, TACHO_STOP);
@@ -144,33 +141,31 @@ void sensorInit(){
  if (ev3_search_sensor(LEGO_EV3_GYRO, &gyro_sn, 0)){
    set_sensor_mode(gyro_sn, "GYRO-ANG");
    printf("Gyro sensor detected, set in angle detection mode.\n");
+ } else if(ev3_search_sensor(LEGO_EV3_US, &sonar_sn, 0)){
+   //set_sensor_mode(gyro_sn, "GYRO-ANG");
+   printf("Sonar detected.\n");
  }else {
    printf("No gyroscope found\n");
  }
 }
+
 int get_gyro_value(){
-  //uint8_t gyro_sn;
   int val;
   if (ev3_search_sensor( LEGO_EV3_GYRO, &gyro_sn, 0 )){
     get_sensor_value( 0, gyro_sn, &val);
-    printf("gyro value: %d\n", val);
+    //printf("gyro value: %d\n", val);
   }
   return val;
 }
 
-void gyroTurnInterval(int deg){
-  int current_pos;
-  current_pos = get_gyro_value();
-  int end_pos = current_pos+deg;
-  while(current_pos > end_pos +3 || current_pos < end_pos -3){
-    if(end_pos < current_pos){
-      turnRight();
-    }else{
-      turnLeft();
-    }
-    current_pos = get_gyro_value();
-  }
+int getApproxHeading(){
+  int heading;
+  int gyro_val;
+  gyro_val = get_gyro_value();
+  heading = gyro_val % 360;
+  return heading;
 }
+
 void turnLeftInterval(){
   set_tacho_speed_sp( rsn, max_speed * 2 / 3 );
   set_tacho_speed_sp( lsn, -max_speed * 2 / 3 );
@@ -198,18 +193,3 @@ void turnRightInterval(){
 
   set_tacho_command_inx( rsn, TACHO_RUN_TIMED );
   set_tacho_command_inx( lsn, TACHO_RUN_TIMED );}                                                                                                                                       33,0-1        Bot
-void turnDegRight(int deg){
-    printf( "Run to relative position...\n" );
-    set_tacho_speed_sp( rsn, max_speed / 2 );
-    set_tacho_ramp_up_sp( rsn, 0 );
-    set_tacho_ramp_down_sp( rsn, 0 );
-    set_tacho_position_sp( rsn, deg );
-
-    set_tacho_speed_sp( lsn, max_speed / 2 );
-    set_tacho_ramp_up_sp( lsn, 0 );
-    set_tacho_ramp_down_sp( lsn, 0 );
-    set_tacho_position_sp( lsn, -deg );
-
-    set_tacho_command_inx( rsn, TACHO_RUN_TO_REL_POS );
-    set_tacho_command_inx( lsn, TACHO_RUN_TO_REL_POS );
-  }
