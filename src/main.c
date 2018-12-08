@@ -1,7 +1,14 @@
 #include <stdio.h>
+#include "claw.h"
 
-int main(int argc, char const *argv[])
-{
-    printf("Yohann er en rotte.\n");
+int main(){
+    if(claw_Init() == 0)
+    {
+      printf('Initializing claw');
+    } else {
+      return -1;
+    }
+    claw_Grab();
+    claw_Throw();
     return 0;
 }
