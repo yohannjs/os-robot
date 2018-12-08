@@ -141,9 +141,6 @@ void sensorInit(){
  if (ev3_search_sensor(LEGO_EV3_GYRO, &gyro_sn, 0)){
    set_sensor_mode(gyro_sn, "GYRO-ANG");
    printf("Gyro sensor detected, set in angle detection mode.\n");
- } else if(ev3_search_sensor(LEGO_EV3_US, &sonar_sn, 0)){
-   //set_sensor_mode(gyro_sn, "GYRO-ANG");
-   printf("Sonar detected.\n");
  }else {
    printf("No gyroscope found\n");
  }
@@ -165,31 +162,3 @@ int getApproxHeading(){
   heading = gyro_val % 360;
   return heading;
 }
-
-void turnLeftInterval(){
-  set_tacho_speed_sp( rsn, max_speed * 2 / 3 );
-  set_tacho_speed_sp( lsn, -max_speed * 2 / 3 );
-
-  set_tacho_time_sp( lsn, 20 );
-  set_tacho_ramp_up_sp( lsn, 5 );
-  set_tacho_ramp_down_sp( lsn, 5 );
-  set_tacho_time_sp( rsn, 20 );
-  set_tacho_ramp_up_sp( rsn, 5 );
-  set_tacho_ramp_down_sp( rsn, 5 );
-
-  set_tacho_command_inx( rsn, TACHO_RUN_TIMED );
-  set_tacho_command_inx( lsn, TACHO_RUN_TIMED );
-}
-void turnRightInterval(){
-  set_tacho_speed_sp( rsn, -max_speed * 2 / 3 );
-  set_tacho_speed_sp( lsn, max_speed * 2 / 3 );
-
-  set_tacho_time_sp( lsn, 20 );
-  set_tacho_ramp_up_sp( lsn, 5 );
-  set_tacho_ramp_down_sp( lsn, 5 );
-  set_tacho_time_sp( rsn, 20 );
-  set_tacho_ramp_up_sp( rsn, 5 );
-  set_tacho_ramp_down_sp( rsn, 5 );
-
-  set_tacho_command_inx( rsn, TACHO_RUN_TIMED );
-  set_tacho_command_inx( lsn, TACHO_RUN_TIMED );}                                                                                                                                       33,0-1        Bot
