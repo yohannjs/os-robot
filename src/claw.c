@@ -18,7 +18,7 @@ int relative_position_big_motor;
 int max_speed_big_motor;
 
 uint8_t small_motor;
-int port_small_motor = 67;
+int port_small_motor = 65;
 int relative_position_small_motor;
 int max_speed_small_motor; // Might not be neccesary
 
@@ -29,7 +29,7 @@ int claw_Throw();
 int main(){
     if(claw_Init() == 0)
     {
-      printf('Initializing claw');
+      printf("Initing claw \n");
     } else {
       return -1;
     }
@@ -104,5 +104,7 @@ int claw_Throw()
   set_tacho_speed_sp( small_motor, -max_speed_small_motor );
   set_tacho_position_sp( small_motor, -90 );
   set_tacho_command_inx( small_motor, TACHO_RUN_FOREVER );
+  Sleep( 2 );
+  set_tacho_command_inx(small_motor, TACHO_STOP );
   return 0;
 }
