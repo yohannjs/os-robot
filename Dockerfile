@@ -11,4 +11,4 @@ COPY src .
 RUN make
 
 # Run source code
-CMD ["./wall-e"]
+CMD ["./main"]
