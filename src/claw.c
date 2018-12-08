@@ -24,16 +24,24 @@ int max_speed_small_motor; // Might not be neccesary
 
 int claw_Init();
 int claw_Grab();
+int claw_Throw();
 
 int main(){
-
+    if(claw_Init() == 0)
+    {
+      printf('Initializing claw');
+    } else {
+      return -1;
+    }
+    claw_Grab();
+    claw_Throw();
     return 0;
 }
 
 int claw_Init()
 {
   if ( ev3_init() == -1 ){
-    printf("could not initialize robot\n");
+    printf("Could not initialize robot or claw\n");
     return ( 1 );
   }
   while ( ev3_tacho_init() < 1 ){
@@ -44,8 +52,8 @@ int claw_Init()
   if (ev3_search_tacho_plugged_in( port_big_motor,0 , &big_motor, 0 )){
     set_tacho_stop_action_inx(big_motor, TACHO_HOLD); // Test other stop action as well for this motor
     get_tacho_max_speed( big_motor, &max_speed_big_motor );
-    set_tacho_ramp_up_sp( big_motor, max_speed_big_motor / 4 );
-    set_tacho_ramp_down_sp( big_motor, max_speed_big_motor / 4 );
+    //set_tacho_ramp_up_sp( big_motor, max_speed_big_motor / 10 );
+    //set_tacho_ramp_down_sp( big_motor, max_speed_big_motor / 10 );
     printf("found motor connected to port: %d\n", port_big_motor);
   }
   // init of small motor at the top of claw. 
@@ -75,16 +83,26 @@ int claw_Init()
 
 int claw_Grab()
 {
+  set_tacho_speed_sp( big_motor, max_speed_big_motor / 10 );
+  set_tacho_speed_sp( small_motor, max_speed_small_motor / 10 );
   set_tacho_position_sp( big_motor, 90 );
+  set_tacho_command_inx( big_motor, TACHO_RUN_TO_REL_POS );
   set_tacho_position_sp( small_motor, 90 );
+  Sleep(5);
+  set_tacho_command_inx( small_motor, TACHO_RUN_TO_REL_POS );
+  Sleep(2);
   set_tacho_position_sp( big_motor, -90 );
+  set_tacho_command_inx( big_motor, TACHO_RUN_TO_REL_POS );
+
   return 0;
 }
 
 int claw_Throw()
 {
-  set_tacho_ramp_up_sp( small_motor, max_speed_small_motor); // Ramp up, og ramp down vil være forskjellig for grab og throw
-  set_tacho_ramp_down_sp( small_motor, max_speed_small_motor / 2 );
+  set_tacho_ramp_up_sp( small_motor, max_speed_small_motor );
+  set_tacho_ramp_down_sp( small_motor, max_speed_small_motor );
   set_tacho_speed_sp( small_motor, -max_speed_small_motor );
+  set_tacho_position_sp( small_motor, -90 );
+  set_tacho_command_inx( small_motor, TACHO_RUN_FOREVER );
   return 0;
 }
