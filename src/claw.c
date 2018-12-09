@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "ev3/ev3.h"
-#include "ev3/ev3_port.h"
-#include "ev3/ev3_tacho.h"
+#include "lib/ev3.h"
+#include "lib/ev3_port.h"
+#include "lib/ev3_tacho.h"
 #include <unistd.h>
-#include "ev3/ev3_sensor.h"
+#include "lib/ev3_sensor.h"
 #include "claw.h"
 
 #define Sleep( msec ) usleep(( msec ) * 1000 )
@@ -29,12 +29,10 @@ int claw_Throw();
 int main(){
     if(claw_Init() == 0)
     {
-      printf("Initing claw \n");
-    } else {
-      return -1;
-    }
+      printf("Initialize claw \n");
+    } else return -1;
     claw_Grab();
-    claw_Throw();
+    //claw_Throw();
     return 0;
 }
 
@@ -42,14 +40,14 @@ int claw_Init()
 {
   if ( ev3_init() == -1 ){
     printf("Could not initialize robot or claw\n");
-    return ( 1 );
+    return 1;
   }
   while ( ev3_tacho_init() < 1 ){
     Sleep( 1000 );
     printf("looking for taco\n");
   }
   // init of big motor in the bottom of claw
-  if (ev3_search_tacho_plugged_in( port_big_motor,0 , &big_motor, 0 )){
+  if (ev3_search_tacho_plugged_in( port_big_motor, 0 , &big_motor, 0 )){
     set_tacho_stop_action_inx(big_motor, TACHO_HOLD); // Test other stop action as well for this motor
     get_tacho_max_speed( big_motor, &max_speed_big_motor );
     //set_tacho_ramp_up_sp( big_motor, max_speed_big_motor / 10 );
