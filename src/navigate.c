@@ -25,6 +25,8 @@ void navigation_GoToPosition(int x, int y);
 void navigation_InitNavigation();
 int navigation_MoveForward(int distance);
 void navigation_UpdatePosition(int x, int y);
+void navigation_GoToSide(direction heading, direction side );
+
 main(){
 //every time robot is done moving, update pos.off_x and pos.off_y with navigation_UpdatePosition.
 navigation_GoToPosition(90,70);
@@ -82,7 +84,7 @@ void navigation_GoToPosition(int x, int y){
       navigation_GoToPosition();
     }
 }
-void navigation_GoRightOfObj(direction heading, direction obj_side ){
+void navigation_GoToSide(direction heading, direction side ){
   int distance_to_obj;
   if(obj_side == LEFT){drive_TurnLeft(90);}
   else if (obj_side == RIGHT){drive_TurnRight(90);}

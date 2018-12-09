@@ -22,8 +22,6 @@ int main(){
   //initializing motors and gyroscope
   drive_InitTachos();
   drive_SensorInit();
-  //setting the max_speed variable
-  get_tacho_max_speed( rsn, &max_speed );
   //running funcitons
   drive_TurnRight(90);
   sleep(2);
@@ -43,6 +41,7 @@ int drive_InitTachos(){
     printf("looking for taco\n");
   }
   if (ev3_search_tacho_plugged_in( right_port,0 , &rsn, 0 )){
+    get_tacho_max_speed( rsn, &max_speed );
     set_tacho_stop_action_inx(rsn, TACHO_HOLD);
     set_tacho_ramp_up_sp( rsn, 10 );
     set_tacho_ramp_down_sp( rsn, 10 );
