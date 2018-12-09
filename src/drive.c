@@ -115,16 +115,16 @@ void drive_TurnLeft(int deg){
 }
 
 void drive_TurnLeftUntilStopped(){
-  set_tacho_speed_sp( rsn, max_speed * 1 / 3 );
-  set_tacho_speed_sp( lsn, -max_speed * 1 / 3 );
+  set_tacho_speed_sp( rsn, max_speed * 1 / 4 );
+  set_tacho_speed_sp( lsn, -max_speed * 1 / 4 );
 
   set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
   set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
 
 void drive_TurnRightUntilStopped(){
-  set_tacho_speed_sp( rsn, -max_speed * 1 / 3 );
-  set_tacho_speed_sp( lsn, max_speed * 1 / 3 );
+  set_tacho_speed_sp( rsn, -max_speed * 1 / 4 );
+  set_tacho_speed_sp( lsn, max_speed * 1 / 4 );
 
   set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
   set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
