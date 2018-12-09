@@ -1,7 +1,0 @@
-FROM ev3dev/debian-jessie-cross
-
-COPY src src
-
-RUN arm-linux-gnueabi-gcc -o robot src/main.c
-
-CMD ./robot
