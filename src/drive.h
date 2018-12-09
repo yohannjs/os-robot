@@ -19,6 +19,8 @@ void drive_GoBackward();
 void drive_Stop();
 void drive_GoDistance(int distance);
 void drive_BackDistance(int distance);
+void drive_SetHeading();
 //sensor functions
 int drive_GetGyroValue();
 int drive_GetHeading();
+drive_SetHeading();

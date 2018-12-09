@@ -16,6 +16,7 @@ int left_port = 68;
 int max_speed;
 
 uint8_t gyro_sn;
+//should maybe use a mutex for motors, if they are called by message a queue needs to be made.
 
 int main(){
   //initializing motors and gyroscope
@@ -184,4 +185,12 @@ int drive_GetHeading(){
   gyro_val = drive_GetGyroValue();
   heading = gyro_val % 360;
   return heading;
+}
+
+void drive_SetHeading(int desired_heading){
+  int current_heading;
+  int to_turn;
+  current_heading = drive_GetHeading();
+  to_turn = desired_heading-current_heading;
+  drive_Turn(to_turn);
 }
