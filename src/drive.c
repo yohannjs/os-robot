@@ -31,6 +31,16 @@ int main(){
 
   return 0;
 }
+
+void drive_loop(){
+  drive_InitTachos();
+  drive_SensorInit();
+  while(1){
+
+  }
+}
+
+
 int drive_InitTachos(){
   if ( ev3_init() == -1 ){
     printf("could not initialize robot\n");
@@ -75,7 +85,7 @@ void drive_BackDistance(int distance){
   drive_GoDistance(-distance);
 }
 
-void drive_Turn(int deg){
+void drive_Turn(int deg, double speed_ratio){
   int current_pos;
   current_pos = drive_GetGyroValue();
   int end_pos = current_pos+deg;
@@ -85,11 +95,11 @@ void drive_Turn(int deg){
   while(current_pos > end_pos +3 || current_pos < end_pos -3){
 
     if (current_pos < end_pos +2 && right == false){
-      drive_TurnLeftUntilStopped();
+      drive_TurnLeftUntilStopped(speed_ratio);
       right = true;
       left = false;
     }else if (current_pos > end_pos-2 && left == false){
-      drive_TurnRightUntilStopped();
+      drive_TurnRightUntilStopped(speed_ratio);
       left = true;
       right = false;
     }else if(current_pos < end_pos +2 && current_pos > end_pos -2 ){
@@ -106,29 +116,34 @@ void drive_Turn(int deg){
   set_tacho_command_inx( lsn, TACHO_STOP);
   usleep(20000);
 }
+void drive_ScanTurn(){
+  drive_Turn(360, 1/8);
+}
 
 void drive_TurnRight(int deg){
-  drive_Turn(deg);
+  drive_Turn(deg, 1/4);
 }
-void drive_TurnLeft(int deg){
+void drive_TurnLeft(int deg, 1/4){
   drive_Turn(-deg);
 }
 
-void drive_TurnLeftUntilStopped(){
-  set_tacho_speed_sp( rsn, max_speed * 1 / 4 );
-  set_tacho_speed_sp( lsn, -max_speed * 1 / 4 );
+void drive_TurnLeftUntilStopped(double speed_ratio){
+  set_tacho_speed_sp( rsn, max_speed * speed_ratio);
+  set_tacho_speed_sp( lsn, -max_speed * speed_ratio);
 
   set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
   set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
 
-void drive_TurnRightUntilStopped(){
-  set_tacho_speed_sp( rsn, -max_speed * 1 / 4 );
-  set_tacho_speed_sp( lsn, max_speed * 1 / 4 );
+void drive_TurnRightUntilStopped(double speed_ratio){
+  set_tacho_speed_sp( rsn, -max_speed * speed_ratio);
+  set_tacho_speed_sp( lsn, max_speed * speed_ratio);
 
   set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
   set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
+
+
 
 void drive_GoForward(){
   set_tacho_speed_sp( rsn, max_speed * 2 / 3 );
@@ -162,6 +177,7 @@ void drive_SensorInit(){
    printf("Initialized sensors. %d sensors connected\n", initResult );
  }
  if (ev3_search_sensor(LEGO_EV3_GYRO, &gyro_sn, 0)){
+   set_sensor_mode(gyro_sn, "GYRO-RATE");
    set_sensor_mode(gyro_sn, "GYRO-ANG");
    printf("Gyro sensor detected, set in angle detection mode.\n");
  }else {
@@ -177,13 +193,23 @@ int drive_GetGyroValue(){
   }
   return val;
 }
-
+//gyroscope can return negative heading, need to take this into account.
 int drive_GetHeading(){
   int heading;
   int gyro_val;
   gyro_val = drive_GetGyroValue();
+  if (gyro_val < 0){
+    heading = (gyro_val % 360) + 360;
+  }else{
   heading = gyro_val % 360;
+  }
+  printf("getHeading called, heading: %d\n", heading);
   return heading;
+}
+
+void drive_ResetGyro(){
+  set_sensor_mode(gyro_sn, "GYRO-RATE");
+  set_sensor_mode(gyro_sn, "GYRO-ANG");
 }
 
 void drive_SetHeading(int desired_heading){
@@ -191,5 +217,6 @@ void drive_SetHeading(int desired_heading){
   int to_turn;
   current_heading = drive_GetHeading();
   to_turn = desired_heading-current_heading;
+  printf("turning %d, degrees\n", to_turn);
   drive_Turn(to_turn);
 }

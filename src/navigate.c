@@ -9,12 +9,13 @@
 //than intended distance?
 //calibrate when passing certain black lines in x and y?
 
-enum direction{
+typedef enum{
   RIGHT = 90,
   LEFT = 270,
   UP = 0,
   DOWN = 180,
-};
+} direction;
+
 struct Position {
    int x;
    int y;
@@ -22,26 +23,29 @@ struct Position {
 } pos;
 
 void navigation_GoToPosition(int x, int y);
-void navigation_InitNavigation();
+void navigation_Init();
 int navigation_MoveForward(int distance);
 void navigation_UpdatePosition(int x, int y);
 void navigation_GoToSide(direction heading, direction side );
 
 main(){
 //every time robot is done moving, update pos.off_x and pos.off_y with navigation_UpdatePosition.
+navigation_Init();
+drive_InitTachos();
+drive_SensorInit();
 navigation_GoToPosition(90,70);
 }
 //should this also register objects somewhere?
 int navigation_MoveForward(int distance){
   int distance_to_obj;
-  distance_to_obj = sensors_DistanceToObject();
+  distance_to_obj = 100;//detect_GetDistance();
   if (distance_to_obj > distance+5){
-    drive_GoForward(distance);
-    sleep(3);
+    drive_GoDistance(distance);
+    sleep(4);
     return distance;
   }else{
-    drive_GoForward(distance_to_obj-5);
-    sleep(3);
+    drive_GoDistance(distance_to_obj-5);
+    sleep(4);
     return distance_to_obj -5;
   }
 }
@@ -60,11 +64,12 @@ void navigation_GoToPosition(int x, int y){
       offset = x - pos.x;
       drive_SetHeading(RIGHT);
       sleep(2); //need time to set heading?
-      new_position = navigation_MoveForward(offset)
+      new_position = navigation_MoveForward(offset);
       navigation_UpdatePosition(new_position,0);
     }
     if (pos.y > y){
       offset = pos.y-y;
+      printf("pos.y > y");
       drive_SetHeading(DOWN);
       sleep(2); //need time to set heading?
       new_position = navigation_MoveForward(offset);
@@ -72,6 +77,7 @@ void navigation_GoToPosition(int x, int y){
     }
     if (pos.y < y){
         offset = y - pos.y;
+        printf("pos.y < y\n");
         drive_SetHeading(UP);
         sleep(2); //need time to set heading?
         new_position = navigation_MoveForward(offset);
@@ -89,7 +95,7 @@ void navigation_GoToSide(direction heading, direction side ){
   if(obj_side == LEFT){drive_TurnLeft(90);}
   else if (obj_side == RIGHT){drive_TurnRight(90);}
   sleep(1);
-  distance_to_obj = sensors_DistanceToObject();
+  distance_to_obj = detect_GetDistance();
   if (distance_to_obj > 15){
     drive_GoForward(10);
     sleep(2);
@@ -107,7 +113,7 @@ void navigation_GoToSide(direction heading, direction side ){
   }
 }
 
-void navigation_InitNavigation(){
+void navigation_Init(){
   pos.x = 60;
   pos.y = 27;
   pos.heading = 0;

@@ -8,19 +8,19 @@
 int drive_InitTachos();
 void drive_SensorInit();
 
-//drive functions
-void drive_Turn(int deg);
+//drive functions for external use
 void drive_TurnRight(int deg);
 void drive_TurnLeft(int deg);
-void drive_TurnRightUntilStopped();
-void drive_TurnLeftUntilStopped();
+void drive_GoDistance(int distance);
+void drive_BackDistance(int distance);
+//drive functions for internal use
+void drive_Turn(int deg, double speed_ratio);
+void drive_TurnRightUntilStopped(double speed_ratio);
+void drive_TurnLeftUntilStopped(double speed_ratio);
 void drive_GoForward();
 void drive_GoBackward();
 void drive_Stop();
-void drive_GoDistance(int distance);
-void drive_BackDistance(int distance);
-void drive_SetHeading();
 //sensor functions
 int drive_GetGyroValue();
 int drive_GetHeading();
-drive_SetHeading();
+void drive_SetHeading(int heading);
