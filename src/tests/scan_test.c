@@ -10,13 +10,15 @@ const int SAMPLE_NUM = 100;
 
 int main()
 {
+    
     drive_SensorInit();
+    drive_InitTachos();
     detect_Init();
 
     FILE* f;
     f = fopen("samples.txt", "w");
 
-    drive_ScanTurn(180);
+    drive_TurnRightSlowUntilStopped();
     
     for (int i = 0; i < SAMPLE_NUM; i++)
     {
@@ -24,5 +26,7 @@ int main()
         usleep(100 * 1000);
     }
     fclose(f);
+
+    drive_Stop();
     return 0;
 }
