@@ -18,7 +18,7 @@ int main()
     FILE* f;
     f = fopen("samples.txt", "w");
 
-    drive_TurnRightSlowUntilStopped();
+    drive_TurnRightForever(50);
     
     for (int i = 0; i < SAMPLE_NUM; i++)
     {
