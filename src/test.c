@@ -23,7 +23,8 @@ int main()
         printf("Could not create thread");
         return 1;
     }
-    
+    sleep(2);
+    cake_Send(2);
     sleep(5);
     cake_Stop(); 
 

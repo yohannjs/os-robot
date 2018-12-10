@@ -28,13 +28,12 @@ void* cake_Server(void* param)
     printf("I am the cake master!\n");
     while (1)
     {
-        sleep(1);
         printf("I can never be destroyed!\n");
         int data = 0;
         mq_receive(mq_rd, (char*) &data, sizeof(int), NULL);
         if (data == 0)  
         {
-            printf("AAGH! Not eating cake is my only weakness!!\n");
+            printf("AAGH! Getting 0 cakes is my only weakness!!\n");
             break;
         }
         else
@@ -46,7 +45,10 @@ void* cake_Server(void* param)
 
 void cake_Stop(void)
 {
-    int data = 0;
-    mq_send(mq_td, (char*) &data, sizeof(int), 1); 
+    cake_Send(0);
 }
 
+void cake_Send(int pieces)
+{
+    mq_send(mq_td, (char*) &pieces, sizeof(int), 1);
+}
