@@ -5,8 +5,9 @@ FROM ev3dev/debian-jessie-cross
 COPY src . 
 
 # Compile source code
-RUN arm-linux-gnueabi-gcc -Wall --std=c11 \
-    main.c \
+RUN arm-linux-gnueabi-gcc --std=c11 -Wall -lrt -pthread \
+    adapters/cake.c \ 
+    test.c \
     -o test
 
 # Run source code
