@@ -28,13 +28,22 @@ int navigation_MoveForward(int distance);
 void navigation_UpdatePosition(int x, int y);
 void navigation_GoToSide(direction heading, direction side );
 
-main(){
+int main(){
 //every time robot is done moving, update pos.off_x and pos.off_y with navigation_UpdatePosition.
 navigation_Init();
 drive_InitTachos();
 drive_SensorInit();
-navigation_GoToPosition(90,70);
+navigation_GoToPosition(30,15);
+navigation_GoToPosition(40,40);
+return 0;
 }
+
+void navigation_Init(){
+  pos.x = 60;
+  pos.y = 27;
+  pos.heading = 0;
+}
+
 //should this also register objects somewhere?
 int navigation_MoveForward(int distance){
   int distance_to_obj;
@@ -95,7 +104,7 @@ void navigation_GoToSide(direction heading, direction side ){
   if(side == LEFT){drive_TurnLeft(90);}
   else if (side == RIGHT){drive_TurnRight(90);}
   sleep(1);
-  distance_to_obj = detect_GetDistance();
+  distance_to_obj = 100;//detect_GetDistance();
   if (distance_to_obj > 15){
     drive_GoForward(10);
     sleep(2);
@@ -111,12 +120,6 @@ void navigation_GoToSide(direction heading, direction side ){
     if(side == RIGHT){drive_TurnLeft(90);}
     else if (side == LEFT){drive_TurnRight(90);}
   }
-}
-
-void navigation_Init(){
-  pos.x = 60;
-  pos.y = 27;
-  pos.heading = 0;
 }
 
 void navigation_UpdatePosition(int x_mov, int y_mov){
