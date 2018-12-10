@@ -14,9 +14,9 @@ void drive_TurnLeft(int deg);
 void drive_GoDistance(int distance);
 void drive_BackDistance(int distance);
 //drive functions for internal use
-void drive_Turn(int deg, double speed_ratio);
-void drive_TurnRightUntilStopped(double speed_ratio);
-void drive_TurnLeftUntilStopped(double speed_ratio);
+void drive_Turn(int deg);
+void drive_TurnRightUntilStopped();
+void drive_TurnLeftUntilStopped();
 void drive_GoForward();
 void drive_GoBackward();
 void drive_Stop();

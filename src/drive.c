@@ -71,7 +71,7 @@ void drive_BackDistance(int distance){
   drive_GoDistance(-distance);
 }
 
-void drive_Turn(int deg, double speed_ratio){
+void drive_Turn(int deg){
   printf("running drive_turn\n");
   int current_pos;
   current_pos = drive_GetGyroValue();
@@ -83,12 +83,12 @@ void drive_Turn(int deg, double speed_ratio){
     printf("in turning loop\n");
     if (current_pos < end_pos +2 && right == false){
       printf("running drive_TurnLeftUntilStopped\n");
-      drive_TurnLeftUntilStopped(speed_ratio);
+      drive_TurnLeftUntilStopped();
       right = true;
       left = false;
     }else if (current_pos > end_pos-2 && left == false){
       printf("running drive_TurnRightUntilStopped\n");
-      drive_TurnRightUntilStopped(speed_ratio);
+      drive_TurnRightUntilStopped();
       left = true;
       right = false;
     }else if(current_pos < end_pos +2 && current_pos > end_pos -2 ){
@@ -116,20 +116,17 @@ void drive_TurnLeft(int deg){
   drive_Turn(-deg, 0.25);
 }
 
-void drive_TurnLeftUntilStopped(double speed_ratio){
-  double turn_speed = max_speed*speed_ratio;
-  set_tacho_speed_sp( rsn, turn_speed);
-  set_tacho_speed_sp( lsn, -turn_speed);
+void drive_TurnLeftUntilStopped(){
+  set_tacho_speed_sp( rsn, max_speed * 1/4);
+  set_tacho_speed_sp( lsn, -max_speed * 1/4);
 
   set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
   set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
 
-void drive_TurnRightUntilStopped(double speed_ratio){
-  double turn_speed = max_speed*speed_ratio;
-  set_tacho_speed_sp( rsn, -turn_speed);
-  set_tacho_speed_sp( lsn, turn_speed);
-  printf("in turnrightUntilstopped\n");
+void drive_TurnRightUntilStopped(){
+  set_tacho_speed_sp( rsn, -max_speed * 1/4);
+  set_tacho_speed_sp( lsn, max_speed * 1/4);
   set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
   set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
