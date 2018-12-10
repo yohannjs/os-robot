@@ -87,13 +87,13 @@ void navigation_GoToPosition(int x, int y){
       //recursive function until complete movement.
       //will get stuck here if object on destination tho..
       //also stuck if object in both x and y path.
-      navigation_GoToPosition();
+      navigation_GoToPosition(x,y);
     }
 }
 void navigation_GoToSide(direction heading, direction side ){
   int distance_to_obj;
-  if(obj_side == LEFT){drive_TurnLeft(90);}
-  else if (obj_side == RIGHT){drive_TurnRight(90);}
+  if(side == LEFT){drive_TurnLeft(90);}
+  else if (side == RIGHT){drive_TurnRight(90);}
   sleep(1);
   distance_to_obj = detect_GetDistance();
   if (distance_to_obj > 15){
@@ -108,8 +108,8 @@ void navigation_GoToSide(direction heading, direction side ){
     }else{
       navigation_UpdatePosition(0,-15);
     }
-    if(obj_side == RIGHT){drive_TurnLeft(90);}
-    else if (obj_side == LEFT){drive_TurnRight(90);}
+    if(side == RIGHT){drive_TurnLeft(90);}
+    else if (side == LEFT){drive_TurnRight(90);}
   }
 }
 
