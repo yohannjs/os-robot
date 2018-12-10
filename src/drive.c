@@ -8,13 +8,13 @@
 #include "drive.h"
 #include <math.h>
 
-uint8_t rsn;
-uint8_t lsn;
-int right_port = 67;
-int left_port = 68;
-int max_speed;
-
-uint8_t gyro_sn;
+static uint8_t rsn;
+static uint8_t lsn;
+static uint8_t lr_sn[3];
+static const int RIGHT_PORT = 67;
+static const int LEFT_PORT = 68;
+static int max_speed;
+static uint8_t gyro_sn;
 //should maybe use a mutex for motors, if they are called by message a queue needs to be made.
 
 /*
@@ -25,9 +25,12 @@ void drive_loop(){
 
   }
 }*/
-drive_init(){
+void drive_Init(){
   drive_InitTachos();
   drive_SensorInit();
+  lr_sn[0] = rsn;
+  lr_sn[1] = lsn;
+  lr_sn[2] = DESC_LIMIT;
 }
 
 int drive_InitTachos(){
@@ -39,18 +42,18 @@ int drive_InitTachos(){
     sleep( 1000 );
     printf("looking for taco\n");
   }
-  if (ev3_search_tacho_plugged_in( right_port,0 , &rsn, 0 )){
+  if (ev3_search_tacho_plugged_in( RIGHT_PORT,0 , &rsn, 0 )){
     get_tacho_max_speed( rsn, &max_speed );
     set_tacho_stop_action_inx(rsn, TACHO_HOLD);
     set_tacho_ramp_up_sp( rsn, 10 );
     set_tacho_ramp_down_sp( rsn, 10 );
-    printf("found motor connected to port: %d\n", right_port);
+    printf("found motor connected to port: %d\n", RIGHT_PORT);
   }
-  if (ev3_search_tacho_plugged_in(left_port, 0, &lsn, 0 )){
+  if (ev3_search_tacho_plugged_in(LEFT_PORT, 0, &lsn, 0 )){
     set_tacho_stop_action_inx(lsn, TACHO_HOLD);
     set_tacho_ramp_up_sp( lsn, 10 );
     set_tacho_ramp_down_sp( lsn, 10 );
-    printf("found motor connected to port: %d\n",left_port);
+    printf("found motor connected to port: %d\n",LEFT_PORT);
   }
   printf( "Tacho is now ready \n" );
   return 0;
@@ -66,8 +69,9 @@ void drive_GoDistance(int distance){
   printf("turning wheels %d degrees\n", turn_degrees_int);
   set_tacho_speed_sp( rsn, max_speed * 1 / 3 );
   set_tacho_speed_sp( lsn, max_speed * 1 / 3 );
-  set_tacho_command_inx(lsn, TACHO_RUN_TO_REL_POS);
-  set_tacho_command_inx(rsn, TACHO_RUN_TO_REL_POS);
+  multi_set_tacho_command_inx(lr_sn, TACHO_RUN_TO_REL_POS );
+  //set_tacho_command_inx(lsn, TACHO_RUN_TO_REL_POS);
+  //set_tacho_command_inx(rsn, TACHO_RUN_TO_REL_POS);
 }
 
 void drive_BackDistance(int distance){
@@ -86,18 +90,19 @@ void drive_Turn(int deg){
     //printf("in turning loop\n");
     if (current_pos < end_pos +1 && right == false){
       //printf("running drive_TurnLeftUntilStopped\n");
-      drive_TurnLeftUntilStopped();
+      drive_TurnLeftForever(100);
       right = true;
       left = false;
     }else if (current_pos > end_pos-1 && left == false){
       //printf("running drive_TurnRightUntilStopped\n");
-      drive_TurnRightUntilStopped();
+      drive_TurnRightForever(100);
       left = true;
       right = false;
     }else if(current_pos < end_pos +2 && current_pos > end_pos -2 ){
       //printf("telling tacho to stop\n");
-      set_tacho_command_inx( rsn, TACHO_STOP);
-      set_tacho_command_inx( lsn, TACHO_STOP);
+      multi_set_tacho_command_inx(lr_sn, TACHO_STOP );
+      //set_tacho_command_inx( rsn, TACHO_STOP);
+      //set_tacho_command_inx( lsn, TACHO_STOP);
       left = false;
       right = false;
       //return;
@@ -105,8 +110,9 @@ void drive_Turn(int deg){
 
     current_pos = drive_GetGyroValue();
   }
-  set_tacho_command_inx( rsn, TACHO_STOP);
-  set_tacho_command_inx( lsn, TACHO_STOP);
+  multi_set_tacho_command_inx(lr_sn, TACHO_STOP);
+  //set_tacho_command_inx( rsn, TACHO_STOP);
+  //set_tacho_command_inx( lsn, TACHO_STOP);
   sleep(1);
 }
 
@@ -121,15 +127,18 @@ void drive_TurnLeftForever(int speed){
   set_tacho_speed_sp( rsn, max_speed * 1/8 * speed/100);
   set_tacho_speed_sp( lsn, -max_speed * 1/8 * speed/100);
 
-  set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
-  set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
+  multi_set_tacho_command_inx(lr_sn, TACHO_RUN_FOREVER );
+  //set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
+  //set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
 
 void drive_TurnRightForever(int speed){
   set_tacho_speed_sp( rsn, (int)(-max_speed * 1/8 * speed/100));
   set_tacho_speed_sp( lsn, (int)(max_speed * 1/8 * speed/100));
-  set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
-  set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
+
+  multi_set_tacho_command_inx(lr_sn, TACHO_RUN_FOREVER);
+  //set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
+  //set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
 
 
@@ -137,21 +146,24 @@ void drive_GoForward(){
   set_tacho_speed_sp( rsn, max_speed * 2 / 3 );
   set_tacho_speed_sp( lsn, max_speed * 2 / 3 );
 
-  set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
-  set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
+  multi_set_tacho_command_inx(lr_sn, TACHO_RUN_FOREVER);
+  //set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
+  //set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
 
 void drive_GoBackward(){
   set_tacho_speed_sp( rsn, -max_speed * 2 / 3 );
   set_tacho_speed_sp( lsn, -max_speed * 2 / 3 );
 
-  set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
-  set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
+  multi_set_tacho_command_inx(lr_sn, TACHO_RUN_FOREVER );
+  //set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
+  //set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
 
 void drive_Stop(){
-  set_tacho_command_inx( rsn, TACHO_STOP);
-  set_tacho_command_inx( lsn, TACHO_STOP);
+  multi_set_tacho_command_inx(lr_sn, TACHO_STOP);
+  //set_tacho_command_inx( rsn, TACHO_STOP);
+  //set_tacho_command_inx( lsn, TACHO_STOP);
 }
 
 void drive_SensorInit(){

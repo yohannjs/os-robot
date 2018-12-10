@@ -25,3 +25,4 @@ void drive_Stop();
 int drive_GetGyroValue();
 int drive_GetHeading();
 void drive_SetHeading(int heading);
+void drive_ResetGyro();
