@@ -117,16 +117,18 @@ void drive_TurnLeft(int deg){
 }
 
 void drive_TurnLeftUntilStopped(double speed_ratio){
-  set_tacho_speed_sp( rsn, max_speed * speed_ratio);
-  set_tacho_speed_sp( lsn, -max_speed * speed_ratio);
+  double turn_speed = max_speed*speed_ratio;
+  set_tacho_speed_sp( rsn, turn_speed);
+  set_tacho_speed_sp( lsn, -turn_speed);
 
   set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
   set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
 
 void drive_TurnRightUntilStopped(double speed_ratio){
-  set_tacho_speed_sp( rsn, -max_speed * speed_ratio);
-  set_tacho_speed_sp( lsn, max_speed * speed_ratio);
+  double turn_speed = max_speed*speed_ratio;
+  set_tacho_speed_sp( rsn, -turn_speed);
+  set_tacho_speed_sp( lsn, turn_speed);
   printf("in turnrightUntilstopped\n");
   set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
   set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
