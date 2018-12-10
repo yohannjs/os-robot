@@ -106,14 +106,12 @@ void drive_Turn(int deg){
   set_tacho_command_inx( lsn, TACHO_STOP);
   sleep(1);
 }
-void drive_ScanTurn(){
-  drive_Turn(360, 0.15);
-}
+
 void drive_TurnRight(int deg){
-  drive_Turn(deg, 0.25);
+  drive_Turn(deg);
 }
 void drive_TurnLeft(int deg){
-  drive_Turn(-deg, 0.25);
+  drive_Turn(-deg);
 }
 
 void drive_TurnLeftUntilStopped(){
@@ -159,7 +157,8 @@ void drive_ScanTurn(int deg){
       right = false;
       //return;
     }
-
+}
+}
     void drive_TurnLeftSlowUntilStopped(){
       set_tacho_speed_sp( rsn, max_speed * 1/8);
       set_tacho_speed_sp( lsn, -max_speed * 1/8);
@@ -250,5 +249,7 @@ void drive_SetHeading(int desired_heading){
   current_heading = drive_GetHeading();
   to_turn = desired_heading-current_heading;
   printf("turning %d, degrees\n", to_turn);
-  drive_Turn(to_turn, 1/4);
+  drive_Turn(to_turn
+
+  );
 }
