@@ -33,9 +33,17 @@ int main(){
 navigation_Init();
 drive_InitTachos();
 drive_SensorInit();
-navigation_GoToPosition(90,70);
+navigation_GoToPosition(30,15);
+navigation_GoToPosition(40,40);
 return 0;
 }
+
+void navigation_Init(){
+  pos.x = 60;
+  pos.y = 27;
+  pos.heading = 0;
+}
+
 //should this also register objects somewhere?
 int navigation_MoveForward(int distance){
   int distance_to_obj;
@@ -112,12 +120,6 @@ void navigation_GoToSide(direction heading, direction side ){
     if(side == RIGHT){drive_TurnLeft(90);}
     else if (side == LEFT){drive_TurnRight(90);}
   }
-}
-
-void navigation_Init(){
-  pos.x = 60;
-  pos.y = 27;
-  pos.heading = 0;
 }
 
 void navigation_UpdatePosition(int x_mov, int y_mov){
