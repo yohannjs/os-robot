@@ -5,6 +5,7 @@
 
 
 //initialize functions
+void drive_Init();
 int drive_InitTachos();
 void drive_SensorInit();
 
@@ -13,16 +14,13 @@ void drive_TurnRight(int deg);
 void drive_TurnLeft(int deg);
 void drive_GoDistance(int distance);
 void drive_BackDistance(int distance);
-void drive_ScanTurn(int deg);
 //drive functions for internal use
 void drive_Turn(int deg);
-void drive_TurnRightUntilStopped();
-void drive_TurnLeftUntilStopped();
+void drive_TurnRightForever(int speed);
+void drive_TurnLeftForever(int speed);
 void drive_GoForward();
 void drive_GoBackward();
 void drive_Stop();
-void drive_TurnLeftSlowUntilStopped();
-void drive_TurnRightSlowUntilStopped();
 //sensor functions
 int drive_GetGyroValue();
 int drive_GetHeading();
