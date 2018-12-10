@@ -137,7 +137,7 @@ void drive_ScanTurn(int deg){
   bool left = false;
   bool right = false;
 
-  while(current_pos > end_pos +3 || current_pos < end_pos -3){
+  if(current_pos > end_pos +3 || current_pos < end_pos -3){
     //printf("in turning loop\n");
     if (current_pos < end_pos +2 && right == false){
       //printf("running drive_TurnLeftUntilStopped\n");
