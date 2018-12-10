@@ -35,18 +35,19 @@ int main(){
   } else return -1;
   sleep(1);
   claw_Throw();
-  sleep(5);
-  get_tacho_position(big_motor, &big_motor_pos);
-  printf("Position: %d \n",big_motor_pos);
   sleep(1);
-  //claw_Lower();
-  /*sleep(2);
+  /*sleep(5);
+  get_tacho_position(big_motor, &big_motor_pos);
+  printf("Position: %d \n",big_motor_pos); */
+  //sleep(5);
+  claw_Lower();
+  sleep(1);
   claw_Grab();
   bool hold = claw_HoldsBall();
   printf("Hold value is %d \n", hold);
   sleep(3);
   claw_Throw();
-  */
+  
   
   return 0;
 }
@@ -118,28 +119,26 @@ int claw_Init()
 
 int claw_Lower()
 {
-  set_tacho_speed_sp  ( big_motor, max_speed_big_motor/10     );
+  set_tacho_speed_sp  ( big_motor, max_speed_big_motor/15     );
   set_tacho_speed_sp  ( small_motor, max_speed_small_motor/10 );
   
-  printf( "Lower claw... \n" );
-  
+  /*
   set_tacho_stop_action_inx ( small_motor, TACHO_COAST          );
   set_tacho_position_sp     ( small_motor, 0                    );
   set_tacho_command_inx     ( small_motor, TACHO_RUN_TO_ABS_POS );
   
   do {
     get_tacho_state_flags   ( small_motor, &state_small_motor   );
-  } while ( state_small_motor == TACHO_RUNNING || state_small_motor == TACHO_RAMPING );
-  
+  } while ( state_small_motor != 0 );
+  */
+   
   set_tacho_stop_action_inx ( big_motor, TACHO_COAST            );
   set_tacho_position_sp     ( big_motor, 100                    );
   set_tacho_command_inx     ( big_motor, TACHO_RUN_TO_ABS_POS   );
   
   do {
     get_tacho_state_flags   ( big_motor, &state_big_motor       );
-  } while ( state_big_motor == TACHO_RUNNING || state_big_motor == TACHO_RAMPING );
-  
-  printf( "Claw lowered... \n" );
+  } while ( state_big_motor != 0 );
 
   return 0;
 }
@@ -156,9 +155,9 @@ int claw_Grab()
   set_tacho_position_sp     ( small_motor, -100                     );
   
   set_tacho_command_inx     ( small_motor, TACHO_RUN_TO_REL_POS     );
-  
   do {
     get_tacho_state_flags   ( small_motor, &state_small_motor       );
+    //printf("Tacho state during grab: %d \n", state_small_motor);
   } while ( state_small_motor == TACHO_RUNNING || state_small_motor == TACHO_RAMPING );
   
   set_tacho_stop_action_inx (big_motor, TACHO_COAST                 );
@@ -170,10 +169,9 @@ int claw_Grab()
 
 bool claw_HoldsBall()
 {
-  FLAGS_T tacho_state;
-  get_tacho_state_flags (small_motor, &tacho_state);
+  get_tacho_state_flags (small_motor, &state_small_motor);
   
-  if (tacho_state == TACHO_STALLED) return true;
+  if (state_small_motor == 9) return true;
   else return false;
 }
 
@@ -187,7 +185,7 @@ int claw_Throw()
   
   do {
     get_tacho_state_flags   ( small_motor, &state_small_motor     );
-  } while ( state_small_motor == TACHO_RUNNING || state_small_motor == TACHO_RAMPING );
+  } while ( state_small_motor != 0 );
   
   
   return 0;
