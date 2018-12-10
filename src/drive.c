@@ -72,27 +72,27 @@ void drive_BackDistance(int distance){
 }
 
 void drive_Turn(int deg){
-  printf("running drive_turn\n");
+  //printf("running drive_turn\n");
   int current_pos;
   current_pos = drive_GetGyroValue();
   int end_pos = current_pos+deg;
   bool left = false;
   bool right = false;
 
-  while(current_pos > end_pos +3 || current_pos < end_pos -3){
-    printf("in turning loop\n");
-    if (current_pos < end_pos +2 && right == false){
-      printf("running drive_TurnLeftUntilStopped\n");
+  while(current_pos > end_pos +1 || current_pos < end_pos -1){
+    //printf("in turning loop\n");
+    if (current_pos < end_pos +1 && right == false){
+      //printf("running drive_TurnLeftUntilStopped\n");
       drive_TurnLeftUntilStopped();
       right = true;
       left = false;
-    }else if (current_pos > end_pos-2 && left == false){
-      printf("running drive_TurnRightUntilStopped\n");
+    }else if (current_pos > end_pos-1 && left == false){
+      //printf("running drive_TurnRightUntilStopped\n");
       drive_TurnRightUntilStopped();
       left = true;
       right = false;
     }else if(current_pos < end_pos +2 && current_pos > end_pos -2 ){
-      printf("telling tacho to stop\n");
+      //printf("telling tacho to stop\n");
       set_tacho_command_inx( rsn, TACHO_STOP);
       set_tacho_command_inx( lsn, TACHO_STOP);
       left = false;
@@ -115,16 +115,16 @@ void drive_TurnLeft(int deg){
 }
 
 void drive_TurnLeftUntilStopped(){
-  set_tacho_speed_sp( rsn, max_speed * 1/4);
-  set_tacho_speed_sp( lsn, -max_speed * 1/4);
+  set_tacho_speed_sp( rsn, max_speed * 1/6);
+  set_tacho_speed_sp( lsn, -max_speed * 1/6);
 
   set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
   set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
 
 void drive_TurnRightUntilStopped(){
-  set_tacho_speed_sp( rsn, -max_speed * 1/4);
-  set_tacho_speed_sp( lsn, max_speed * 1/4);
+  set_tacho_speed_sp( rsn, -max_speed * 1/6);
+  set_tacho_speed_sp( lsn, max_speed * 1/6);
   set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
   set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
@@ -137,20 +137,20 @@ void drive_ScanTurn(int deg){
   bool left = false;
   bool right = false;
 
-  while(current_pos > end_pos +3 || current_pos < end_pos -3){
-    printf("in turning loop\n");
+  if(current_pos > end_pos +3 || current_pos < end_pos -3){
+    //printf("in turning loop\n");
     if (current_pos < end_pos +2 && right == false){
-      printf("running drive_TurnLeftUntilStopped\n");
+      //printf("running drive_TurnLeftUntilStopped\n");
       drive_TurnLeftSlowUntilStopped();
       right = true;
       left = false;
     }else if (current_pos > end_pos-2 && left == false){
-      printf("running drive_TurnRightUntilStopped\n");
+      //printf("running drive_TurnRightUntilStopped\n");
       drive_TurnRightSlowUntilStopped();
       left = true;
       right = false;
     }else if(current_pos < end_pos +2 && current_pos > end_pos -2 ){
-      printf("telling tacho to stop\n");
+      //printf("telling tacho to stop\n");
       set_tacho_command_inx( rsn, TACHO_STOP);
       set_tacho_command_inx( lsn, TACHO_STOP);
       left = false;
@@ -220,7 +220,7 @@ int drive_GetGyroValue(){
   int val;
   if (ev3_search_sensor( LEGO_EV3_GYRO, &gyro_sn, 0 )){
     get_sensor_value( 0, gyro_sn, &val);
-    printf("gyro value: %d\n", val);
+    //printf("gyro value: %d\n", val);
   }
   return val;
 }
@@ -248,7 +248,7 @@ void drive_SetHeading(int desired_heading){
   int to_turn;
   current_heading = drive_GetHeading();
   to_turn = desired_heading-current_heading;
-  printf("turning %d, degrees\n", to_turn);
+  //printf("turning %d, degrees\n", to_turn);
   drive_Turn(to_turn
 
   );
