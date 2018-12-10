@@ -157,7 +157,8 @@ void drive_ScanTurn(int deg){
       right = false;
       //return;
     }
-
+}
+}
     void drive_TurnLeftSlowUntilStopped(){
       set_tacho_speed_sp( rsn, max_speed * 1/8);
       set_tacho_speed_sp( lsn, -max_speed * 1/8);
