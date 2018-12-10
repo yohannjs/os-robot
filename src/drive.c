@@ -17,14 +17,14 @@ int max_speed;
 uint8_t gyro_sn;
 //should maybe use a mutex for motors, if they are called by message a queue needs to be made.
 
-
+/*
 void drive_loop(){
   drive_InitTachos();
   drive_SensorInit();
   while(1){
 
   }
-}
+}*/
 
 
 int drive_InitTachos(){
@@ -82,14 +82,17 @@ void drive_Turn(int deg, double speed_ratio){
   while(current_pos > end_pos +3 || current_pos < end_pos -3){
     printf("in turning loop\n");
     if (current_pos < end_pos +2 && right == false){
+      printf("running drive_TurnLeftUntilStopped\n");
       drive_TurnLeftUntilStopped(speed_ratio);
       right = true;
       left = false;
     }else if (current_pos > end_pos-2 && left == false){
+      printf("running drive_TurnRightUntilStopped\n");
       drive_TurnRightUntilStopped(speed_ratio);
       left = true;
       right = false;
     }else if(current_pos < end_pos +2 && current_pos > end_pos -2 ){
+      printf("telling tacho to stop\n");
       set_tacho_command_inx( rsn, TACHO_STOP);
       set_tacho_command_inx( lsn, TACHO_STOP);
       left = false;
@@ -104,14 +107,13 @@ void drive_Turn(int deg, double speed_ratio){
   sleep(1);
 }
 void drive_ScanTurn(){
-  drive_Turn(360, 1/8);
+  drive_Turn(360, 0.15);
 }
-
 void drive_TurnRight(int deg){
-  drive_Turn(deg, 1/4);
+  drive_Turn(deg, 0.25);
 }
 void drive_TurnLeft(int deg){
-  drive_Turn(-deg, 1/4);
+  drive_Turn(-deg, 0.25);
 }
 
 void drive_TurnLeftUntilStopped(double speed_ratio){
@@ -176,7 +178,7 @@ int drive_GetGyroValue(){
   int val;
   if (ev3_search_sensor( LEGO_EV3_GYRO, &gyro_sn, 0 )){
     get_sensor_value( 0, gyro_sn, &val);
-    //printf("gyro value: %d\n", val);
+    printf("gyro value: %d\n", val);
   }
   return val;
 }
@@ -188,7 +190,7 @@ int drive_GetHeading(){
   if (gyro_val < 0){
     heading = (gyro_val % 360) + 360;
   }else{
-  heading = gyro_val % 360;
+    heading = gyro_val % 360;
   }
   printf("getHeading called, heading: %d\n", heading);
   return heading;
