@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "ev3.h"
@@ -18,19 +17,6 @@ int max_speed;
 uint8_t gyro_sn;
 //should maybe use a mutex for motors, if they are called by message a queue needs to be made.
 
-int main(){
-  //initializing motors and gyroscope
-  drive_InitTachos();
-  drive_SensorInit();
-  //running funcitons
-  drive_TurnRight(90);
-  sleep(2);
-  drive_TurnLeft(180);
-  sleep(3);
-  drive_GoDistance(-10);
-
-  return 0;
-}
 
 void drive_loop(){
   drive_InitTachos();
@@ -69,7 +55,7 @@ int drive_InitTachos(){
 
 void drive_GoDistance(int distance){
   double wheel_r = 2.7;
-  double dist_per_degree = (2*wheel_r*M_PI)/360;
+  double dist_per_degree = (2*wheel_r*3.14159)/360;
   double turn_degrees = distance / dist_per_degree;
   int turn_degrees_int = (int) turn_degrees;
   set_tacho_position_sp(lsn, turn_degrees_int);
@@ -86,6 +72,7 @@ void drive_BackDistance(int distance){
 }
 
 void drive_Turn(int deg, double speed_ratio){
+  printf("running drive_turn\n");
   int current_pos;
   current_pos = drive_GetGyroValue();
   int end_pos = current_pos+deg;
@@ -93,7 +80,7 @@ void drive_Turn(int deg, double speed_ratio){
   bool right = false;
 
   while(current_pos > end_pos +3 || current_pos < end_pos -3){
-
+    printf("in turning loop\n");
     if (current_pos < end_pos +2 && right == false){
       drive_TurnLeftUntilStopped(speed_ratio);
       right = true;
@@ -114,7 +101,7 @@ void drive_Turn(int deg, double speed_ratio){
   }
   set_tacho_command_inx( rsn, TACHO_STOP);
   set_tacho_command_inx( lsn, TACHO_STOP);
-  usleep(20000);
+  sleep(1);
 }
 void drive_ScanTurn(){
   drive_Turn(360, 1/8);
@@ -123,8 +110,8 @@ void drive_ScanTurn(){
 void drive_TurnRight(int deg){
   drive_Turn(deg, 1/4);
 }
-void drive_TurnLeft(int deg, 1/4){
-  drive_Turn(-deg);
+void drive_TurnLeft(int deg){
+  drive_Turn(-deg, 1/4);
 }
 
 void drive_TurnLeftUntilStopped(double speed_ratio){
@@ -138,7 +125,7 @@ void drive_TurnLeftUntilStopped(double speed_ratio){
 void drive_TurnRightUntilStopped(double speed_ratio){
   set_tacho_speed_sp( rsn, -max_speed * speed_ratio);
   set_tacho_speed_sp( lsn, max_speed * speed_ratio);
-
+  printf("in turnrightUntilstopped\n");
   set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
   set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
@@ -218,5 +205,5 @@ void drive_SetHeading(int desired_heading){
   current_heading = drive_GetHeading();
   to_turn = desired_heading-current_heading;
   printf("turning %d, degrees\n", to_turn);
-  drive_Turn(to_turn);
+  drive_Turn(to_turn, 1/4);
 }
