@@ -1,5 +1,7 @@
 #include <unistd.h>
 #include <stdio.h>
+#include <stdbool.h>
+
 
 #include "../drive.h"
 #include "../adapters/detect.h"
@@ -12,13 +14,13 @@ int main()
     detect_Init();
 
     FILE* f;
-    f = fopen("samples.txt")
+    f = fopen("samples.txt", "w");
 
     drive_ScanTurn(180);
     
     for (int i = 0; i < SAMPLE_NUM; i++)
     {
-        fprintf(f, "%d\n", detect_GetDistance());
+        fprintf(f, "%d\t%d\n", drive_GetHeading(), detect_GetDistance());
         usleep(100 * 1000);
     }
     fclose(f);
