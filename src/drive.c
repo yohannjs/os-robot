@@ -131,6 +131,50 @@ void drive_TurnRightUntilStopped(){
   set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
 }
 
+void drive_ScanTurn(int deg){
+  printf("running drive_turn\n");
+  int current_pos;
+  current_pos = drive_GetGyroValue();
+  int end_pos = current_pos+deg;
+  bool left = false;
+  bool right = false;
+
+  while(current_pos > end_pos +3 || current_pos < end_pos -3){
+    printf("in turning loop\n");
+    if (current_pos < end_pos +2 && right == false){
+      printf("running drive_TurnLeftUntilStopped\n");
+      drive_TurnLeftSlowUntilStopped();
+      right = true;
+      left = false;
+    }else if (current_pos > end_pos-2 && left == false){
+      printf("running drive_TurnRightUntilStopped\n");
+      drive_TurnRightSlowUntilStopped();
+      left = true;
+      right = false;
+    }else if(current_pos < end_pos +2 && current_pos > end_pos -2 ){
+      printf("telling tacho to stop\n");
+      set_tacho_command_inx( rsn, TACHO_STOP);
+      set_tacho_command_inx( lsn, TACHO_STOP);
+      left = false;
+      right = false;
+      //return;
+    }
+
+    void drive_TurnLeftSlowUntilStopped(){
+      set_tacho_speed_sp( rsn, max_speed * 1/8);
+      set_tacho_speed_sp( lsn, -max_speed * 1/8);
+
+      set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
+      set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
+    }
+
+    void drive_TurnRightSlowUntilStopped(){
+      set_tacho_speed_sp( rsn, -max_speed * 1/8);
+      set_tacho_speed_sp( lsn, max_speed * 1/8);
+      set_tacho_command_inx( rsn, TACHO_RUN_FOREVER);
+      set_tacho_command_inx( lsn, TACHO_RUN_FOREVER);
+    }
+
 
 
 void drive_GoForward(){
