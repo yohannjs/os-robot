@@ -1,8 +1,8 @@
-#include "drive.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 
+#include "../interfaces/drive.h"
 //Position x goes from 0 to 119, y goes from 0 to 99
 
 //check if allowed to drive that far before going. Is object detected closer
@@ -28,6 +28,7 @@ int navigation_MoveForward(int distance);
 void navigation_UpdatePosition(int x, int y);
 void navigation_GoToSide(direction heading, direction side );
 
+/*
 int main(){
 //every time robot is done moving, update pos.off_x and pos.off_y with navigation_UpdatePosition.
 navigation_Init();
@@ -37,6 +38,7 @@ navigation_GoToPosition(30,15);
 navigation_GoToPosition(40,40);
 return 0;
 }
+*/
 
 void navigation_Init(){
   pos.x = 60;
