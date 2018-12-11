@@ -24,17 +24,8 @@ void drive_loop(){
   while(1){
 
   }
-}*/
-
-
-int main(){
-  drive_Init();
-  int heading;
-  heading = drive_GetHeading();
-  drive_Turn(1800);
-  heading = drive_GetHeading();
-return 0;
 }
+*/
 
 void drive_Init(){
   drive_InitTachos();

@@ -17,7 +17,7 @@ typedef enum{
   MIDDLE = 20;
   DIAGONAL = 40;
   SIDE = 30;
-} distance;
+} search_point_distance;
 
 static const int START_X = 60;
 static const int START_Y = 27;
@@ -26,7 +26,7 @@ static const int SEARCH_THROWLINE_OFFSET = 33;
 //static const int X_SERCHPOINT_OFFSET = 30;
 //static const int DIAGONAL_SEARCHPOINT_ANGLE = 40;
 //static const int DIAGONAL_SEARCHPOINT_DISTANCE = 40;
-static distance = current_robot_distance;
+static searchpoint_distance = current_robot_distance;
 static direction = current_robot_heading;
 static int ball_distance = 0;
 static int ball_direction = 0;
@@ -34,7 +34,7 @@ static int ball_direction = 0;
 void navigation_RecalibrateGyro();
 //void navigation_GoToStart();
 
-void navigation_GoToScanPosition(distance distance, direction direction);
+void navigation_GoToScanPosition(searchpoint_distance distance, direction direction);
 void navigation_MoveToBall(int distance_to_ball, int ball_heading);
 void navigation_ReturnToScanPosition();
 void navigation_ReturnFromScanPosition();
@@ -58,7 +58,7 @@ sleep(5);
 return 0;
 }
 
-void navigation_GoToScanPosition(distance distance, direction direction){
+void navigation_GoToScanPosition(searchpoint_distance distance, direction direction){
   drive_SetHeading(direction);
   sleep(2);
   drive_GoForward(distance);
