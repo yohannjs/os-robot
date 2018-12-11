@@ -6,24 +6,24 @@
 #include "../drive.h"
 #include "../adapters/detect.h"
 
-const int SAMPLE_NUM = 100; 
+const int SAMPLE_NUM = 1000; 
 
 int main()
 {
     
-    drive_SensorInit();
-    drive_InitTachos();
+    drive_Init();
+    //drive_InitTachos();
     detect_Init();
 
     FILE* f;
     f = fopen("samples.txt", "w");
 
-    drive_TurnRightForever(50);
+    drive_TurnRightForever(10);
     
     for (int i = 0; i < SAMPLE_NUM; i++)
     {
         fprintf(f, "%d\t%d\n", drive_GetHeading(), detect_GetDistance());
-        usleep(100 * 1000);
+        usleep(10 * 1000);
     }
     fclose(f);
 
