@@ -1,3 +1,16 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "lib/ev3.h"
+#include "lib/ev3_port.h"
+#include "lib/ev3_tacho.h"
+#include <unistd.h>
+#include "lib/ev3_sensor.h"
+#include "claw.h"
+#include "claw.c"
+
+#define Sleep( msec ) usleep(( msec ) * 1000 )
+
 int main(){
   if(claw_Init() == 0)
   {
