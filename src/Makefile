@@ -1,5 +1,8 @@
 CC=arm-linux-gnueabi-gcc
 CFLAGS=-Wall -std=c11
 
-main.o: main.c 
-	 $(CC) $(CFLAGS) -c main.c 
+adapters: adapters/*.c
+	$(CC) $(CFLAGS) adapters/*.c -c
+
+test: test.c 
+	$(CC) $(CFLAGS) test.c drive.c adapters/*.o obj/*.o -o test
