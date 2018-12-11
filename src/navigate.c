@@ -2,126 +2,110 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-
-//Position x goes from 0 to 119, y goes from 0 to 99
-
-//check if allowed to drive that far before going. Is object detected closer
-//than intended distance?
-//calibrate when passing certain black lines in x and y?
+#include <stdbool.h>
 
 typedef enum{
   RIGHT = 90,
   LEFT = 270,
   UP = 0,
   DOWN = 180,
+  LEFT_DIAGONAL = 320;
+  RIGHT_DIAGONAL = 40;
 } direction;
 
-struct Position {
-   int x;
-   int y;
-   int heading;
-} pos;
+typedef enum{
+  MIDDLE = 20;
+  DIAGONAL = 40;
+  SIDE = 30;
+} distance;
 
-void navigation_GoToPosition(int x, int y);
+static const int START_X = 60;
+static const int START_Y = 27;
+//static const int Y_SEARCH_OFFSET = 20;
+static const int SEARCH_THROWLINE_OFFSET = 32;
+//static const int X_SERCHPOINT_OFFSET = 30;
+//static const int DIAGONAL_SEARCHPOINT_ANGLE = 40;
+//static const int DIAGONAL_SEARCHPOINT_DISTANCE = 40;
+static distance = current_robot_distance;
+static direction = current_robot_heading;
+static int ball_distance = 0;
+static int ball_direction = 0;
+
 void navigation_Init();
-int navigation_MoveForward(int distance);
-void navigation_UpdatePosition(int x, int y);
-void navigation_GoToSide(direction heading, direction side );
+//void navigation_GoToStart();
 
-main(){
+void navigation_MoveToBall(int distance_to_ball, int ball_heading);
+void navigation_ReturnToScanPosition();
+//void navigation_GoToSideOfObject(direction heading, direction side );
+
+void navigation_GoToScanPosition(distance distance, direction direction);
+void navigation_ReturnFromScanPosition();
+
+
+int main(){
 //every time robot is done moving, update pos.off_x and pos.off_y with navigation_UpdatePosition.
-navigation_Init();
-drive_InitTachos();
-drive_SensorInit();
-navigation_GoToPosition(90,70);
-navigation_GoToPosition(40.40);
+//navigation_Init();
+drive_Init();
+navigation_GoToScanPosition(DIAGONAL, LEFT_DIAGONAL);
+navigation_MoveToBall(30, 70);
+sleep(4);
+navigation_ReturnToScanPosition();
+navigation_ReturnFromScanPosition();
+
+sleep(5);
+
+return 0;
+}
+
+void navigation_GoToScanPosition(distance distance, direction direction){
+  drive_SetHeading(direction);
+  sleep(2);
+  drive_GoForward(distance);
+  sleep(2);
+  current_robot_heading = direction;
+  current_robot_distance = distance;
+}
+
+void navigation_ReturnFromScanPosition(){
+  drive_SetHeading(current_robot_heading);
+  sleep(2);
+  drive_BackDistance(current_robot_distance);
+  sleep(2);
 }
 //should this also register objects somewhere?
-int navigation_MoveForward(int distance){
-  int distance_to_obj;
-  distance_to_obj = 100;//detect_GetDistance();
-  if (distance_to_obj > distance+5){
-    drive_GoDistance(distance);
-    sleep(4);
-    return distance;
-  }else{
-    drive_GoDistance(distance_to_obj-5);
-    sleep(4);
-    return distance_to_obj -5;
-  }
+void navigation_MoveToBall(int distance_to_ball, int ball_heading){
+  ball_distance = distance_to_ball-13;
+  ball_direction = ball_heading;
+  drive_SetHeading(ball_heading);
+  drive_GoDistance(ball_distance);
 }
 
-void navigation_GoToPosition(int x, int y){
-  int new_position;
-  int offset;
-  if (pos.x > x){
-    offset = pos.x-x;
-    drive_SetHeading(LEFT);
-    sleep(2); //need time to set heading?
-    new_position = navigation_MoveForward(offset);
-    navigation_UpdatePosition(-new_position,0);
-  }
-  if (pos.x < x){
-      offset = x - pos.x;
-      drive_SetHeading(RIGHT);
-      sleep(2); //need time to set heading?
-      new_position = navigation_MoveForward(offset);
-      navigation_UpdatePosition(new_position,0);
-    }
-    if (pos.y > y){
-      offset = pos.y-y;
-      printf("pos.y > y");
-      drive_SetHeading(DOWN);
-      sleep(2); //need time to set heading?
-      new_position = navigation_MoveForward(offset);
-      navigation_UpdatePosition(0,-new_position);
-    }
-    if (pos.y < y){
-        offset = y - pos.y;
-        printf("pos.y < y\n");
-        drive_SetHeading(UP);
-        sleep(2); //need time to set heading?
-        new_position = navigation_MoveForward(offset);
-        navigation_UpdatePosition(0,new_position);
-      }
-    if (pos.x != x || pos.y != y){
-      //recursive function until complete movement.
-      //will get stuck here if object on destination tho..
-      //also stuck if object in both x and y path.
-      navigation_GoToPosition(x,y);
-    }
+void navigation_ReturnToScanPosition(){
+  drive_BackDistance(ball_distance);
+  sleep(3);
+  drive_Turn(-ball_direction);
 }
-void navigation_GoToSide(direction heading, direction side ){
-  int distance_to_obj;
-  if(side == LEFT){drive_TurnLeft(90);}
-  else if (side == RIGHT){drive_TurnRight(90);}
+
+void navigation_GoToShootingPosition(){
+  bool is_on_line = false;
+  drive_GoForward();
+  while(is_on_line == false){
+    is_on_line = false;//detect_OnLine();
+  }
+  drive_Stop();
+}
+void navigation_ReturnAfterThrow(){
+  drive_BackDistance(SEARCH_THROWLINE_OFFSET);
+}
+/*
+void navigation_GoToStart(){
+  //navigation_GoToPosition(60,27);
+}
+*/
+
+void navigation_RecalibrateGyro(){
+  drive_GoDistance(70);
   sleep(1);
-  distance_to_obj = 100;//detect_GetDistance();
-  if (distance_to_obj > 15){
-    drive_GoForward(10);
-    sleep(2);
-    if(heading == UP){
-      navigation_UpdatePosition(15,0);
-    }else if(heading == DOWN){
-      navigation_UpdatePosition(-15,0);
-    }else if(heading == LEFT){
-      navigation_UpdatePosition(0,15);
-    }else{
-      navigation_UpdatePosition(0,-15);
-    }
-    if(side == RIGHT){drive_TurnLeft(90);}
-    else if (side == LEFT){drive_TurnRight(90);}
-  }
-}
-
-void navigation_Init(){
-  pos.x = 60;
-  pos.y = 27;
-  pos.heading = 0;
-}
-
-void navigation_UpdatePosition(int x_mov, int y_mov){
-  pos.x = pos.x + x_mov;
-  pos.y = pos.y + y_mov;
-  pos.heading = drive_GetHeading();
+  drive_ResetGyro();
+  drive_BackDistance(61);
 }
