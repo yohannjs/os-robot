@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <math.h>
+
 
 //Position x goes from 0 to 119, y goes from 0 to 99
 
@@ -27,6 +29,7 @@ void navigation_Init();
 int navigation_MoveForward(int distance);
 void navigation_UpdatePosition(int x, int y);
 void navigation_GoToSide(direction heading, direction side );
+void navigation_GoToStart();
 
 int main(){
 //every time robot is done moving, update pos.off_x and pos.off_y with navigation_UpdatePosition.
@@ -34,7 +37,7 @@ navigation_Init();
 drive_InitTachos();
 drive_SensorInit();
 navigation_GoToPosition(30,15);
-navigation_GoToPosition(40,40);
+navigation_GoToPosition(70,70);
 return 0;
 }
 
@@ -57,6 +60,9 @@ int navigation_MoveForward(int distance){
     sleep(4);
     return distance_to_obj -5;
   }
+}
+navigation_GoToStart(){
+  navigation_GoToPosition(60,27);
 }
 
 void navigation_GoToPosition(int x, int y){
@@ -102,7 +108,7 @@ void navigation_GoToPosition(int x, int y){
 void navigation_GoToSide(direction heading, direction side ){
   int distance_to_obj;
   if(side == LEFT){drive_TurnLeft(90);}
-  else if (side == RIGHT){drive_TurnRight(90);}
+  else if(side == RIGHT){drive_TurnRight(90);}
   sleep(1);
   distance_to_obj = 100;//detect_GetDistance();
   if (distance_to_obj > 15){
@@ -120,6 +126,10 @@ void navigation_GoToSide(direction heading, direction side ){
     if(side == RIGHT){drive_TurnLeft(90);}
     else if (side == LEFT){drive_TurnRight(90);}
   }
+}
+
+[int distance, int heading] navigate_CalculateBallPosition(){
+
 }
 
 void navigation_UpdatePosition(int x_mov, int y_mov){
