@@ -6,5 +6,6 @@ int claw_Lower();
 int claw_Grab();
 int claw_Throw();
 bool claw_HoldsBall();
+int claw_Drop();
 
 #endif

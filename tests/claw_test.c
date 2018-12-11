@@ -1,3 +1,5 @@
+#include "../src/interfaces/claw.h"
+
 int main(){
   if(claw_Init() == 0)
   {

@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-
-#include "../drive.h"
-#include "../adapters/detect.h"
+#include "../src/interfaces/drive.c"
+#include "../src/interfaces/drive.h"
+#include "../src/adapters/detect.h"
 
 const int SAMPLE_NUM = 1000; 
 
@@ -13,19 +13,7 @@ int main()
     
     drive_Init();
     detect_Init();
-
-    FILE* f;
-    f = fopen("samples.txt", "w");
-
-    drive_TurnRightForever(10);
-    
-    for (int i = 0; i < SAMPLE_NUM; i++)
-    {
-        fprintf(f, "%d\t%d\n", drive_GetHeading(), detect_GetDistance());
-        usleep(10 * 1000);
-    }
-    fclose(f);
-
-    drive_Stop();
+  scan_TurnRightScan(180, 10);
+  
     return 0;
 }
