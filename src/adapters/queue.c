@@ -8,14 +8,40 @@
 static mqd_t mq_rd; // MQ receive descriptor
 static mqd_t mq_td; // MQ transmit descriptor
 
-int cake_Init(void)
+int queue_Create(char *name, mqd_t *mq, int max_length)
 {
+    if (name[0] != '/')
+    {
+        printf("\e[91m[QUEUE] Queue name must start with /\e[0m\n");
+        return 1;
+    }
     struct mq_attr attr;
-    attr.mq_maxmsg = 10;
+    attr.mq_maxmsg = max_length;
     attr.mq_msgsize = sizeof(int);
     attr.mq_flags = 0;
-    
-    mq_td = mq_open("/cake", O_CREAT | O_WRONLY, 0666, &attr);
+    *mq = mq_open(name, O_CREAT | O_RDWR |O_NONBLOCK, 0666, &attr);
+    if (*mq == (mqd_t)-1)
+    {
+        printf("\e91m[QUEUE] Queue %s could not be created\e[0m\n", name);
+        return 1;
+    }
+    return 0;
+}
+
+void queue_Write(mqd_t mq, int data)
+{
+    mq_send(mq, (char*) &data, sizeof(int), NULL);
+}
+
+int queue_Read(mqd_t mq)
+{
+    int data = 0;
+    mq_receive(mq, (char*) &data, sizeof(int), 1);
+    return data;
+}
+/*
+int cake_Init(void)
+{
     mq_rd = mq_open("/cake", O_RDONLY, 0666, &attr);
 
     return 0;
@@ -52,3 +78,4 @@ void cake_Send(int pieces)
 {
     mq_send(mq_td, (char*) &pieces, sizeof(int), 1);
 }
+*/
