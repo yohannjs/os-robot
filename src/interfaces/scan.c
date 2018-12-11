@@ -8,7 +8,7 @@
 
 const int SAMPLE_NUM = 1000; 
 
-int main()
+int scan_TurnRightScan(int degrees)
 {
     
     drive_Init();
