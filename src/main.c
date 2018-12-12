@@ -47,6 +47,10 @@ void handler(uint16_t command, int16_t value)
 int main()
 {
     printf("Kob-e\n");
-
+    uint16_t command;
+	int16_t value;
+	for(;;){
+		event_handler(command, value);
+	}
     return 0;
 }
