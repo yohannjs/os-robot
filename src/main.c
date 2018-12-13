@@ -12,7 +12,7 @@
 
 int state;
 
-void handler(uint16_t command, int16_t value)
+void handler(uint16_t command, uint16_t value)
 {
     // Handle commands not dependent on state (communication w/ server)
     switch (command)
@@ -56,7 +56,7 @@ int main()
     uint16_t command;
 	int16_t value;
 	for(;;){
-		event_handler(command, value);
+		handler(command, value);
 	}
     return 0;
 }
