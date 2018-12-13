@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "../../lib/ev3.h"
-#include "../../lib/ev3_port.h"
-#include "../../lib/ev3_tacho.h"
-#include "../../lib/ev3_sensor.h"
+#include "ev3.h"
+#include "ev3_port.h"
+#include "ev3_tacho.h"
+#include "ev3_sensor.h"
 #include "claw.h"
 
 #define Sleep( msec ) usleep(( msec ) * 1000 )

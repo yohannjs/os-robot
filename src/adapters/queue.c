@@ -3,7 +3,7 @@
 #include <pthread.h>
 #include <mqueue.h>
 
-#include "cake.h"
+#include "queue.h"
 
 static mqd_t mq_rd; // MQ receive descriptor
 static mqd_t mq_td; // MQ transmit descriptor
