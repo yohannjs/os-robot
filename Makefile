@@ -1,40 +1,44 @@
+#   KOB-E Makefile
+# By the KOB-E Squad
+
+# All source code except for main and tests
+src = $(wildcard src/interfaces/*.c) \
+      $(wildcard src/adapters/*.c) \
+      $(wildcard lib/*.c)
+
+# List of all necessary object files
+obj = $(src:.c=.o)
+
+# List of test file executeables
+exe_tst = $(patsubst tests/%.c, bin/%, $(wildcard tests/*.c))
+
+# Header file includes
+includes = -I./lib -I./src/interfaces -I./src/adapters
+
+# Project wide defines
+defines = -D _BSD_SOURCE
+
+# Other libraries
+libraries = -lrt -lpthread
+
 CC=arm-linux-gnueabi-gcc
-CFLAGS=-Wall -std=c11 -O2
+CFLAGS=-Wall -std=c11 -O2 $(includes) $(libraries) $(defines)
 
-EV3=lib/*.o
+# Make both main file and tests if nothing else is specified
+all: main tests
+	
+# Make main executeable
+main: src/main.c $(obj) 
+	$(CC) $(CFLAGS) $^ -o bin/$@
 
-INCLUDES=-I./lib/ -I./src/interfaces/ -I./src/adapters/
+# Make test executeables 
+tests: $(exe_tst)
 
-all: main drive_test detect_test
+# Pattern for making test files
+bin/%_test: tests/%_test.c $(obj)
+	$(CC) $(CFLAGS) $^ -o $@
 
-# Main executeable
-main: src/main.c src/interfaces/detect.o src/interfaces/drive.o src/adapters/navigate.o
-	$(CC) $(CFLAGS) $(INCLUDES) $^ $(EV3) -o bin/$@
-
-# Tests
-drive_test: tests/drive_test.c src/interfaces/drive.o
-	$(CC) $(CFLAGS) $(INCLUDES) $^ $(EV3) -o bin/$@
-
-detect_test: tests/detect_test.c src/interfaces/detect.o
-	$(CC) $(CLFAGS) $(INCLUDES) $^ $(EV3) -o bin/$@
-
-# Modules
-detect.o: src/interfaces/detect.c
-	$(CC) $(CFLAGS) $(INCLUDES) $^ -c -o src/interfaces/$@
-
-drive.o: src/interfaces/drive.c
-	$(CC) $(CFLAGS) $(INCLUDES) $^ -c -o src/interfaces/$@
-
-navigate.o: src/adapters/navigate.c
-	$(CC) $(CFLAGS) $(INCLUDES) $^ -c -o src/adapters/$@
-
-lib/%.o: lib/%.c
-	$(CC) $(CFLAGS) lib/$*.c -c lib/$*.o 
-
-lib: lib/%.o 
-	ar c lib/ev3.a $^
-
-# Cleaning
+# Removing ALL object files
 clean:
-	rm src/interfaces/*.o src/adapters/*.o
+	rm -f $(obj) 
 

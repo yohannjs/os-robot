@@ -47,14 +47,14 @@ int drive_InitTachos(){
   if (ev3_search_tacho_plugged_in( RIGHT_PORT,0 , &rsn, 0 )){
     get_tacho_max_speed( rsn, &max_speed );
     set_tacho_stop_action_inx(rsn, TACHO_HOLD);
-    set_tacho_ramp_up_sp( rsn, 10 );
+    set_tacho_ramp_up_sp( rsn, 100 );
     set_tacho_ramp_down_sp( rsn, 100 );
     printf("found motor connected to port: %d\n", RIGHT_PORT);
   }
   if (ev3_search_tacho_plugged_in(LEFT_PORT, 0, &lsn, 0 )){
     set_tacho_stop_action_inx(lsn, TACHO_HOLD);
-    set_tacho_ramp_up_sp( lsn, 10 );
-    set_tacho_ramp_down_sp( lsn, 10 );
+    set_tacho_ramp_up_sp( lsn, 100 );
+    set_tacho_ramp_down_sp( lsn, 100 );
     printf("found motor connected to port: %d\n",LEFT_PORT);
   }
   printf( "Tacho is now ready \n" );
@@ -138,15 +138,15 @@ void drive_TurnRightForever(int speed){
 
 
 void drive_GoForward(){
-  set_tacho_speed_sp( rsn, max_speed * 2 / 3 );
-  set_tacho_speed_sp( lsn, max_speed * 2 / 3 );
+  set_tacho_speed_sp( rsn, max_speed * 1 / 2 );
+  set_tacho_speed_sp( lsn, max_speed * 1 / 2 );
 
   multi_set_tacho_command_inx(lr_sn, TACHO_RUN_FOREVER);
 }
 
 void drive_GoBackward(){
-  set_tacho_speed_sp( rsn, -max_speed * 2 / 3 );
-  set_tacho_speed_sp( lsn, -max_speed * 2 / 3 );
+  set_tacho_speed_sp( rsn, -max_speed * 1 / 2 );
+  set_tacho_speed_sp( lsn, -max_speed * 1 / 2 );
 
   multi_set_tacho_command_inx(lr_sn, TACHO_RUN_FOREVER );
 }
