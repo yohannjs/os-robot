@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "../drive.h"
-#include "../src/adapters/detect.h"
+#include "drive.h"
+#include "detect.h"
 
 int scan_TurnRightScan(int degrees, int speed)
 {

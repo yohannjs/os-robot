@@ -3,21 +3,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "navigate.h"
 
-typedef enum{
-  RIGHT = 90,
-  LEFT = 270,
-  UP = 0,
-  DOWN = 180,
-  LEFT_DIAGONAL = 320;
-  RIGHT_DIAGONAL = 40;
-} direction;
-
-typedef enum{
-  MIDDLE = 20;
-  DIAGONAL = 40;
-  SIDE = 30;
-} search_point_distance;
 
 static const int START_X = 60;
 static const int START_Y = 27;
@@ -26,52 +13,28 @@ static const int SEARCH_THROWLINE_OFFSET = 33;
 //static const int X_SERCHPOINT_OFFSET = 30;
 //static const int DIAGONAL_SEARCHPOINT_ANGLE = 40;
 //static const int DIAGONAL_SEARCHPOINT_DISTANCE = 40;
-static searchpoint_distance = current_robot_distance;
-static direction = current_robot_heading;
+static searchpoint_distance current_robot_distance;
+static direction current_robot_heading;
 static int ball_distance = 0;
 static int ball_direction = 0;
 
-void navigation_RecalibrateGyro();
-//void navigation_GoToStart();
-
-void navigation_GoToScanPosition(searchpoint_distance distance, direction direction);
-void navigation_MoveToBall(int distance_to_ball, int ball_heading);
-void navigation_ReturnToScanPosition();
-void navigation_ReturnFromScanPosition();
-
-//void navigation_GoToSideOfObject(direction heading, direction side );
-
-
-
-int main(){
-
-
-drive_Init();
-navigation_GoToScanPosition(DIAGONAL, LEFT_DIAGONAL);
-navigation_MoveToBall(30, 70);
-sleep(4);
-navigation_ReturnToScanPosition();
-navigation_ReturnFromScanPosition();
-
-sleep(5);
-
-return 0;
-}
 
 void navigation_GoToScanPosition(searchpoint_distance distance, direction direction){
   drive_SetHeading(direction);
-  sleep(2);
-  drive_GoForward(distance);
-  sleep(2);
+  sleep(5);
+  drive_GoDistance(distance);
+  sleep(5);
   current_robot_heading = direction;
   current_robot_distance = distance;
 }
 
 void navigation_ReturnFromScanPosition(){
   drive_SetHeading(current_robot_heading);
-  sleep(2);
+  sleep(5);
   drive_BackDistance(current_robot_distance);
-  sleep(2);
+  sleep(5);
+  drive_SetHeading(0);
+  sleep(5);
 }
 //should this also register objects somewhere?
 void navigation_MoveToBall(int distance_to_ball, int ball_heading){
@@ -83,8 +46,9 @@ void navigation_MoveToBall(int distance_to_ball, int ball_heading){
 
 void navigation_ReturnToScanPosition(){
   drive_BackDistance(ball_distance);
-  sleep(3);
-  drive_Turn(-ball_direction);
+  sleep(5);
+  //drive_Turn(-ball_direction);
+  //sleep(2);
 }
 
 void navigation_GoToShootingPosition(){
