@@ -3,9 +3,9 @@
 #include <unistd.h>
 #include <stdbool.h>
 
-#include "../../lib/ev3.h"
-#include "../../lib/ev3_port.h"
-#include "../../lib/ev3_sensor.h"
+#include "ev3.h"
+#include "ev3_port.h"
+#include "ev3_sensor.h"
 
 #define Sleep( msec ) usleep(( msec ) * 1000 )
 
