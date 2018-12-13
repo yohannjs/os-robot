@@ -166,12 +166,12 @@ int claw_Drop()
   
   do {
     get_tacho_state_flags   ( big_motor, &state_big_motor           );
-  } while ( state_big_motor == TACHO_RUNNING || state_big_motor == TACHO_RAMPING )
+  } while ( state_big_motor == TACHO_RUNNING || state_big_motor == TACHO_RAMPING );
     
     set_tacho_command_inx   ( small_motor, TACHO_RUN_TO_REL_POS     );
   
   do {
     get_tacho_state_flags   ( small_motor, &state_small_motor       );
-  } while ( state_small_motor != 0 )
+  } while ( state_small_motor != 0 );
     
 }
