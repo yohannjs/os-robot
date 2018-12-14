@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <unistd.h>
-#include <stdbool.h>
 
 #include "claw.h"
 
@@ -9,21 +8,14 @@ int main(){
   {
     printf("Initialized claw \n");
   } else return -1;
-  sleep(1);
-  claw_Throw();
-  sleep(1);
-  /*sleep(5);
-  get_tacho_position(big_motor, &big_motor_pos);
-  printf("Position: %d \n",big_motor_pos); */
-  //sleep(5);
-  claw_Lower();
-  sleep(1);
-  claw_Grab();
-  bool hold = claw_HoldsBall();
-  printf("Hold value is %d \n", hold);
-  sleep(3);
-  claw_Throw();
-  
-  
+  /*
+  if (claw_TakeBall()==1)
+  {
+    printf("Ball caught \n");
+    claw_Drop();
+  }
+  */
+  claw_Drop();
+  claw_Reset();
   return 0;
 }
