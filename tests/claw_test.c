@@ -1,4 +1,8 @@
-#include "../src/interfaces/claw.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <stdbool.h>
+
+#include "claw.h"
 
 int main(){
   if(claw_Init() == 0)
