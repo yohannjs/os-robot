@@ -13,7 +13,7 @@ int detect_Init(void);
 /**
  * Gets the current distance in front of the robot detected by the sonar.
  *
- * @returns The distance in centimeters
+ * @returns The distance in millimeters
  */
 int detect_GetDistance(void);
 
