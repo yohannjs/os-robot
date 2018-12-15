@@ -5,77 +5,50 @@
 
 #include "queue.h"
 
-static mqd_t mq_rd; // MQ receive descriptor
-static mqd_t mq_td; // MQ transmit descriptor
+static const size_t queue_size = 10;
+static const size_t msg_size = sizeof(int);
 
-int queue_Create(char *name, mqd_t *mq, int max_length)
+static int queue_CreateDescriptor(char *name, mqd_t *mq, int flags)
 {
     if (name[0] != '/')
     {
-        printf("\e[91m[QUEUE] Queue name must start with /\e[0m\n");
+        printf("[  QUEUE ] Queue name must start with /\n");
         return 1;
     }
     struct mq_attr attr;
-    attr.mq_maxmsg = max_length;
-    attr.mq_msgsize = sizeof(int);
+    attr.mq_maxmsg = queue_size;
+    attr.mq_msgsize = msg_size;
     attr.mq_flags = 0;
-    *mq = mq_open(name, O_CREAT | O_RDWR |O_NONBLOCK, 0666, &attr);
+    *mq = mq_open(name, flags, 0666, &attr);
     if (*mq == (mqd_t)-1)
     {
-        printf("\e91m[QUEUE] Queue %s could not be created\e[0m\n", name);
+        printf("[  QUEUE ] Queue %s could not be created\n", name);
         return 1;
     }
     return 0;
 }
 
-void queue_Write(mqd_t mq, int data)
+int queue_Create(char *name, mqd_t *mq)
 {
-    mq_send(mq, (char*) &data, sizeof(int), NULL);
+    return queue_CreateDescriptor(name, mq, O_CREAT | O_RDWR | O_NONBLOCK);
 }
 
-int queue_Read(mqd_t mq)
+int queue_Write(mqd_t mq, int data)
 {
-    int data = 0;
-    mq_receive(mq, (char*) &data, sizeof(int), 1);
-    return data;
-}
-/*
-int cake_Init(void)
-{
-    mq_rd = mq_open("/cake", O_RDONLY, 0666, &attr);
-
+    if (mq_send(mq, (char*) &data, msg_size, NULL) == -1) {
+        printf("[  QUEUE ] Message queue is full\n");
+        return 1;
+    }
     return 0;
 }
 
-void* cake_Server(void* param)
+int queue_Read(mqd_t mq, int *data)
 {
-    int pieces = (int) param;
-    
-    printf("I am the cake master!\n");
-    while (1)
+    int bytes = mq_receive(mq, (char*) data, msg_size, 1);
+    if (bytes == -1) 
     {
-        printf("I can never be destroyed!\n");
-        int data = 0;
-        mq_receive(mq_rd, (char*) &data, sizeof(int), NULL);
-        if (data == 0)  
-        {
-            printf("AAGH! Getting 0 cakes is my only weakness!!\n");
-            break;
-        }
-        else
-            printf("By giving me %d cakes you've made me more powerful!\n", data);
+        data = 0;
+        return 1;
     }
-    pthread_exit(NULL);
-    return NULL;
+    return 0;
 }
-
-void cake_Stop(void)
-{
-    cake_Send(0);
-}
-
-void cake_Send(int pieces)
-{
-    mq_send(mq_td, (char*) &pieces, sizeof(int), 1);
-}
-*/

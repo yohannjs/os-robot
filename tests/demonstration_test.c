@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdbool.h>
 
-#include "navigation.h"
+#include "navigate.h"
 #include "claw.h"
 #include "scan.h"
 

@@ -124,15 +124,18 @@ int claw_Grab()
   set_tacho_position_sp     (big_motor, 0                           );
   set_tacho_command_inx     (big_motor, TACHO_RUN_TO_ABS_POS        );
   
+  do {
+    get_tacho_state_flags   ( big_motor, &state_big_motor           );
+  } while ( state_big_motor == TACHO_RUNNING || state_big_motor == TACHO_RAMPING );
+  
   return 0;
 }
 
-bool claw_HoldsBall()
+int claw_HoldsBall()
 {
   get_tacho_state_flags (small_motor, &state_small_motor);
   
-  if (state_small_motor == 9) return true;
-  else return false;
+  return ((state_small_motor & 0x10) == 0x10);
 }
 
 int claw_Throw()
@@ -154,9 +157,9 @@ int claw_Throw()
 int claw_Drop()
 {
   set_tacho_speed_sp        ( small_motor, max_speed_small_motor/20 );
-  set_tacho_speed_sp        ( big_motor, max_speed_big_motor/10     );
+  set_tacho_speed_sp        ( big_motor, max_speed_big_motor/20     );
   
-  set_tacho_position_sp     ( small_motor, 10                       );
+  set_tacho_position_sp     ( small_motor, 90                       );
   set_tacho_position_sp     ( big_motor, 50                         );
   
   set_tacho_stop_action_inx ( small_motor, TACHO_COAST              );
@@ -166,12 +169,39 @@ int claw_Drop()
   
   do {
     get_tacho_state_flags   ( big_motor, &state_big_motor           );
-  } while ( state_big_motor == TACHO_RUNNING || state_big_motor == TACHO_RAMPING )
+  } while ( state_big_motor == TACHO_RUNNING || state_big_motor == TACHO_RAMPING );
     
     set_tacho_command_inx   ( small_motor, TACHO_RUN_TO_REL_POS     );
   
   do {
     get_tacho_state_flags   ( small_motor, &state_small_motor       );
-  } while ( state_small_motor != 0 )
-    
+  } while ( state_small_motor != 0 );
+  
+  return 0;
+}
+
+int claw_TakeBall()
+{
+  claw_Lower();
+  claw_Grab();
+  return claw_HoldsBall();
+}
+
+int claw_Reset()
+{
+  set_tacho_speed_sp        ( big_motor, max_speed_big_motor/10 );
+  set_tacho_stop_action_inx ( big_motor, TACHO_COAST            );
+  set_tacho_position_sp     ( big_motor, 0                      );
+  set_tacho_command_inx     ( big_motor, TACHO_RUN_TO_ABS_POS   );
+  
+  set_tacho_speed_sp        ( small_motor, max_speed_small_motor/10 );
+  set_tacho_stop_action_inx ( small_motor, TACHO_COAST              );
+  set_tacho_position_sp     ( small_motor, 0                        );
+  set_tacho_command_inx     ( small_motor, TACHO_RUN_TO_ABS_POS     );
+  
+  do {
+    get_tacho_state_flags   ( small_motor, &state_small_motor       );
+    get_tacho_state_flags   ( big_motor, &state_big_motor           );
+  } while ( state_small_motor != 0 && state_big_motor != 0);
+  return 0;
 }

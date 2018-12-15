@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <math.h>
+
 #include "ev3.h"
 #include "ev3_port.h"
 #include "ev3_tacho.h"
-#include <unistd.h>
 #include "ev3_sensor.h"
 #include "drive.h"
-#include <math.h>
 
 static uint8_t rsn;
 static uint8_t lsn;

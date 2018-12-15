@@ -1,3 +1,5 @@
+#ifndef DRIVE_H
+#define DRIVE_H
 // Drive module header file. The functions intended for external use are:
 // drive_TurnRight, drive_TurnLeft, drive_GoDistance, drive_BackDistance
 // and drive_GetHeading.
@@ -26,3 +28,5 @@ int drive_GetGyroValue();
 int drive_GetHeading();
 void drive_SetHeading(int heading);
 void drive_ResetGyro();
+
+#endif

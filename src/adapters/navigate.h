@@ -1,3 +1,6 @@
+#ifndef NAVIGATE_H
+#define NAVIGATE_H
+
 typedef enum dir{
   RIGHT = 90,
   LEFT = 270,
@@ -23,3 +26,5 @@ void navigation_ReturnFromScanPosition();
 void navigation_GoToShootingPosition();
 void navigation_ReturnAfterThrow();
 //void navigation_GoToSideOfObject(direction heading, direction side );
+
+#endif
