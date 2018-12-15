@@ -9,7 +9,8 @@ int scan_TurnRightScan(int degrees, int speed)
 {
   FILE* f;
   f = fopen("samples.txt", "w");
-
+  drive_Stop();
+ // return 0;
   drive_TurnRightForever(speed);
   int heading;
   while(1)
