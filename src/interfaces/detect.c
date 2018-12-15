@@ -9,9 +9,7 @@
 
 #define Sleep( msec ) usleep(( msec ) * 1000 )
 
-const char const *color[] = { "?", "BLACK", "BLUE", "GREEN", "YELLOW", "RED", "WHITE", "BROWN" };
-#define COLOR_COUNT  (( int )( sizeof( color ) / sizeof( color[ 0 ])))
-
+#define COLOR_COUNT 8;
 
 static uint8_t sn_color;
 static uint8_t sn_sonar;
@@ -24,7 +22,7 @@ int detect_Init(void)
     if (ev3_search_sensor(LEGO_EV3_COLOR, &sn_color, 0)) 
     {
         printf("[detect] Color sensor found\n");
-    	set_sensor_mode(sn_color, "COL-REFLECT");
+    	set_sensor_mode(sn_color, "COL-COLOR");
     }
     else
     {
@@ -55,17 +53,20 @@ int detect_GetDistance(void)
     return value;
 }
 
-int detect_OnLine(void)
+bool detect_OnLine(void)
 {
-    float value;
-    //bool black = false;
-    if (!get_sensor_value0(sn_color, &value))
+    int value;
+    bool isBlack = false;
+    if ( !get_sensor_value( 0, sn_color, &value ) || ( value < 0 ) || ( value >= COLOR_COUNT ))
     {
         printf("[detect] [ERROR] Color sensor not responding\n");
     }
     else
     {
-    //    black = (value == 1);
+        if(value == 1)
+        {
+            isBlack = true;
+        }
     }
-    return value;
+    return isBlack;
 }
