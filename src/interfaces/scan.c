@@ -26,21 +26,22 @@ int scan_TurnRightScan(int degrees, int speed)
   return NUM_SAMPLES;
 }
 
-int scan_FindBallHeading(int NUM_SAMPLES, int* heading, int* distance){
+int scan_FindBallHeading(int NUM_SAMPLES, int* head, int* dist){
   int heading[1500];// = {0};
   int distance[1500];// = {0};
+  FILE* f;
   f = fopen("samples.txt", "r"); // INSERT CORRECT FILE NAME HERE
   if(!f){
     printf("Error, samples.txt not found \n");
     return -1;
   }
-  int dist;
+  int dista;
   for (int i = 0; i < NUM_SAMPLES; i++){
-    fscanf(f, "%d\t%d", &heading[i], &dist);
-    if(dist > 500){
+    fscanf(f, "%d\t%d", &heading[i], &dista);
+    if(*dist > 500){
       distance[i] = 500;
     } else{
-      distance[i] = dist;
+      distance[i] = dista;
     }
   }
   int minimum_distance = distance[0];
@@ -53,7 +54,8 @@ int scan_FindBallHeading(int NUM_SAMPLES, int* heading, int* distance){
     }
   }
   printf("distance to ball = %d \n associated heading = %d \n", minimum_distance, index_counter);
-  *heading = index_counter;
-  *distance = minimum_distance; 
+  *head = index_counter;
+  *dist = minimum_distance; 
+  fclose(f);
   return 0;
 }
