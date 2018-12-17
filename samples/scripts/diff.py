@@ -22,25 +22,27 @@ for i in range(360):
     diff[i] = distances1[i] - distances2[i];
 
 # Run the samples through a low pass filter with a0=1, a1=0.95
-#lp_distances = st.filterSamples(distances, 1, 0.95)
+#diff = st.filterSamples(diff, 1, 0.99, 0.9)
 
 # Run the low pass filtered samples through a high pass filter
-#hp_distances = st.filterSamples(lp_distances, 1, -0.9)
+filtered = st.filterSamples(diff, 1, -0.99)
 
 # We only care about the absolute size of the high pass filtered samples
 # so we take the absolute value of each sample
-#hp_distances = [abs(d) for d in hp_distances]
+filtered = [abs(d) for d in filtered]
 
 # Make a list containing all 360 headings in radians, needed for polar plot
 heading = np.arange(0, np.pi * 2, np.pi / 180)
 
 # Plot the original signal, the low pass filtered signal and the low pass +
 # high pass filtered signal
-p1 = plt.subplot(131, projection="polar")
+p1 = plt.subplot(221, projection="polar")
 p1.plot(heading, distances1)
-p2 = plt.subplot(132, projection="polar")
+p2 = plt.subplot(222, projection="polar")
 p2.plot(heading, distances2)
-p3 = plt.subplot(133, projection="polar")
+p3 = plt.subplot(223, projection="polar")
 p3.plot(heading, diff)
+p4 = plt.subplot(224, projection="polar")
+p4.plot(heading, filtered)
 plt.show()
 

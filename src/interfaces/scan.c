@@ -6,22 +6,52 @@
 #include "drive.h"
 #include "detect.h"
 
-int scan_ScanDegrees(int degrees, int speed)
+int scan_Scan360(int* samples, int speed)
 {
-  FILE* f;
-  f = fopen("samples.txt", "w");
-  drive_TurnDegrees(degrees, speed);
-  int heading;
-  while(1)
+  //FILE* f;
+  //f = fopen("samples.txt", "w");
+  int heading = drive_GetHeading();
+  int new_samples[360];
+  drive_TurnDegrees(365, speed);
+    
+  for (int i=0; i<360; i++)
   {
-    heading = drive_GetHeading();
-    fprintf(f, "%d\t%d\n", heading, detect_GetDistance());
-    usleep(10 * 1000);
+    int current_heading = heading;
+    int sum = 0;
+    int num = 0;
+    do {
+      heading = drive_GetHeading();
+      sum += detect_GetDistance();
+      num++;
+      usleep(10 * 1000);
+    } while (current_heading == heading);
+    new_samples[current_heading] = sum / num;
   }
-  fclose(f);
+  samples = new_samples;
+  //int heading;
+  //while(get)
+  //{
+  //  heading = drive_GetHeading();
+  //  fprintf(f, "%d\t%d\n", heading, detect_GetDistance());
+  //  usleep(10 * 1000);
+  //}
+  //fclose(f);
   return 0;
 }
 
+int scan_WriteSamplesToFile(int* samples, char *file_name)
+{
+  FILE *f;
+  f = fopen(file_name, "w");
+  for (int i=0; i<360; i++)
+  {
+    fprintf(f, "%d\n", samples[i]);
+  }
+  printf("[  SCAN  ] Samples written to file %s\n", file_name);
+  fclose(f);
+  
+  return 0;
+}
 
 int scan_TurnRightScan(int degrees, int speed)
 {
@@ -42,6 +72,53 @@ int scan_TurnRightScan(int degrees, int speed)
   fclose(f);
   drive_Stop();
   return NUM_SAMPLES;
+}
+
+int scan_FindBall(int* samples, int* template, int *head, int *dist)
+{
+  int threshold = 300;
+  int min_length = 10;
+  int diff[360];
+  
+  int start_heading;
+  int end_heading = 0;
+  for (int i=0; i<360; i++)
+  {
+    diff[i] = samples[i] - template[i];
+    start_heading = i;
+    while (diff[i] <= threshold)
+    {
+      end_heading = i;
+      i++;
+    }
+    if (end_heading > start_heading + min_length)
+    {
+      int length = end_heading - start_heading;
+      *head = start_heading + length / 2;
+      *dist = samples[*head];
+      return 0; 
+    }
+  }
+  return 1;
+}
+
+int scan_LoadSamples(char *file_name, int *samples)
+{
+  FILE *f;
+  f = fopen(file_name, "r");
+  if (!f)
+  {
+    printf("[  SCAN  ] Error, %s not found\n", file_name);
+    return 1;
+  }
+  int loaded_samples[360];
+  for (int i=0; i<360; i++)
+  {
+    fscanf(f, "%d", &loaded_samples[i]);
+  }
+  fclose(f);
+  samples = loaded_samples;
+  return 0;
 }
 
 int scan_FindBallHeading(int NUM_SAMPLES, int* head, int* dist){
