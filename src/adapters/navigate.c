@@ -85,6 +85,9 @@ void navigation_GoToShootingPosition(){
 void navigation_ReturnAfterThrow(){
   drive_BackDistance(START_THROWLINE_OFFSET);
 }
+void navitation_GoToDropPosition(){
+  drive_GoForward(50);
+}
 /*
 void navigation_GoToStart(){
   //navigation_GoToPosition(60,27);

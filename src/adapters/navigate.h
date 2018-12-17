@@ -25,6 +25,7 @@ void navigation_ReturnToScanPosition();
 void navigation_ReturnFromScanPosition();
 void navigation_GoToShootingPosition();
 void navigation_ReturnAfterThrow();
+void navitation_GoToDropPosition();
 //void navigation_GoToSideOfObject(direction heading, direction side );
 
 #endif

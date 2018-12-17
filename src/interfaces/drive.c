@@ -67,7 +67,15 @@ int drive_InitTachos(){
   printf( "Tacho is now ready \n" );
   return 0;
 }
-
+int drive_MotorStatus(){
+  FLAGS_T state_big_motor;
+  get_tacho_state_flags   ( big_motor, &state_big_motor);
+  if(state_big_motor == TACHO_HOLDING){
+    return 0;
+  }else{
+    return 1;
+  }
+}
 void drive_GoDistance(int distance){
   double wheel_r = 2.7;
   double dist_per_degree = (2*wheel_r*3.14159)/360;

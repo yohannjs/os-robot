@@ -17,6 +17,7 @@ void drive_TurnRight(int deg);
 void drive_TurnLeft(int deg);
 void drive_GoDistance(int distance);
 void drive_BackDistance(int distance);
+int drive_MotorStatus(); //returns 0 if motor is not driving, 1 otherwise.
 //drive functions for internal use
 void drive_Turn(int deg);
 void drive_TurnRightForever(int speed);
