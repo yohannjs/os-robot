@@ -225,5 +225,5 @@ void drive_SetHeading(int desired_heading){
     to_turn = to_turn - 360;
   }
   //printf("turning %d, degrees\n", to_turn);
-  drive_Turn(to_turn);
+  drive_TurnDegrees(to_turn, 25);
 }
