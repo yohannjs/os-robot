@@ -42,13 +42,13 @@ void navigation_Init(){
 }
 */
 
-void navigation_GoToScanPosition(searchpoint_distance distance, direction direction){
-  drive_SetHeading(direction);
-  sleep(5);
-  drive_GoDistance(distance);
-  sleep(5);
-  current_robot_heading = direction;
-  current_robot_distance = distance;
+void navigation_GoToScanPosition(point search_point){
+  drive_SetHeading(search_point.dir);
+  sleep(3);
+  drive_GoDistance(search_point.dist);
+  sleep(4);
+  current_robot_heading = search_point.dir;
+  current_robot_distance = search_point.dist;
 }
 
 void navigation_ReturnFromScanPosition(){
