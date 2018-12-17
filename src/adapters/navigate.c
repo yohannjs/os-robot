@@ -73,7 +73,7 @@ void navigation_ReturnToScanPosition(){
 }
 
 void navigation_GoToShootingPosition(){
-  drive_GoForward(20);
+  drive_GoForward(10);
   sleep(2);
   bool is_on_line = false;
   drive_GoForward();
