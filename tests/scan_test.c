@@ -5,13 +5,16 @@
 #include "drive.h"
 #include "detect.h"
 #include "scan.h"
+#include "navigate.h"
 
 int main()
 {
     
     drive_Init();
     detect_Init();
-    scan_TurnRightScan(360, 10);
+    navigation_GoToScanPosition(MIDDLE, UP);
+    sleep(5);
+    scan_TurnRightScan(359, 15);
   
     return 0;
 }

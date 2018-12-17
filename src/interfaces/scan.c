@@ -75,6 +75,5 @@ int scan_FindBallHeading(int NUM_SAMPLES, int* head, int* dist){
   *head = index_counter;
   *dist = minimum_distance; 
   fclose(f);
->>>>>>> dev
   return 0;
 }
