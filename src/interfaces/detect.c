@@ -9,7 +9,7 @@
 
 #define Sleep( msec ) usleep(( msec ) * 1000 )
 
-#define COLOR_COUNT 8;
+#define COLOR_COUNT 8
 
 static uint8_t sn_color;
 static uint8_t sn_sonar;
@@ -18,19 +18,19 @@ int detect_Init(void)
 {
     if (ev3_init() == -1) return 1;
     if (ev3_sensor_init() == -1) return 1;
-    
-    if (ev3_search_sensor(LEGO_EV3_COLOR, &sn_color, 0)) 
+
+    if (ev3_search_sensor(LEGO_EV3_COLOR, &sn_color, 0))
     {
         printf("[detect] Color sensor found\n");
     	set_sensor_mode(sn_color, "COL-COLOR");
     }
     else
     {
-        printf("[detect] [ERROR] Color sensor not found\n");   
+        printf("[detect] [ERROR] Color sensor not found\n");
         return 1;
     }
 
-    if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar, 0)) 
+    if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar, 0))
     {
         printf("[detect] Distance sensor found\n");
     }
