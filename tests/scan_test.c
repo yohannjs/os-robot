@@ -11,7 +11,7 @@ int main()
     
     drive_Init();
     detect_Init();
-    scan_TurnRightScan(400, 10);
+    scan_TurnRightScan(360, 10);
   
     return 0;
 }
