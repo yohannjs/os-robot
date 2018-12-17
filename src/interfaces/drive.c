@@ -69,7 +69,7 @@ int drive_InitTachos(){
 }
 int drive_MotorStatus(){
   FLAGS_T state_big_motor;
-  get_tacho_state_flags   ( big_motor, &state_big_motor);
+  get_tacho_state_flags   ( lsn, &state_big_motor);
   if(state_big_motor == TACHO_HOLDING){
     return 0;
   }else{
@@ -106,13 +106,13 @@ void drive_Turn(int deg){
     if (current_pos < end_pos +1 && right == false){
       //printf("running drive_TurnLeftUntilStopped\n");
       drive_Stop();
-      drive_TurnRightForever(100);
+      drive_TurnRightForever(60);
       right = true;
       left = false;
     }else if (current_pos > end_pos-1 && left == false){
       //printf("running drive_TurnRightUntilStopped\n");
       drive_Stop();
-      drive_TurnLeftForever(100);
+      drive_TurnLeftForever(60);
       left = true;
       right = false;
     }else if(current_pos < end_pos +2 && current_pos > end_pos -2 ){
@@ -161,15 +161,15 @@ void drive_TurnRightForever(int speed){
 
 
 void drive_GoForward(){
-  set_tacho_speed_sp( rsn, max_speed * 1 / 2 );
-  set_tacho_speed_sp( lsn, max_speed * 1 / 2 );
+  set_tacho_speed_sp( rsn, max_speed * 1 / 6 );
+  set_tacho_speed_sp( lsn, max_speed * 1 / 6 );
 
   multi_set_tacho_command_inx(lr_sn, TACHO_RUN_FOREVER);
 }
 
 void drive_GoBackward(){
-  set_tacho_speed_sp( rsn, -max_speed * 1 / 2 );
-  set_tacho_speed_sp( lsn, -max_speed * 1 / 2 );
+  set_tacho_speed_sp( rsn, -max_speed * 1 / 6 );
+  set_tacho_speed_sp( lsn, -max_speed * 1 / 6 );
 
   multi_set_tacho_command_inx(lr_sn, TACHO_RUN_FOREVER );
 }
@@ -215,7 +215,7 @@ int drive_GetHeading(){
   }else{
     heading = gyro_val % 360;
   }
-  printf("getHeading called, heading: %d\n", heading);
+  //printf("getHeading called, heading: %d\n", heading);
   return heading;
 }
 
@@ -233,5 +233,5 @@ void drive_SetHeading(int desired_heading){
     to_turn = to_turn - 360;
   }
   //printf("turning %d, degrees\n", to_turn);
-  drive_TurnDegrees(to_turn, 25);
+  drive_Turn(to_turn);
 }
