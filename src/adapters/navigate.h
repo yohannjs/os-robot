@@ -18,13 +18,15 @@ typedef enum dist{
 
 void navigation_RecalibrateGyro();
 //void navigation_GoToStart();
+void navigation_Init();
 
 void navigation_GoToScanPosition(searchpoint_distance distance, direction direction);
 void navigation_MoveToBall(int distance_to_ball, int ball_heading);
 void navigation_ReturnToScanPosition();
 void navigation_ReturnFromScanPosition();
-void navigation_GoToShootingPosition();
+void navigation_GoToThrowPosition();
 void navigation_ReturnAfterThrow();
+void navigation_ReturnAfterDrop();
 void navitation_GoToDropPosition();
 //void navigation_GoToSideOfObject(direction heading, direction side );
 

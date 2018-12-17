@@ -1,19 +1,21 @@
-#include "drive.h"
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "navigate.h"
+// #include <pthread.h>
 //#include "queue.h"
 #include "detect.h"
+#include "drive.h"
+#include "navigate.h"
 //#include <mqueue.h>
-#include <pthread.h>
+
 
 
 static const int START_X = 60;
 static const int START_Y = 27;//changed must measure and change
 //static const int Y_SEARCH_OFFSET = 20;
-static const int START_THROWLINE_OFFSET = 33;//changed must measure and change
+static const int START_THROWLINE_OFFSET = 24;//changed 17/12 from 28 to 24
 //static const int X_SERCHPOINT_OFFSET = 30;
 //static const int DIAGONAL_SEARCHPOINT_ANGLE = 40;
 //static const int DIAGONAL_SEARCHPOINT_DISTANCE = 40;
@@ -71,7 +73,7 @@ void navigation_MoveToBall(int distance_to_ball, int ball_heading){
   sleep(2);
 }
 
-void navigation_ReturnToScanPosition(){}
+void navigation_ReturnToScanPosition(){
   drive_BackDistance(ball_distance);
   printf("ReturnToScanPosition: backing %d\n", ball_distance);
   sleep(5);
@@ -79,8 +81,8 @@ void navigation_ReturnToScanPosition(){}
   //sleep(2);
 }
 
-void navigation_GoToShootingPosition(){
-  drive_GoDistance(10);
+void navigation_GoToThrowPosition(){
+  drive_GoDistance(15);
   sleep(2);
   bool is_on_line = false;
   drive_GoForward();
@@ -89,11 +91,19 @@ void navigation_GoToShootingPosition(){
   }
   drive_Stop();
 }
+
 void navigation_ReturnAfterThrow(){
   drive_BackDistance(START_THROWLINE_OFFSET);
 }
+
 void navitation_GoToDropPosition(){
-  drive_GoDistance(50);
+  int distance_to_drop_position = 55;
+  drive_GoDistance(distance_to_drop_position);
+}
+
+void navigation_ReturnAfterDrop(){
+  int distance_from_drop_position = 55;
+  drive_BackDistance(distance_from_drop_position);
 }
 /*
 void navigation_GoToStart(){
