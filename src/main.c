@@ -1,5 +1,7 @@
 // Include standard C-libraries
 #include <stdio.h>
+#include "navigate.h"
+#include "scan.h"
 
 // Include project header files
 

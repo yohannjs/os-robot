@@ -4,9 +4,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "navigate.h"
-#include "queue.h"
+//#include "queue.h"
 #include "detect.h"
-#include <mqueue.h>
+//#include <mqueue.h>
 #include <pthread.h>
 
 
