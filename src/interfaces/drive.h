@@ -12,6 +12,7 @@ int drive_InitTachos();
 void drive_SensorInit();
 
 //drive functions for external use
+void drive_TurnDegrees(int deg, int speed); //speed 0 to 100, 100 == max_speed
 void drive_TurnRight(int deg);
 void drive_TurnLeft(int deg);
 void drive_GoDistance(int distance);
