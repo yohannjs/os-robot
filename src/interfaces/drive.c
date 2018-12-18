@@ -17,22 +17,8 @@
 static uint8_t rsn;
 static uint8_t lsn;
 static uint8_t lr_sn[3];
-//static const int RIGHT_PORT = 67;
-//static const int LEFT_PORT = 68;
 static int max_speed;
 static uint8_t gyro_sn;
-
-//should maybe use a mutex for motors, if they are called by message a queue needs to be made.
-
-/*
-void drive_loop(mqd_t navigate_queue){
-  drive_InitTachos();
-  drive_SensorInit();
-  while(1){
-    queue_read(navigate_queue, );
-  }
-}
-*/
 
 void drive_Init(){
   drive_InitTachos();
@@ -87,6 +73,9 @@ void drive_GoDistance(int distance){
   set_tacho_speed_sp( rsn, max_speed * 1 / 3 );
   set_tacho_speed_sp( lsn, max_speed * 1 / 3 );
   multi_set_tacho_command_inx(lr_sn, TACHO_RUN_TO_REL_POS );
+  while(drive_MotorStatus()){
+    usleep(100);
+  }
 }
 
 void drive_BackDistance(int distance){
@@ -127,7 +116,7 @@ void drive_Turn(int deg){
     //printf("current pos =%d\n", current_pos);
   }
   multi_set_tacho_command_inx(lr_sn, TACHO_STOP);
-  sleep(1);
+  usleep(500000);
 }
 
 void drive_TurnRight(int deg){
@@ -143,6 +132,9 @@ void drive_TurnDegrees(int deg, int speed){
   set_tacho_speed_sp(lsn, max_speed * speed/100);
   set_tacho_speed_sp(rsn, max_speed * speed/100);
   multi_set_tacho_command_inx(lr_sn, TACHO_RUN_TO_REL_POS);
+  while(drive_MotorStatus()){
+    usleep(100000);
+  }
 }
 
 void drive_TurnLeftForever(int speed){

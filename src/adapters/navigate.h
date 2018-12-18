@@ -6,27 +6,24 @@ typedef enum dir{
   LEFT = 270,
   UP = 0,
   DOWN = 180,
-  LEFT_DIAGONAL = 320,
-  RIGHT_DIAGONAL = 40,
+  LEFT_DIAGONAL = 326,
+  RIGHT_DIAGONAL = 34,
 } direction;
 
 typedef enum dist{
-  //MIDDLE = 20,
-  DIAGONAL = 40,
-  SIDE = 20,
+  MID_SIDE = 20,
+  EAST_WEST = 40,
+  NORTH_SOUTH = 30,
+  DIAGONAL = 36,
 } searchpoint_distance;
 
-typedef struct {
-  searchpoint_distance dist;
-  direction dir;
-} point;
-
-
-const point SOUTH_EAST {SIDE, RIGHT};
-const point SOUTH_WEST {SIDE, LEFT};
-const point NORTH_EAST {DIAGONAL, RIGHT_DIAGONAL};
-const point NORTH_WEST {DIAGONAL, LEFT_DIAGONAL};
-
+typedef enum {
+  SOUTH_EAST = 1,
+  NORTH_EAST = 2,
+  NORTH_WEST = 3,
+  SOUTH_WEST = 4,
+  MIDDLE = 5;
+} p;
 
 void navigation_RecalibrateGyro();
 //void navigation_GoToStart();
