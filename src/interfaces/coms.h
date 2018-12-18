@@ -45,7 +45,7 @@ int coms_Init(char *server_address, mqd_t *receive_queue, mqd_t *transmit_queue)
  * Communicate with it through the queues given to coms_Init.
  * Parameter is unused, but required by pthread, just pass it NULL.
  */
-void *coms_Handle(void *param);
+//void *coms_Handle(void *param);
 
 /**
  * Deinitialization function.
@@ -56,5 +56,11 @@ void *coms_Handle(void *param);
  *      1 = couldn't disconnect
  */
 int coms_DeInit(void);
+
+int coms_Read(void);
+
+int coms_SendScore(bool long_shot);
+
+int coms_WaitForMessage(void);
 
 #endif

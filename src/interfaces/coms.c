@@ -13,10 +13,7 @@ static bool online = false;
 
 static int socket;
 
-static mqd_t rq;
-static mqd_t tq;
-
-int coms_Init(char* server_address, mqd_t *receive_queue, mqd_t *transmit_queue)
+int coms_Init(char* server_address)
 {
     // Init
     struct sockaddr_rc addr;
@@ -38,58 +35,69 @@ int coms_Init(char* server_address, mqd_t *receive_queue, mqd_t *transmit_queue)
     return 1;    
 }
 
-void* coms_Handler(void *param)
+int coms_Receive(void)
 {
-    while (online)
+    char *receive_msg;
+    int read_bytes = read(socket, receive_msg, max_msg);
+    if (read_bytes =< 0)
     {
-        char *receive_msg;
-        int read_bytes = read(socket, receive_msg, max_msg);
-        if (read_bytes =< 0)
+        printf("[  COMS  ] Server dropped connection.\n");
+        if (coms_DeInit())
         {
-            printf("[  COMS  ] Server dropped connection.\n");
-            if (coms_DeInit())
-            {
-                printf("[  COMS  ] Insane error! Shutting down!\n");
-                exit(1);
-            }
-            break;   
-        } else {
-            int type = receive_msg[4];
-            switch (type)
-            {
-                case COMS_ACK:
-                    break;
-                case COMS_START:
-                    break;
-                case COMS_STOP:
-                    break;
-                case COMS_KICK:
-                    break;
-                case COMS_SCORE:
-                    break;
-                case COMS_CUSTOM:
-                    break;
-                default:
-                    printf("[  COMS  ] Received unknown message\n");
-            }
-            
-            
-            // TODO Send to receive message queue
-
-            // TODO Error handling
+            printf("[  COMS  ] Insane error! Shutting down!\n");
+            exit(1);
         }
-
-        int transmit_msg;
-        if (0) // TODO Read from transmit queue
+    } 
+    else 
+    {
+        int type = receive_msg[4];
+        switch (type)
         {
-            *((uint16_t *) msg) = 0; // Msg ID is hopefully useless
-            msg[2] = COMS_GROUP; 
-            msg[3] = 0xFF;
-            msg[4] = 4;
-            msg[5] = 1;
-            write(socket, msg, 6);
-        }
+            case COMS_ACK:
+                return -1;
+            case COMS_START:
+                return COMS_START;
+            case COMS_STOP:
+                return COMS_STOP;
+            case COMS_KICK:
+                if (receive_msg[5] == COMS_GROUP)
+                    return COMS_KICK;
+                else
+                    return -1;
+            case COMS_SCORE:
+                return -1;
+            case COMS_CUSTOM:
+                return -1;
+            default:
+                printf("[  COMS  ] Received unknown message\n");
+        }       
     }
+}
+
+int coms_WaitForMessage(void)
+{
+    int msg;
+    do {
+        msg = coms_receive();
+    }
+    while (msg == -1);
+    return msg;
+}
+
+int coms_SendScore(bool long_shot)
+{
+    int transmit_msg;
+    *((uint16_t *) msg) = 0; // Msg ID is hopefully useless
+    msg[2] = COMS_GROUP; 
+    msg[3] = 0xFF;
+    msg[4] = COMS_SCORE;
+    if (long_shot)
+        msg[5] = 3;
+    else
+        msg[5] = 1;
+    write(socket, msg, 6);
+    
+    return 0;
 }
 
 int coms_DeInit(void)
