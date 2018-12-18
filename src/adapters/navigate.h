@@ -22,9 +22,10 @@ typedef enum {
   NORTH_EAST = 2,
   NORTH_WEST = 3,
   SOUTH_WEST = 4,
-  MIDDLE = 5;
+  MIDDLE = 5,
 } p;
 
+void navigation_Init();
 void navigation_RecalibrateGyro();
 //void navigation_GoToStart();
 
