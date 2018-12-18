@@ -8,18 +8,13 @@
 #include "navigate.h"
 
 int main(int argc, char **argv)
-{
-//    drive_Init();
-//    detect_Init();
-//    navigation_GoToScanPosition(MIDDLE, UP);
-//    sleep(5);
-    
+{    
     if (argc == 1)
     { 
       int samples[360];
       int template[360];
-      scan_LoadSamples("samples/samples006.txt", samples);
-      scan_LoadSamples("samples/samples001.txt", template);
+      scan_LoadSamples("samples/samples10.txt", samples);
+      scan_LoadSamples("samples/template01.txt", template);
       
       int heading;
       int distance;
@@ -29,7 +24,20 @@ int main(int argc, char **argv)
       
       printf("Heading: %d\nDistance: %d\n", heading, distance);
     } 
+    else if (argc == 2) 
+    {
+
+        drive_Init();
+        detect_Init();
+        navigation_GoToScanPosition(MIDDLE, UP);
+        sleep(3);
+        int samples[360];
+        scan_Scan360( samples, 3 );
+        scan_WriteSamplesToFile( samples, argv[1] );
+    }
     else
       printf("lol nope\n");
     return 0;
 }
+
+

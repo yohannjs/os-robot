@@ -11,7 +11,7 @@ int scan_Scan360(int* samples, int speed)
   //FILE* f;
   //f = fopen("samples.txt", "w");
   int heading = drive_GetHeading();
-  int new_samples[360];
+  //int new_samples[360];
   drive_TurnDegrees(365, speed);
     
   for (int i=0; i<360; i++)
@@ -25,9 +25,9 @@ int scan_Scan360(int* samples, int speed)
       num++;
       usleep(10 * 1000);
     } while (current_heading == heading);
-    new_samples[current_heading] = sum / num;
+    samples[current_heading] = sum / num;
   }
-  samples = new_samples;
+  //samples = new_samples;
   //int heading;
   //while(get)
   //{
@@ -76,8 +76,8 @@ int scan_TurnRightScan(int degrees, int speed)
 
 int scan_FindBall(int* samples, int* template, int *head, int *dist)
 {
-  int threshold = 150;
-  int min_length = 30;
+  int threshold = 100;
+  int min_length = 20;
   int diff[360];
   
   int start_heading;
