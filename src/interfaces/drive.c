@@ -85,11 +85,10 @@ void drive_BackDistance(int distance){
 void drive_Turn(int deg){
   //printf("running drive_turn\n");
   int current_pos;
-  current_pos = drive_GetGyroValue();
   int end_pos = current_pos+deg;
   bool left = false;
   bool right = false;
-
+  current_pos = drive_GetGyroValue();
   while(current_pos > end_pos +1 || current_pos < end_pos -1){
     //printf("in turning loop\n");
     if (current_pos < end_pos +1 && right == false){
@@ -135,6 +134,7 @@ void drive_TurnDegrees(int deg, int speed){
   while(drive_MotorStatus()){
     usleep(100000);
   }
+  usleep(300000);
 }
 
 void drive_TurnLeftForever(int speed){
@@ -223,6 +223,8 @@ void drive_SetHeading(int desired_heading){
   to_turn = desired_heading-current_heading;
   if(to_turn > 180){
     to_turn = to_turn - 360;
+  }else if(to_turn < -180){
+    to_turn = to_turn + 360;
   }
   //printf("turning %d, degrees\n", to_turn);
   drive_Turn(to_turn);
