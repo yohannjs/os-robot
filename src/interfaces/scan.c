@@ -76,27 +76,32 @@ int scan_TurnRightScan(int degrees, int speed)
 
 int scan_FindBall(int* samples, int* template, int *head, int *dist)
 {
-  int threshold = 300;
-  int min_length = 10;
+  int threshold = 150;
+  int min_length = 30;
   int diff[360];
   
   int start_heading;
   int end_heading = 0;
   for (int i=0; i<360; i++)
   {
-    diff[i] = samples[i] - template[i];
+    diff[i] = template[i] - samples[i];
+    printf("Diff[%d] = %d\n", i, diff[i]);
     start_heading = i;
-    while (diff[i] <= threshold)
+    while (diff[i] >= threshold)
     {
       end_heading = i;
       i++;
+      diff[i] = template[i] - samples[i];
+      printf("Diff[%d] = %d\n", i, diff[i]);
     }
     if (end_heading > start_heading + min_length)
     {
       int length = end_heading - start_heading;
       *head = start_heading + length / 2;
       *dist = samples[*head];
-      return 0; 
+      printf("Found ball h:%d d:%d\n", *head, *dist);
+      
+      //return 0; 
     }
   }
   return 1;
@@ -111,13 +116,16 @@ int scan_LoadSamples(char *file_name, int *samples)
     printf("[  SCAN  ] Error, %s not found\n", file_name);
     return 1;
   }
-  int loaded_samples[360];
+  //int loaded_samples[360];
   for (int i=0; i<360; i++)
   {
-    fscanf(f, "%d", &loaded_samples[i]);
+    int val; 
+    fscanf(f, "%d", &val);
+    printf("%d\n", val);
+    samples[i] = val;
   }
   fclose(f);
-  samples = loaded_samples;
+  //samples = loaded_samples;
   return 0;
 }
 
