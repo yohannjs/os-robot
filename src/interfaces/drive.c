@@ -221,11 +221,14 @@ void drive_SetHeading(int desired_heading){
   int to_turn;
   current_heading = drive_GetHeading();
   to_turn = desired_heading-current_heading;
-  if(to_turn > 180){
+  if(to_turn > 180)
+  {
     to_turn = to_turn - 360;
-  }else if(to_turn < -180){
+  }
+  else if(to_turn < -180)
+  {
     to_turn = to_turn + 360;
   }
-  //printf("turning %d, degrees\n", to_turn);
+  printf("turning %d, degrees\n", to_turn);
   drive_Turn(to_turn);
 }

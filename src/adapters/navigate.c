@@ -7,8 +7,8 @@
 #include "drive.h"
 #include "navigate.h"
 
-static const int START_X = 60;
-static const int START_Y = 27;//changed must measure and change
+// static const int START_X = 60;
+// static const int START_Y = 27;//changed must measure and change
 
 static const int START_THROWLINE_OFFSET = 24;//changed 17/12 from 28 to 24
 static int ball_distance = 0;
@@ -19,9 +19,12 @@ void navigation_Init(){
   drive_Init();
 }
 
-void navigation_GoToScanPosition(p search_point){
-  if(current_point == MIDDLE){
-    switch (search_point) {
+void navigation_GoToScanPosition(p search_point)
+{
+  if(current_point == MIDDLE)
+  {
+    switch (search_point) 
+    {
       case SOUTH_EAST:
         drive_SetHeading(RIGHT);
         drive_GoDistance(MID_SIDE);
@@ -38,95 +41,102 @@ void navigation_GoToScanPosition(p search_point){
         drive_SetHeading(LEFT);
         drive_GoDistance(MID_SIDE);
         break;
+      default:
+        printf("Not supposed to go here.\n");
     }
-  }else if(current_point == SOUTH_EAST){
-      switch (search_point) {
-        case MIDDLE:
-          printf("not supposed to go here from south_EAST\n");
-          break;
-        case NORTH_EAST:
-          drive_SetHeading(UP);
-          drive_GoDistance(NORTH_SOUTH);
-          break;
-        case NORTH_WEST:
-          printf("not supposed to go here from south_EAST\n");
-          break;
-        case SOUTH_WEST:
-          drive_SetHeading(LEFT);
-          drive_GoDistance(EAST_WEST);
-          break;
-      }
-    }else if(current_point == NORTH_EAST){
-        switch (search_point) {
-          case MIDDLE:
-            printf("not supposed to go here from NORTH_EAST\n");
-            break;
-          case SOUTH_EAST:
-            drive_SetHeading(DOWN);
-            drive_GoDistance(NORTH_SOUTH);
-            break;
-          case NORTH_WEST:
-            drive_SetHeading(LEFT);
-            drive_GoDistance(EAST_WEST);
-            break;
-          case SOUTH_WEST:
-            printf("not supposed to go here from NORTH_EAST\n");
-            break;
-        }
-      }else if(current_point == NORTH_WEST){
-          switch (search_point) {
-            case MIDDLE:
-              printf("not supposed to go here from NORTH_WEST\n");
-              break;
-            case SOUTH_EAST:
-              printf("not supposed to go here from NORTH_WEST\n");
-              drive_SetHeading(DOWN);
-              drive_GoDistance(NORTH_SOUTH);
-              break;
-            case NORTH_EAST:
-              drive_SetHeading(RIGHT);
-              drive_GoDistance(EAST_WEST);
-              break;
-            case SOUTH_WEST:
-              drive_SetHeading(DOWN);
-              drive_GoDistance(NORTH_SOUTH);
-              break;
-          }
-        }else if(current_point == SOUTH_WEST){
-            switch (search_point) {
-              case MIDDLE:
-                printf("not supposed to go here from SOUTH_WEST\n");
-                break;
-              case SOUTH_EAST:
-                drive_SetHeading(RIGHT);
-                drive_GoDistance(EAST_WEST);
-                break;
-              case NORTH_EAST:
-                printf("not supposed to go here from SOUTH_WEST\n");
-                break;
-              case NORTH_WEST:
-                drive_SetHeading(UP);
-                drive_GoDistance(NORTH_SOUTH);
-                break;
-            }
-          }
-  current_point = search_point;
+  }
+  else if(current_point == SOUTH_EAST)
+  {
+    switch (search_point) 
+    {
+      case NORTH_EAST:
+        drive_SetHeading(UP);
+        drive_GoDistance(NORTH_SOUTH);
+        break;
+      case SOUTH_WEST:
+        drive_SetHeading(LEFT);
+        drive_GoDistance(EAST_WEST);
+        break;
+      default:
+        printf("Not supposed to go here.\n");
+
+    }
+  }
+  else if(current_point == NORTH_EAST)
+  {
+    switch (search_point) 
+    {
+      case SOUTH_EAST:
+        drive_SetHeading(DOWN);
+        drive_GoDistance(NORTH_SOUTH);
+        break;
+      case NORTH_WEST:
+        drive_SetHeading(LEFT);
+        drive_GoDistance(EAST_WEST);
+        break;
+      default:
+        printf("Not supposed to go here.\n");
+        break;
+    }
+  }
+  else if(current_point == NORTH_WEST)
+  {
+    switch (search_point) 
+    {
+      case NORTH_EAST:
+        drive_SetHeading(RIGHT);
+        drive_GoDistance(EAST_WEST);
+        break;
+      case SOUTH_WEST:
+        drive_SetHeading(DOWN);
+        drive_GoDistance(NORTH_SOUTH);
+        break;
+      default:
+        printf("Not supposed to go here.\n");
+    }
+  }
+  else if(current_point == SOUTH_WEST)
+  {
+    switch (search_point) 
+    {
+      case SOUTH_EAST:
+        drive_SetHeading(RIGHT);
+        drive_GoDistance(EAST_WEST);
+        break;
+      case NORTH_WEST:
+        drive_SetHeading(UP);
+        drive_GoDistance(NORTH_SOUTH);
+        break;
+      default:
+        printf("Not supposed to go here.\n");
+    }
+  }
+  printf("current point used = %d \n", current_point);
+  printf("search point used = %d \n", search_point);
+  current_point = search_point;  
 }
 
 void navigation_ReturnFromScanPosition(){
-  switch (current_point) {
+  switch (current_point) 
+  {
     case SOUTH_EAST:
       drive_SetHeading(RIGHT);
       drive_BackDistance(MID_SIDE);
+      break;
     case NORTH_EAST:
       drive_SetHeading(RIGHT_DIAGONAL);
       drive_BackDistance(DIAGONAL);
+      break;
     case NORTH_WEST:
       drive_SetHeading(LEFT_DIAGONAL);
       drive_BackDistance(DIAGONAL);
+      break;
     case SOUTH_WEST:
-    drive_SetHeading(LEFT);
-    drive_BackDistance(MID_SIDE);
+      drive_SetHeading(LEFT);
+      drive_BackDistance(MID_SIDE);
+      break;
+    default: 
+      printf("Not supposed to go here.\n");
   }
   current_point = MIDDLE;
 }
