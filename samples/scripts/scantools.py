@@ -3,10 +3,22 @@
 def loadSamplesRaw(filename):
     samples = []
     samplefile = open(filename, "r")
+    filelines = []
     for line in samplefile:
-        sample = line.strip().split("\t")
-        samples.append([int(sample[0]), int(sample[1])])
+        filelines.append(line)
     samplefile.close()
+    
+    if "\t" in filelines[0]: 
+        # Old format
+        for line in filelines:
+            sample = line.strip().split("\t")
+            samples.append([int(sample[0]), int(sample[1])])
+    else:
+        # New format
+        for line in filelines:
+            samples.append(int(line.strip()))
+    
+    print("Read %d lines from file" % len(samples))
     return samples
 
 # Returns a list containing two lists: one with the headings and one with the 
@@ -27,14 +39,19 @@ def loadSamplesRaw2(filename):
 def loadSamples(filename, maxdistance):
     distances = [0] * 360
     samples = loadSamplesRaw(filename)
-    headings = [s[0] for s in samples]
-    for sample in samples:
-        angle = sample[0]
-        distance = sample[1]
-        distances[angle] += distance / headings.count(angle)
+    if type(samples[0]) is list:
+        headings = [s[0] for s in samples]
+        for sample in samples:
+            angle = sample[0]
+            distance = sample[1]
+            distances[angle] += distance / headings.count(angle)
+    else:
+        distances = samples.copy()
     for i in range(360):
         if distances[i] == 0 or distances[i] > maxdistance:
             distances[i] = maxdistance
+    
+    
     return distances
 
 def saveSamples(samples, filename):
