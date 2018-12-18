@@ -11,8 +11,6 @@ static const int START_X = 60;
 static const int START_Y = 27;//changed must measure and change
 
 static const int START_THROWLINE_OFFSET = 24;//changed 17/12 from 28 to 24
-//static searchpoint_distance current_robot_distance;
-//static direction current_robot_heading;
 static int ball_distance = 0;
 static int ball_direction = 0;
 static p current_point = MIDDLE;
@@ -44,8 +42,7 @@ void navigation_GoToScanPosition(p search_point){
   }else if(current_point == SOUTH_EAST){
       switch (search_point) {
         case MIDDLE:
-          drive_SetHeading(LEFT);
-          drive_GoDistance(MID_SIDE);
+          printf("not supposed to go here from south_EAST\n");
           break;
         case NORTH_EAST:
           drive_SetHeading(UP);

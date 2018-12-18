@@ -29,12 +29,16 @@ void navigation_RecalibrateGyro();
 //void navigation_GoToStart();
 
 void navigation_GoToScanPosition(p search_point);
+void navigation_ReturnFromScanPosition();
+
 void navigation_MoveToBall(int distance_to_ball, int ball_heading);
 void navigation_ReturnToScanPosition();
-void navigation_ReturnFromScanPosition();
-void navigation_GoToShootingPosition();
+
+void navigation_GoToThrowPosition();
 void navigation_ReturnAfterThrow();
+
 void navitation_GoToDropPosition();
+void navigation_ReturnAfterDrop();
 //void navigation_GoToSideOfObject(direction heading, direction side );
 
 #endif
