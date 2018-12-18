@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
+#include "queue.h"
 
 #include "ev3.h"
 #include "ev3_port.h"
@@ -9,21 +10,26 @@
 #include "ev3_sensor.h"
 #include "drive.h"
 
+#define DEG_TO_LIN 2.5
+#define RIGHT_PORT 67
+#define LEFT_PORT 68
+
 static uint8_t rsn;
 static uint8_t lsn;
 static uint8_t lr_sn[3];
-static const int RIGHT_PORT = 67;
-static const int LEFT_PORT = 68;
+//static const int RIGHT_PORT = 67;
+//static const int LEFT_PORT = 68;
 static int max_speed;
 static uint8_t gyro_sn;
+
 //should maybe use a mutex for motors, if they are called by message a queue needs to be made.
 
 /*
-void drive_loop(){
+void drive_loop(mqd_t navigate_queue){
   drive_InitTachos();
   drive_SensorInit();
   while(1){
-
+    queue_read(navigate_queue, );
   }
 }
 */
@@ -122,6 +128,14 @@ void drive_TurnRight(int deg){
 void drive_TurnLeft(int deg){
   drive_Turn(-deg);
 }
+//turn desired amount of degrees without gyro. negative deg turns left
+void drive_TurnDegrees(int deg, int speed){
+  set_tacho_position_sp(rsn, deg * DEG_TO_LIN);
+  set_tacho_position_sp(lsn, -deg * DEG_TO_LIN);
+  set_tacho_speed_sp(lsn, max_speed * speed/100);
+  set_tacho_speed_sp(rsn, max_speed * speed/100);
+  multi_set_tacho_command_inx(lr_sn, TACHO_RUN_TO_REL_POS);
+}
 
 void drive_TurnLeftForever(int speed){
   set_tacho_speed_sp( rsn, -max_speed * 1/8 * speed/100);
@@ -211,5 +225,5 @@ void drive_SetHeading(int desired_heading){
     to_turn = to_turn - 360;
   }
   //printf("turning %d, degrees\n", to_turn);
-  drive_Turn(to_turn);
+  drive_TurnDegrees(to_turn, 25);
 }
