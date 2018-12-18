@@ -6,14 +6,16 @@ typedef enum dir{
   LEFT = 270,
   UP = 0,
   DOWN = 180,
-  LEFT_DIAGONAL = 320,
-  RIGHT_DIAGONAL = 40,
+  LEFT_DIAGONAL = 319,
+  RIGHT_DIAGONAL = 41,
 } direction;
 
+
 typedef enum dist{
-  MIDDLE = 20,
-  DIAGONAL = 40,
-  SIDE = 30,
+  MID_SIDE = 30,
+  EAST_WEST = 60,
+  NORTH_SOUTH = 40,
+  DIAGONAL = 50,
 } searchpoint_distance;
 
 void navigation_RecalibrateGyro();

@@ -44,9 +44,9 @@ void navigation_Init(){
 
 void navigation_GoToScanPosition(searchpoint_distance distance, direction direction){
   drive_SetHeading(direction);
-  sleep(5);
+  sleep(1);
   drive_GoDistance(distance);
-  sleep(5);
+  sleep(3);
   current_robot_heading = direction;
   current_robot_distance = distance;
 }

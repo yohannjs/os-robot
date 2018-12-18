@@ -84,8 +84,8 @@ void drive_GoDistance(int distance){
   set_tacho_position_sp(lsn, turn_degrees_int);
   set_tacho_position_sp(rsn, turn_degrees_int);
   printf("turning wheels %d degrees\n", turn_degrees_int);
-  set_tacho_speed_sp( rsn, max_speed * 1 / 3 );
-  set_tacho_speed_sp( lsn, max_speed * 1 / 3 );
+  set_tacho_speed_sp( rsn, max_speed * 1 / 5 );
+  set_tacho_speed_sp( lsn, max_speed * 1 / 5 );
   multi_set_tacho_command_inx(lr_sn, TACHO_RUN_TO_REL_POS );
 }
 
