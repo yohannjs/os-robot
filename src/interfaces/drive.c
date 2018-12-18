@@ -135,6 +135,7 @@ void drive_TurnDegrees(int deg, int speed){
   while(drive_MotorStatus()){
     usleep(100000);
   }
+  usleep(200000);
 }
 
 void drive_TurnLeftForever(int speed){
