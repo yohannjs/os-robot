@@ -83,39 +83,30 @@ void drive_BackDistance(int distance){
 }
 
 void drive_Turn(int deg){
-  //printf("running drive_turn\n");
-  int current_pos;
-  int end_pos = current_pos+deg;
-  bool left = false;
-  bool right = false;
-  current_pos = drive_GetGyroValue();
-  while(current_pos > end_pos +1 || current_pos < end_pos -1){
-    //printf("in turning loop\n");
-    if (current_pos < end_pos +1 && right == false){
-      //printf("running drive_TurnLeftUntilStopped\n");
-      drive_Stop();
-      drive_TurnRightForever(60);
-      right = true;
-      left = false;
-    }else if (current_pos > end_pos-1 && left == false){
-      //printf("running drive_TurnRightUntilStopped\n");
-      drive_Stop();
-      drive_TurnLeftForever(60);
-      left = true;
-      right = false;
-    }else if(current_pos < end_pos +2 && current_pos > end_pos -2 ){
-      //printf("telling tacho to stop\n");
-      multi_set_tacho_command_inx(lr_sn, TACHO_STOP );
-      left = false;
-      right = false;
-      //return;
-    }
+  int current_pos = drive_GetGyroValue();
+  int end_pos = current_pos + deg;
+  
+  // Starts turning in the right direction
+  if (deg > 0)
+    drive_TurnLeftForever(60);
+  else if (deg < 0) 
+    drive_TurnRightForever(60);
+  else
+    return;
 
+  // Wait for the desired direction to be equal the current direction
+  do
+  {
     current_pos = drive_GetGyroValue();
-    //printf("current pos =%d\n", current_pos);
+    usleep(50 * 1000);
   }
-  multi_set_tacho_command_inx(lr_sn, TACHO_STOP);
-  usleep(500000);
+  while (current_pos != end_pos);
+
+  // Stop turning
+  drive_Stop();
+  
+  // Wait a little bit for the robot to stop completely
+  usleep(500 * 1000);
 }
 
 void drive_TurnRight(int deg){
