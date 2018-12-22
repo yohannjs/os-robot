@@ -16,13 +16,13 @@ exe_tst = $(patsubst tests/%.c, bin/%, $(wildcard tests/*.c))
 includes = -I./lib -I./src/interfaces -I./src/adapters
 
 # Project wide defines
-defines = -D _BSD_SOURCE
+defines = -D _DEFAULT_SOURCE
 
 # Other libraries
 libraries = -lrt -lpthread
 
 CC=arm-linux-gnueabi-gcc
-CFLAGS=-Wall -std=c11 -O2 $(includes) $(libraries) $(defines)
+CFLAGS = -O2 -g -std=gnu99 -W -Wall -Wno-comment $(includes) $(libraries) $(defines)
 
 # Make both main file and tests if nothing else is specified
 all: main tests
