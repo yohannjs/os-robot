@@ -84,8 +84,8 @@ void drive_BackDistance(int distance){
 
 void drive_Turn(int deg){
   //printf("running drive_turn\n");
-  int current_pos;
-  int end_pos = current_pos+deg;
+  int current_pos = drive_GetHeading();
+  int end_pos = current_pos + deg;
   bool left = false;
   bool right = false;
   current_pos = drive_GetGyroValue();
@@ -217,6 +217,7 @@ void drive_ResetGyro(){
 }
 
 void drive_SetHeading(int desired_heading){
+  printf("Setting heading: %d \n", desired_heading);
   int current_heading;
   int to_turn;
   current_heading = drive_GetHeading();

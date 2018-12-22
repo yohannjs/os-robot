@@ -139,6 +139,7 @@ void navigation_ReturnFromScanPosition(){
       printf("Not supposed to go here.\n");
   }
   current_point = MIDDLE;
+  drive_SetHeading(UP);
 }
 //should this also register objects somewhere?
 void navigation_MoveToBall(int distance_to_ball, int ball_heading){

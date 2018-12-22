@@ -28,34 +28,43 @@ int main()
     detect_Init();
     claw_Init();
 // INIT OVER
+    // drive_SetHeading(RIGHT);
+    // drive_SetHeading(LEFT);
+    // drive_SetHeading(RIGHT_DIAGONAL);
+    // drive_SetHeading(LEFT_DIAGONAL);
+
+// OTHER TESTS
     // scan_Scan360(samples, speed_scan);
     // scan_WriteSamplesToFile(samples,"template_START.txt");
-    sleep(1);
+    // sleep(1);
     // GO TO SCAN POSITION SOUTH EAST
     navigation_GoToScanPosition(SOUTH_EAST);
+    navigation_ReturnFromScanPosition();
     // sleep(1);
     // scan_Scan360(samples, speed_scan);
     // scan_WriteSamplesToFile(samples,"template_SOUTH_EAST.txt");
-    sleep(1);
+    // sleep(1);
 
     // GO TO SCAN POSITION NORTH EAST
     navigation_GoToScanPosition(NORTH_EAST);
+    navigation_ReturnFromScanPosition();
     // sleep(1);
     // scan_Scan360(samples, speed_scan);
     // scan_WriteSamplesToFile(samples,"template_NORTH_EAST.txt");
-    sleep(1);
+    // sleep(1);
 
     // GO TO SCAN POSITION NORTH WEST
     navigation_GoToScanPosition(NORTH_WEST);
+    navigation_ReturnFromScanPosition();
     // sleep(2);
     // scan_Scan360(samples, speed_scan);
     // scan_WriteSamplesToFile(samples,"template_NORTH_WEST.txt");
-    sleep(1);
+    // sleep(1);
     // GO TO SCAN POSITION SOUTH WEST
     navigation_GoToScanPosition(SOUTH_WEST);
     // sleep(1);
     // scan_Scan360(samples, speed_scan);
     // scan_WriteSamplesToFile(samples,"template_SOUTH_WEST.txt");
-    sleep(1);
+    // sleep(1);
     navigation_ReturnFromScanPosition();
 }
