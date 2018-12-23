@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdbool.h>
+
 #include "detect.h"
 #include "drive.h"
 #include "navigate.h"
@@ -111,8 +112,8 @@ void navigation_GoToScanPosition(p search_point)
         printf("Not supposed to go here.\n");
     }
   }
-  printf("current point used = %d \n", current_point);
-  printf("search point used = %d \n", search_point);
+  // printf("current point used = %d \n", current_point);
+  // printf("search point used = %d \n", search_point);
   current_point = search_point;  
 }
 

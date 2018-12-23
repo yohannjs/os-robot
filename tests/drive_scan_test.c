@@ -27,6 +27,14 @@ int main()
     navigation_Init();
     detect_Init();
     claw_Init();
+
+    // drive_SetHeadingY(UP);
+    // drive_SetHeadingY(DOWN);
+    // drive_SetHeadingY(LEFT);
+    // drive_SetHeadingY(RIGHT);
+    // drive_SetHeadingY(LEFT_DIAGONAL);
+    // drive_SetHeadingY(RIGHT_DIAGONAL);
+    // drive_SetHeadingY(UP);
 // INIT OVER
     // drive_SetHeading(RIGHT);
     // drive_SetHeading(LEFT);
@@ -34,37 +42,36 @@ int main()
     // drive_SetHeading(LEFT_DIAGONAL);
 
 // OTHER TESTS
-    // scan_Scan360(samples, speed_scan);
-    // scan_WriteSamplesToFile(samples,"template_START.txt");
-    // sleep(1);
-    // GO TO SCAN POSITION SOUTH EAST
+    // // GO TO SCAN POSITION SOUTH EAST
+    // navigation_GoToScanPosition(SOUTH_EAST);
+    // navigation_ReturnFromScanPosition();
+
+    // // GO TO SCAN POSITION NORTH EAST
+    // navigation_GoToScanPosition(NORTH_EAST);
+    // navigation_ReturnFromScanPosition();
+
+    // // GO TO SCAN POSITION NORTH WEST
+    // navigation_GoToScanPosition(NORTH_WEST);
+    // navigation_ReturnFromScanPosition();
+
+    // // GO TO SCAN POSITION SOUTH WEST
+    // navigation_GoToScanPosition(SOUTH_WEST);
+
+    // // GO BACK TO MIDDLE
+    // navigation_ReturnFromScanPosition();
+
     navigation_GoToScanPosition(SOUTH_EAST);
-    navigation_ReturnFromScanPosition();
-    // sleep(1);
-    // scan_Scan360(samples, speed_scan);
-    // scan_WriteSamplesToFile(samples,"template_SOUTH_EAST.txt");
-    // sleep(1);
 
     // GO TO SCAN POSITION NORTH EAST
     navigation_GoToScanPosition(NORTH_EAST);
-    navigation_ReturnFromScanPosition();
-    // sleep(1);
-    // scan_Scan360(samples, speed_scan);
-    // scan_WriteSamplesToFile(samples,"template_NORTH_EAST.txt");
-    // sleep(1);
+
 
     // GO TO SCAN POSITION NORTH WEST
     navigation_GoToScanPosition(NORTH_WEST);
-    navigation_ReturnFromScanPosition();
-    // sleep(2);
-    // scan_Scan360(samples, speed_scan);
-    // scan_WriteSamplesToFile(samples,"template_NORTH_WEST.txt");
-    // sleep(1);
+
     // GO TO SCAN POSITION SOUTH WEST
     navigation_GoToScanPosition(SOUTH_WEST);
-    // sleep(1);
-    // scan_Scan360(samples, speed_scan);
-    // scan_WriteSamplesToFile(samples,"template_SOUTH_WEST.txt");
-    // sleep(1);
+
+    // GO BACK TO MIDDLE
     navigation_ReturnFromScanPosition();
 }

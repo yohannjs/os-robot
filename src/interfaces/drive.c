@@ -69,7 +69,7 @@ void drive_GoDistance(int distance){
   int turn_degrees_int = (int) turn_degrees;
   set_tacho_position_sp(lsn, turn_degrees_int);
   set_tacho_position_sp(rsn, turn_degrees_int);
-  printf("turning wheels %d degrees\n", turn_degrees_int);
+  // printf("turning wheels %d degrees\n", turn_degrees_int);
   set_tacho_speed_sp( rsn, max_speed * 1 / 3 );
   set_tacho_speed_sp( lsn, max_speed * 1 / 3 );
   multi_set_tacho_command_inx(lr_sn, TACHO_RUN_TO_REL_POS );
@@ -83,29 +83,36 @@ void drive_BackDistance(int distance){
 }
 
 void drive_Turn(int deg){
-  //printf("running drive_turn\n");
+  printf("[Turn] Running drive_turn\n");
   int current_pos = drive_GetHeading();
   int end_pos = current_pos + deg;
   bool left = false;
   bool right = false;
   current_pos = drive_GetGyroValue();
-  while(current_pos > end_pos +1 || current_pos < end_pos -1){
-    //printf("in turning loop\n");
-    if (current_pos < end_pos +1 && right == false){
-      //printf("running drive_TurnLeftUntilStopped\n");
+  while(current_pos > end_pos +1 || current_pos < end_pos -1)
+  {
+    // printf("[Turn] In turning loop\n");
+    if (current_pos < end_pos +1 && right == false)
+    {
+      printf("[Turn] Running drive_TurnRightUntilStopped\n");
       drive_Stop();
       drive_TurnRightForever(60);
       right = true;
       left = false;
-    }else if (current_pos > end_pos-1 && left == false){
-      //printf("running drive_TurnRightUntilStopped\n");
+    }
+    else if (current_pos > end_pos-1 && left == false)
+    {
+      printf("[Turn] Running drive_TurnLeftUntilStopped\n");
       drive_Stop();
       drive_TurnLeftForever(60);
       left = true;
       right = false;
-    }else if(current_pos < end_pos +2 && current_pos > end_pos -2 ){
-      //printf("telling tacho to stop\n");
-      multi_set_tacho_command_inx(lr_sn, TACHO_STOP );
+    }
+    else if (current_pos < end_pos +2 && current_pos > end_pos -2 )
+    {
+      drive_Stop();
+      printf("[Turn] Telling tacho to stop\n");
+      // multi_set_tacho_command_inx(lr_sn, TACHO_STOP );
       left = false;
       right = false;
       //return;
@@ -191,23 +198,25 @@ void drive_SensorInit(){
 
 int drive_GetGyroValue(){
   int val;
-  if (ev3_search_sensor( LEGO_EV3_GYRO, &gyro_sn, 0 )){
+  if (ev3_search_sensor( LEGO_EV3_GYRO, &gyro_sn, 0 ))
+  {
     get_sensor_value( 0, gyro_sn, &val);
-    //printf("gyro value: %d\n", val);
   }
   return val;
 }
-//gyroscope can return negative heading, need to take this into account.
+// Returns heading as a number between 0 and 360.
 int drive_GetHeading(){
   int heading;
   int gyro_val;
   gyro_val = drive_GetGyroValue();
-  if (gyro_val < 0){
+  if (gyro_val < 0)
+  {
     heading = (gyro_val % 360) + 360;
-  }else{
+  }
+  else
+  {
     heading = gyro_val % 360;
   }
-  //printf("getHeading called, heading: %d\n", heading);
   return heading;
 }
 
@@ -216,20 +225,39 @@ void drive_ResetGyro(){
   set_sensor_mode(gyro_sn, "GYRO-ANG");
 }
 
-void drive_SetHeading(int desired_heading){
-  printf("Setting heading: %d \n", desired_heading);
-  int current_heading;
-  int to_turn;
-  current_heading = drive_GetHeading();
-  to_turn = desired_heading-current_heading;
-  if(to_turn > 180)
+void drive_SetHeading(int desired_heading)
+{
+  // printf("[SetHeadingY] Desired heading: %d \n", desired_heading);
+  int current_heading = drive_GetHeading();
+  // printf("[SetHeadingY] Current heading: %d \n", current_heading);
+  int degrees_to_turn = desired_heading - current_heading;
+  
+  if (degrees_to_turn > 180 || (degrees_to_turn < 0 && degrees_to_turn > -181))
   {
-    to_turn = to_turn - 360;
-  }
-  else if(to_turn < -180)
+    drive_TurnLeftForever(40);
+    // printf("[SetHeadingY] Turning left \n");
+  } 
+  else if (abs(degrees_to_turn) <= 2)
   {
-    to_turn = to_turn + 360;
+    return;
   }
-  printf("turning %d, degrees\n", to_turn);
-  drive_Turn(to_turn);
+  else
+  {
+    drive_TurnRightForever(40);
+    // printf("[SetHeadingY] Turning right \n ");
+  }
+
+  while (abs(current_heading - desired_heading) > 1)
+  {
+    // printf("[SetHeadingY] desired heading - current heading = %d \n", desired_heading - current_heading);
+    current_heading = drive_GetHeading();
+    if (abs(current_heading - desired_heading) <= 1) 
+    {
+      break;
+    }
+    // usleep(5000);
+  }
+  drive_Stop();
+  usleep(500000);
 }
+
