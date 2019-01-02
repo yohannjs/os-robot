@@ -16,11 +16,11 @@ int NUM_SAMPLES;
 int heading_ball;
 int distance_ball;
 
-int samples[360];
 int speed_scan = 3;
 
 int main()
 {
+    int samples[360];
     navigation_Init();
     detect_Init();
     claw_Init();

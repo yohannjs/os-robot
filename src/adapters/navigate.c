@@ -44,9 +44,9 @@ void navigation_Init(){
 
 void navigation_GoToScanPosition(searchpoint_distance distance, direction direction){
   drive_SetHeading(direction);
-  sleep(1);
+  sleep(5);
   drive_GoDistance(distance);
-  sleep(3);
+  sleep(5);
   current_robot_heading = direction;
   current_robot_distance = distance;
 }
@@ -71,6 +71,12 @@ void navigation_MoveToBall(int distance_to_ball, int ball_heading){
   printf("MoveToBall: going distance %d\n", ball_distance);
   drive_GoDistance(ball_distance);
   sleep(2);
+}
+
+void navigation_AdjustBallDistance(int distance_to_ball){
+  int to_move = distance_to_ball - 13;
+  drive_GoDistance(to_move);
+  ball_distance = ball_distance + to_move;
 }
 
 void navigation_ReturnToScanPosition(){
