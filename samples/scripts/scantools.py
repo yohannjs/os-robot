@@ -37,6 +37,13 @@ def loadSamples(filename, maxdistance):
             distances[i] = maxdistance
     return distances
 
+def saveSamples(samples, filename):
+    f = open(filename, "w")
+    for line in samples:
+        f.write("%d\n" % line)
+    f.close()
+    
+
 # Runs a list of samples through a simple first order filter with specifiable
 # a0 and a1.
 def filterSamples(samples, a0, a1):
@@ -46,3 +53,16 @@ def filterSamples(samples, a0, a1):
     for i in range(1, samplenumber):
         filteredsamples[i] = a0 * samples[i] + a1 * samples[i - 1]
     return filteredsamples
+
+def filterSamples2(samples, a0, a1, a2):
+    samplenumber = len(samples)
+    filteredsamples = samples.copy() 
+    filteredsamples[0] = a0 * samples[0] + a1 * samples[samplenumber - 1] + a2 * samples[samplenumber - 2]
+    for i in range(1, samplenumber):
+        filteredsamples[i] = a0 * samples[i] + a1 * samples[i - 1] + a2 * samples[i - 2]
+    return filteredsamples
+
+def spikeFilter(samples, threshold):
+  samplenumber = len(samples)
+  filteredsamples = samples.copy()
+  
