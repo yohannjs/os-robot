@@ -13,7 +13,8 @@ int main(int argc, char *argv[])
         printf("No arguments given. Exiting...\n");
         return 1;
     }
-
+    claw_Init();
+    drive_Init();
     int test = (int) argv[1][0] - 48;
     switch(test)
     {
@@ -26,6 +27,7 @@ int main(int argc, char *argv[])
             // Drop ball
             claw_Drop();
             sleep(3);
+            claw_Reset();
             break;
         case 2:
             printf("Running short throw test...\n");
