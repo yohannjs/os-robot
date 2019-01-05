@@ -40,6 +40,7 @@ void navigation_ReturnAfterThrow();
 
 void navitation_GoToDropPosition();
 void navigation_ReturnAfterDrop();
+void navigation_AdjustBallDistance(int distance_to_ball);
 //void navigation_GoToSideOfObject(direction heading, direction side );
 
 #endif

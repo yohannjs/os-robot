@@ -152,6 +152,12 @@ void navigation_MoveToBall(int distance_to_ball, int ball_heading){
   drive_GoDistance(ball_distance);
 }
 
+void navigation_AdjustBallDistance(int distance_to_ball){
+  int to_move = distance_to_ball - 13;
+  drive_GoDistance(to_move);
+  ball_distance = ball_distance + to_move;
+}
+
 void navigation_ReturnToScanPosition(){
   drive_BackDistance(ball_distance);
   printf("ReturnToScanPosition: backing %d\n", ball_distance);
