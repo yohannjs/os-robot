@@ -99,12 +99,19 @@ int scan_FindBall(int* samples, int* template, int *head, int *dist)
       int length = end_heading - start_heading;
       *head = start_heading + length / 2;
       *dist = samples[*head];
-      printf("Found ball h:%d d:%d\n", *head, *dist);
-      
-      //return 0; 
+
+      printf("Found ball at heading: %d and distance: %d\n", *head, *dist);
+      // return 0; 
     }
   }
-  return 1;
+  if (end_heading == 0) 
+  {
+    return 1;
+  } 
+  else 
+  {
+    return 0;
+  }
 }
 
 int scan_LoadSamples(char *file_name, int *samples)
@@ -121,7 +128,7 @@ int scan_LoadSamples(char *file_name, int *samples)
   {
     int val; 
     fscanf(f, "%d", &val);
-    printf("%d\n", val);
+    // printf("%d\n", val);
     samples[i] = val;
   }
   fclose(f);
