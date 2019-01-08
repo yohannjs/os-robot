@@ -169,3 +169,38 @@ int scan_FindBallHeading(int NUM_SAMPLES, int* head, int* dist){
   fclose(f);
   return 0;
 }
+
+int scan_FindBall2(int* samples, int threshold, int *head, int *dist)
+{
+  int min_length = 20;
+  int diff[360];
+  
+  int start_heading;
+  int end_heading = 0;
+  for (int i=0; i<360; i++)
+  {
+    start_heading = i;
+    while (diff[i] <= threshold)
+    {
+      end_heading = i;
+      i++;
+    }
+    if (end_heading > start_heading + min_length)
+    {
+      int length = end_heading - start_heading;
+      *head = start_heading + length / 2;
+      *dist = samples[*head];
+      
+      printf("Found ball at heading: %d and distance: %d\n", *head, *dist);
+      // return 0;
+    }
+  }
+  if (end_heading == 0)
+  {
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
+}
