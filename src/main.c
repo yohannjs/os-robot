@@ -1,16 +1,18 @@
 // // Include standard C-libraries
 // #include <stdio.h>
+// #include <stdint.h>
 // #include "navigate.h"
 // #include "scan.h"
+// #include "claw.h"
 
 // // Include project header files
 
 // #define Sleep( msec ) usleep(( msec ) * 1000 )
 
-// #define STATE_SEARCH_BALL 1
-// #define STATE_BALL_GRAB 2
-// #define STATE_SEARCH_GOAL 3
-// #define STATE_BALL_SCORE 4
+// #define STATE_INIT 1
+// #define STATE_SEARCH 2
+// #define STATE_GRAB 3
+// #define STATE_SCORE 4
 
 // static int state;
 // static int* ball_heading;
