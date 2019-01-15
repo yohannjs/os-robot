@@ -138,10 +138,10 @@ void drive_TurnDegrees(int deg, int speed){
   set_tacho_speed_sp(lsn, max_speed * speed/100);
   set_tacho_speed_sp(rsn, max_speed * speed/100);
   multi_set_tacho_command_inx(lr_sn, TACHO_RUN_TO_REL_POS);
-  while(drive_MotorStatus()){
-    usleep(100000);
-  }
-  usleep(300000);
+  //while(drive_MotorStatus()){
+  //  usleep(100000);
+  //}
+  //usleep(300000);
 }
 
 void drive_TurnLeftForever(int speed){
@@ -231,12 +231,12 @@ void drive_SetHeading(int desired_heading)
   int current_heading = drive_GetHeading();
   // printf("[SetHeadingY] Current heading: %d \n", current_heading);
   int degrees_to_turn = desired_heading - current_heading;
-  
+
   if (degrees_to_turn > 180 || (degrees_to_turn < 0 && degrees_to_turn > -181))
   {
     drive_TurnLeftForever(40);
     // printf("[SetHeadingY] Turning left \n");
-  } 
+  }
   else if (abs(degrees_to_turn) <= 2)
   {
     return;
@@ -251,7 +251,7 @@ void drive_SetHeading(int desired_heading)
   {
     // printf("[SetHeadingY] desired heading - current heading = %d \n", desired_heading - current_heading);
     current_heading = drive_GetHeading();
-    if (abs(current_heading - desired_heading) <= 1) 
+    if (abs(current_heading - desired_heading) <= 1)
     {
       break;
     }
@@ -260,4 +260,3 @@ void drive_SetHeading(int desired_heading)
   drive_Stop();
   usleep(500000);
 }
-
