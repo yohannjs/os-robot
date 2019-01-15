@@ -21,7 +21,7 @@ static int ball_heading;
 static int ball_distance;
 p prev_point = SOUTH_WEST;
 const int start_threshold = 250;
-const int corner_threshold = 100; 
+const int corner_threshold = 100;
 const int side_threshold = 200;
 
 
@@ -60,6 +60,7 @@ void handler(uint16_t command, uint16_t value)
             navigation_GoToThrowPosition();
             claw_Throw();
             //send some kind of score message
+            sleep(1);
             claw_Grab();
             claw_Throw();
             navigation_ReturnAfterThrow();
@@ -78,8 +79,8 @@ void handler(uint16_t command, uint16_t value)
                     {
                         printf("FOUND BALL! \n");
                         state = STATE_GRAB;
-                    } 
-                    else 
+                    }
+                    else
                     {
                         printf("Ball not found. \n");
                         state = STATE_SEARCH;
@@ -94,13 +95,13 @@ void handler(uint16_t command, uint16_t value)
                     {
                         printf("FOUND BALL! \n");
                         state = STATE_GRAB;
-                    } 
-                    else 
+                    }
+                    else
                     {
                         printf("Ball not found. \n");
                         state = STATE_SEARCH;
                     }
-                    prev_point = SOUTH_WEST;
+                    prev_point = SOUTH_EAST;
                     break;
 
                 case SOUTH_EAST:
@@ -110,13 +111,13 @@ void handler(uint16_t command, uint16_t value)
                     {
                         printf("FOUND BALL! \n");
                         state = STATE_GRAB;
-                    } 
-                    else 
+                    }
+                    else
                     {
                         printf("Ball not found. \n");
                         state = STATE_SEARCH;
                     }
-                    prev_point = MIDDLE;
+                    prev_point = NORTH_EAST;
                     break;
 
                 case NORTH_EAST:
@@ -126,13 +127,13 @@ void handler(uint16_t command, uint16_t value)
                     {
                         printf("FOUND BALL! \n");
                         state = STATE_GRAB;
-                    } 
-                    else 
+                    }
+                    else
                     {
                         printf("Ball not found. \n");
                         state = STATE_SEARCH;
                     }
-                    prev_point = SOUTH_EAST;
+                    prev_point = NORTH_WEST;
                     break;
 
                 case NORTH_WEST:
@@ -142,13 +143,13 @@ void handler(uint16_t command, uint16_t value)
                     {
                         printf("FOUND BALL! \n");
                         state = STATE_GRAB;
-                    } 
-                    else 
+                    }
+                    else
                     {
                         printf("Ball not found. \n");
                         state = STATE_SEARCH;
                     }
-                    prev_point = NORTH_EAST;
+                    prev_point = SOUTH_WEST;
                     break;
 
                 case SOUTH_WEST:
@@ -158,13 +159,13 @@ void handler(uint16_t command, uint16_t value)
                     {
                         printf("FOUND BALL! \n");
                         state = STATE_GRAB;
-                    } 
-                    else 
+                    }
+                    else
                     {
                         printf("Ball not found. \n");
                         state = STATE_SEARCH;
                     }
-                    prev_point = NORTH_WEST;
+                    prev_point = MIDDLE;
                     break;
 
             }
@@ -180,7 +181,7 @@ void handler(uint16_t command, uint16_t value)
                 printf("could not grab ball\n");
                 navigation_ReturnToScanPosition();
                 state = STATE_SEARCH;
-            } 
+            }
             else
             {
                 state = STATE_SCORE;
