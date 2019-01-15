@@ -21,7 +21,6 @@ static int* ball_heading;
 static int* ball_distance;
 p prev_point = SOUTH_WEST;
 
-
 void handler(uint16_t command, uint16_t value)
 {
     // Handle commands not dependent on state (communication w/ server)
@@ -70,8 +69,8 @@ void handler(uint16_t command, uint16_t value)
             switch (prev_point)
             {
                 case UNINIT:
-                    scan_Scan360();
-                    if(scan_FindBall(samples, template_START, &heading_ball, &distance_ball) == 0)
+                    scan_Scan360(samples, 3);
+                    if(scan_FindBall(samples, template_START, &ball_heading, &ball_distance) == 0)
                     {
                         printf("FOUND BALL! \n");
                         state = STATE_GRAB;
@@ -86,8 +85,8 @@ void handler(uint16_t command, uint16_t value)
 
                 case MIDDLE:
                     navigation_GoToScanPosition(SOUTH_EAST);
-                    scan_Scan360();
-                    if(scan_FindBall(samples, template_SOUTH_EAST, &heading_ball, &distance_ball) == 0)
+                    scan_Scan360(samples, 3);
+                    if(scan_FindBall2(samples, 30, &ball_heading, &ball_distance)
                     {
                         printf("FOUND BALL! \n");
                         state = STATE_GRAB;
@@ -102,8 +101,8 @@ void handler(uint16_t command, uint16_t value)
 
                 case SOUTH_EAST:
                     navigation_GoToScanPosition(NORTH_EAST);
-                    scan_Scan360();
-                    if(scan_FindBall(samples, template_NORTH_EAST, &heading_ball, &distance_ball) == 0)
+                    scan_Scan360(samples, 3);
+                    if(scan_FindBall2(samples, 20, &ball_heading, &ball_distance) == 0)
                     {
                         printf("FOUND BALL! \n");
                         state = STATE_GRAB;
@@ -118,8 +117,8 @@ void handler(uint16_t command, uint16_t value)
 
                 case NORTH_EAST:
                     navigation_GoToScanPosition(NORTH_WEST);
-                    scan_Scan360();
-                    if(scan_FindBall(samples, template_NORTH_WEST, &heading_ball, &distance_ball) == 0)
+                    scan_Scan360(samples, 3);
+                    if(scan_FindBall2(samples, 20, &ball_heading, &ball_distance) == 0)
                     {
                         printf("FOUND BALL! \n");
                         state = STATE_GRAB;
@@ -134,8 +133,8 @@ void handler(uint16_t command, uint16_t value)
 
                 case NORTH_WEST:
                     navigation_GoToScanPosition(SOUTH_WEST);
-                    scan_Scan360();
-                    if(scan_FindBall(samples, template_SOUTH_WEST, &heading_ball, &distance_ball) == 0)
+                    scan_Scan360(samples, 3);
+                    if(scan_FindBall2(samples, 20, &ball_heading, &ball_distance) == 0)
                     {
                         printf("FOUND BALL! \n");
                         state = STATE_GRAB;
@@ -150,8 +149,8 @@ void handler(uint16_t command, uint16_t value)
 
                 case SOUTH_WEST:
                     navigation_GoToScanPosition(MIDDLE);
-                    scan_Scan360();
-                    if(scan_FindBall(samples, template_MIDDLE, &heading_ball, &distance_ball) == 0)
+                    scan_Scan360(samples, 3);
+                    if(scan_FindBall2(samples, 20, &ball_heading, &ball_distance) == 0)
                     {
                         printf("FOUND BALL! \n");
                         state = STATE_GRAB;
@@ -169,8 +168,8 @@ void handler(uint16_t command, uint16_t value)
 
         case STATE_GRAB:
             /* code */
-            navigation_MoveToBall(ball_distance, ball_heading);
-            adjust_distance = detect_GetDistance();
+            navigation_MoveToBall(*ball_distance, *ball_heading);
+            int adjust_distance = detect_GetDistance();
             navigation_AdjustBallDistance(adjust_distance);
             if(claw_TakeBall())
             {
