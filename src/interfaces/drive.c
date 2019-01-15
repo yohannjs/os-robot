@@ -141,10 +141,6 @@ void drive_TurnDegrees(int deg, int speed){
   set_tacho_speed_sp(lsn, max_speed * speed/100);
   set_tacho_speed_sp(rsn, max_speed * speed/100);
   multi_set_tacho_command_inx(lr_sn, TACHO_RUN_TO_REL_POS);
-  //while(drive_MotorStatus()){
-  //  usleep(100000);
-  //}
-  //usleep(300000);
 }
 
 void drive_TurnLeftForever(int speed){
