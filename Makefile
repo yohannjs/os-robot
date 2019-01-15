@@ -21,8 +21,8 @@ defines = -D _DEFAULT_SOURCE
 # Other libraries
 libraries = -lrt -lpthread
 
-CC=arm-linux-gnueabi-gcc
-CFLAGS= -O2 -g -std=gnu99 -W -Wall -Wno-comment $(includes) $(libraries) $(defines)
+CC = arm-linux-gnueabi-gcc
+CFLAGS = -O2 -g -std=gnu99 -W -Wall -Wno-comment $(includes) $(libraries) $(defines)
 
 # Make both main file and tests if nothing else is specified
 all: main tests

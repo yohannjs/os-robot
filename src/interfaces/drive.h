@@ -18,8 +18,10 @@ void drive_TurnLeft(int deg);
 void drive_GoDistance(int distance);
 void drive_BackDistance(int distance);
 int drive_MotorStatus(); //returns 0 if motor is not driving, 1 otherwise.
+void drive_SetHeading(int desired_heading);
 //drive functions for internal use
 void drive_Turn(int deg);
+
 void drive_TurnRightForever(int speed);
 void drive_TurnLeftForever(int speed);
 void drive_GoForward();
@@ -28,7 +30,6 @@ void drive_Stop();
 //sensor functions
 int drive_GetGyroValue();
 int drive_GetHeading();
-void drive_SetHeading(int heading);
 void drive_ResetGyro();
 
 #endif
