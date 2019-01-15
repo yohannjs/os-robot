@@ -63,6 +63,9 @@ int drive_MotorStatus(){
   }
 }
 void drive_GoDistance(int distance){
+  if (distance == 0){
+    return;
+  }
   double wheel_r = 2.7;
   double dist_per_degree = (2*wheel_r*3.14159)/360;
   double turn_degrees = distance / dist_per_degree;
