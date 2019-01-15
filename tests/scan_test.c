@@ -35,10 +35,10 @@ int main(int argc, char **argv)
         //sleep(3);
         int samples[360];
         int threshold = 200;
-        //scan_Scan360( samples, 3 );
+        scan_Scan360( samples, 3 );
         printf("Done with scan, moving to file \n");
         printf(argv[1]);
-        //scan_FindBall2(samples, threshold, &heading, &distance);
+        scan_FindBall2(samples, threshold, &heading, &distance);
         scan_WriteSamplesToFile( samples, argv[1] );
         //navigation_MoveToBall(distance, heading);
         //int adjustDistance;
