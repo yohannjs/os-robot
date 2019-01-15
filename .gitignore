@@ -1,3 +1,4 @@
 *.swp
-src/test
-src/main
+*.o 
+bin/
+samples/scripts/__pycache__
