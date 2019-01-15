@@ -13,13 +13,13 @@ obj = $(src:.c=.o)
 exe_tst = $(patsubst tests/%.c, bin/%, $(wildcard tests/*.c))
 
 # Header file includes
-includes = -I./lib -I./src/interfaces -I./src/adapters
+includes = -I./lib -I./src/interfaces -I./src/adapters -I./lib/ev3_link 
 
 # Project wide defines
 defines = -D _DEFAULT_SOURCE
 
 # Other libraries
-libraries = -lrt -lpthread
+libraries = -lrt -lpthread -lev3dev-c
 
 CC = arm-linux-gnueabi-gcc
 CFLAGS = -O2 -g -std=gnu99 -W -Wall -Wno-comment $(includes) $(libraries) $(defines)
