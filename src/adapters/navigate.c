@@ -43,7 +43,7 @@ void navigation_GoToScanPosition(p search_point)
         drive_GoDistance(MID_SIDE);
         break;
       default:
-        printf("Not supposed to go here.\n");
+        printf("Already here.\n");
     }
   }
   else if(current_point == SOUTH_EAST)
