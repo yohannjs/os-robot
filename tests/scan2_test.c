@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     else if (argc == 2) 
     {
         int threshold = 200;
-        scan_Scan360( samples, 3 );
+        scan_Scan360( samples);
         printf("Done with scan, moving to file \n");
         // printf(argv[1]);
         scan_FindBall2(samples, threshold, &heading, &distance);
