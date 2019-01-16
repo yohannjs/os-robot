@@ -18,11 +18,12 @@ typedef enum dist{
 } searchpoint_distance;
 
 typedef enum {
+  MIDDLE = 0,
   SOUTH_EAST = 1,
   NORTH_EAST = 2,
   NORTH_WEST = 3,
   SOUTH_WEST = 4,
-  MIDDLE = 5,
+  UNINIT = 5,
 } p;
 
 void navigation_Init();
