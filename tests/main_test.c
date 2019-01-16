@@ -200,6 +200,7 @@ void handler(uint16_t command, uint16_t value)
             navigation_ReturnFromScanPosition();
             // NEED TO CHECK BATTERY LEVEL HERE
             navigation_GoToThrowPosition();
+            Sleep(1);
             claw_Throw();
             //send some kind of score message
             navigation_ReturnAfterThrow();
