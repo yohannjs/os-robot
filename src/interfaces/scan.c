@@ -175,6 +175,8 @@ int scan_FindBall2(int* samples, int threshold, int *head, int *dist)
   int min_length = 20; 
   int start_heading;
   int end_heading = 0;
+  *head = 0;
+  *dist = 0;
   for (int i=0; i<360; i++)
   {
     start_heading = i;
