@@ -32,7 +32,7 @@ int main(int argc, char **argv)
         navigation_GoToScanPosition(MIDDLE, UP);
         sleep(3);
         int samples[360];
-        scan_Scan360( samples, 3 );
+        scan_Scan360(samples);
         scan_WriteSamplesToFile( samples, argv[1] );
     }
     else

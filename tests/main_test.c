@@ -73,7 +73,7 @@ void handler(uint16_t command, uint16_t value)
             switch (prev_point)
             {
                 case UNINIT:
-                    scan_Scan360(samples, 3);
+                    scan_Scan360(samples);
                     // if(scan_FindBall(samples, template_START, &ball_heading, &ball_distance) == 0) // Should use template here in game
                     scan_FindBall2(samples, start_threshold, &ball_heading, &ball_distance);
                     if(ball_heading == 0 && ball_distance == 0)
@@ -91,7 +91,7 @@ void handler(uint16_t command, uint16_t value)
 
                 case MIDDLE:
                     navigation_GoToScanPosition(SOUTH_EAST);
-                    scan_Scan360(samples, 3);
+                    scan_Scan360(samples);
                     scan_FindBall2(samples, side_threshold, &ball_heading, &ball_distance);
                     if(ball_heading == 0 && ball_distance == 0)
                     {
@@ -108,7 +108,7 @@ void handler(uint16_t command, uint16_t value)
 
                 case SOUTH_EAST:
                     navigation_GoToScanPosition(NORTH_EAST);
-                    scan_Scan360(samples, 3);
+                    scan_Scan360(samples);
                     scan_FindBall2(samples, corner_threshold, &ball_heading, &ball_distance);
                     if(ball_heading == 0 && ball_distance == 0)
                     {
@@ -125,7 +125,7 @@ void handler(uint16_t command, uint16_t value)
 
                 case NORTH_EAST:
                     navigation_GoToScanPosition(NORTH_WEST);
-                    scan_Scan360(samples, 3);
+                    scan_Scan360(samples);
                     scan_FindBall2(samples, corner_threshold, &ball_heading, &ball_distance);
                     if(ball_heading == 0 && ball_distance == 0)
                     {
@@ -142,7 +142,7 @@ void handler(uint16_t command, uint16_t value)
 
                 case NORTH_WEST:
                     navigation_GoToScanPosition(SOUTH_WEST);
-                    scan_Scan360(samples, 3);
+                    scan_Scan360(samples);
                     scan_FindBall2(samples, side_threshold, &ball_heading, &ball_distance);
                     if(ball_heading == 0 && ball_distance == 0)
                     {
@@ -159,7 +159,7 @@ void handler(uint16_t command, uint16_t value)
 
                 case SOUTH_WEST:
                     navigation_GoToScanPosition(MIDDLE);
-                    scan_Scan360(samples, 3);
+                    scan_Scan360(samples);
                     scan_FindBall2(samples, start_threshold, &ball_heading, &ball_distance);
                     if((ball_heading == 0) && (ball_distance == 0))
                     {

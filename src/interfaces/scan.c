@@ -6,13 +6,13 @@
 #include "drive.h"
 #include "detect.h"
 
-int scan_Scan360(int* samples, int speed)
+int scan_Scan360(int* samples)
 {
   //FILE* f;
   //f = fopen("samples.txt", "w");
   int heading = drive_GetHeading();
   //int new_samples[360];
-  drive_TurnRightForever(speed);
+  drive_TurnRightForever(30);
     
   for (int i=0; i<360; i++)
   {
