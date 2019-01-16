@@ -12,7 +12,7 @@ int scan_Scan360(int* samples, int speed)
   //f = fopen("samples.txt", "w");
   int heading = drive_GetHeading();
   //int new_samples[360];
-  drive_TurnDegrees(365, speed);
+  drive_TurnRightForever(speed);
     
   for (int i=0; i<360; i++)
   {
@@ -27,6 +27,8 @@ int scan_Scan360(int* samples, int speed)
     } while (current_heading == heading);
     samples[current_heading] = sum / num;
   }
+
+  drive_Stop();
   //samples = new_samples;
   //int heading;
   //while(get)
