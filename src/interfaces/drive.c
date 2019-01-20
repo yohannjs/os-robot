@@ -231,14 +231,14 @@ void drive_SetHeading(int desired_heading)
   // printf("[SetHeadingY] Current heading: %d \n", current_heading);
   int degrees_to_turn = desired_heading - current_heading;
 
-  if (degrees_to_turn > 180 || (degrees_to_turn < 0 && degrees_to_turn > -181))
+  if (abs(degrees_to_turn) <= 1)
+  {
+    return;
+  }
+  else if (degrees_to_turn > 180 || (degrees_to_turn < 0 && degrees_to_turn > -181))
   {
     drive_TurnLeftForever(40);
     // printf("[SetHeadingY] Turning left \n");
-  }
-  else if (abs(degrees_to_turn) <= 2)
-  {
-    return;
   }
   else
   {

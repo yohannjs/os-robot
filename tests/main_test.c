@@ -58,11 +58,11 @@ void handler(uint16_t command, uint16_t value)
             int samples[360];
 
             navigation_GoToThrowPosition();
-            Sleep(500)
+            Sleep(500);
             claw_Throw();
             //send some kind of score message
             claw_TakeBall();
-            Sleep(500)
+            Sleep(500);
             claw_Throw();
             navigation_ReturnAfterThrow();
             state = STATE_SEARCH;
