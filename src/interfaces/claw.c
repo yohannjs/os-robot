@@ -8,7 +8,7 @@
 #include "ev3_sensor.h"
 #include "claw.h"
 
-#define Sleep( msec ) usleep(( msec ) * 1000 )
+#include "utils.h"
 
 // big motor parameters
 uint8_t big_motor;
@@ -36,7 +36,7 @@ int claw_Init()
   }
   
   while ( ev3_tacho_init() < 1 ){
-    sleep( 10 );
+    utils_Sleep( 10 );
     printf("looking for taco\n");
   }
   
@@ -150,7 +150,7 @@ int claw_Throw()
     get_tacho_state_flags   ( small_motor, &state_small_motor     );
   } while ( state_small_motor != 0 );
   
-  claw_Reset();
+  //claw_Reset();
   return 0;
 }
 
@@ -183,9 +183,11 @@ int claw_Drop()
 int claw_TakeBall()
 {
   claw_Lower();
+  utils_Sleep(500);
   claw_Grab();
-  printf("is claw holding ball? %d \n", claw_HoldsBall());
-  return claw_HoldsBall();
+  int holds = claw_HoldsBall();
+  printf("is claw holding ball? %d \n", holds);
+  return holds;
 }
 
 int claw_Reset()
