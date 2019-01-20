@@ -11,7 +11,7 @@
 // static const int START_X = 60;
 // static const int START_Y = 27;//changed must measure and change
 
-static const int START_THROWLINE_OFFSET = 24;//changed 17/12 from 28 to 24
+static const int START_THROWLINE_OFFSET = 24;
 static int ball_distance = 0;
 static int ball_direction = 0;
 static p current_point = MIDDLE;
@@ -43,7 +43,7 @@ void navigation_GoToScanPosition(p search_point)
         drive_GoDistance(MID_SIDE);
         break;
       default:
-        printf("Already here.\n");
+        printf("[NAVIGATE] Already here.\n");
     }
   }
   else if(current_point == SOUTH_EAST)
@@ -62,7 +62,7 @@ void navigation_GoToScanPosition(p search_point)
         drive_SetHeading(LEFT);
         drive_GoDistance(MID_SIDE);
       default:
-        printf("Not supposed to go here.\n");
+        printf("[NAVIGATE] Not supposed to go here.\n");
 
     }
   }
@@ -79,7 +79,7 @@ void navigation_GoToScanPosition(p search_point)
         drive_GoDistance(EAST_WEST);
         break;
       default:
-        printf("Not supposed to go here.\n");
+        printf("[NAVIGATE] Not supposed to go here.\n");
         break;
     }
   }
@@ -96,7 +96,7 @@ void navigation_GoToScanPosition(p search_point)
         drive_GoDistance(NORTH_SOUTH);
         break;
       default:
-        printf("Not supposed to go here.\n");
+        printf("[NAVIGATE] Not supposed to go here.\n");
     }
   }
   else if(current_point == SOUTH_WEST)
@@ -115,7 +115,7 @@ void navigation_GoToScanPosition(p search_point)
         drive_SetHeading(RIGHT);
         drive_GoDistance(MID_SIDE);
       default:
-        printf("Not supposed to go here.\n");
+        printf("[NAVIGATE] Not supposed to go here.\n");
     }
   }
   // printf("current point used = %d \n", current_point);
@@ -143,7 +143,7 @@ void navigation_ReturnFromScanPosition(){
       drive_BackDistance(MID_SIDE);
       break;
     default:
-      printf("Not supposed to go here.\n");
+      printf("[NAVIGATE] Not supposed to go here.\n");
   }
   current_point = MIDDLE;
   drive_SetHeading(UP);
@@ -152,21 +152,22 @@ void navigation_ReturnFromScanPosition(){
 void navigation_MoveToBall(int distance_to_ball, int ball_heading){
   ball_distance = distance_to_ball-13;
   ball_direction = ball_heading;
-  printf("MoveToBall: setting heading %d\n", ball_direction);
+  printf("[NAVIGATE] MoveToBall: setting heading %d\n", ball_direction);
   drive_SetHeading(ball_heading);
-  printf("MoveToBall: going distance %d\n", ball_distance);
+  printf("[NAVIGATE] MoveToBall: going distance %d\n", ball_distance);
   drive_GoDistance(ball_distance);
 }
 
 void navigation_AdjustBallDistance(int distance_to_ball){
   int to_move = distance_to_ball - 13;
+  Sleep(300);
   drive_GoDistance(to_move);
   ball_distance = ball_distance + to_move;
 }
 
 void navigation_ReturnToScanPosition(){
   drive_BackDistance(ball_distance);
-  printf("ReturnToScanPosition: backing %d\n", ball_distance);
+  printf("[NAVIGATE] ReturnToScanPosition: backing %d\n", ball_distance);
 }
 
 void navigation_GoToThrowPosition(){
