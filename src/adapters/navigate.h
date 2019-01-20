@@ -13,8 +13,8 @@ typedef enum dir{
 typedef enum dist{
   MID_SIDE = 20,
   EAST_WEST = 40,
-  NORTH_SOUTH = 30,
-  DIAGONAL = 36,
+  NORTH_SOUTH = 20,
+  DIAGONAL = 28,
 } searchpoint_distance;
 
 typedef enum {
