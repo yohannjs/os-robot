@@ -8,8 +8,8 @@ typedef enum dir{
   LEFT = 270,
   UP = 0,
   DOWN = 180,
-  LEFT_DIAGONAL = 320,
-  RIGHT_DIAGONAL = 40,
+  LEFT_DIAGONAL = 315,
+  RIGHT_DIAGONAL = 45,
 } direction;
 
 typedef enum dist{
