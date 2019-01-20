@@ -1,13 +1,15 @@
 #ifndef NAVIGATE_H
 #define NAVIGATE_H
+#include <math.h>
+
 
 typedef enum dir{
   RIGHT = 90,
   LEFT = 270,
   UP = 0,
   DOWN = 180,
-  LEFT_DIAGONAL = 326,
-  RIGHT_DIAGONAL = 34,
+  LEFT_DIAGONAL = 320,
+  RIGHT_DIAGONAL = 40,
 } direction;
 
 typedef enum dist{
