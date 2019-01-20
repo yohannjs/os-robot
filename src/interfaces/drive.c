@@ -66,6 +66,12 @@ int drive_MotorStatus(){
 void drive_GoDistance(int distance){
   if (distance == 0){
     return;
+  }else if (abs(distance) < 10){
+    set_tacho_speed_sp( rsn, max_speed * 1 / 5 );
+    set_tacho_speed_sp( lsn, max_speed * 1 / 5 );
+  }else{
+    set_tacho_speed_sp( rsn, max_speed * 1 / 3 );
+    set_tacho_speed_sp( lsn, max_speed * 1 / 3 );
   }
   double wheel_r = 2.7;
   double dist_per_degree = (2*wheel_r*3.14159)/360;
@@ -74,11 +80,9 @@ void drive_GoDistance(int distance){
   set_tacho_position_sp(lsn, turn_degrees_int);
   set_tacho_position_sp(rsn, turn_degrees_int);
   // printf("turning wheels %d degrees\n", turn_degrees_int);
-  set_tacho_speed_sp( rsn, max_speed * 1 / 3 );
-  set_tacho_speed_sp( lsn, max_speed * 1 / 3 );
   multi_set_tacho_command_inx(lr_sn, TACHO_RUN_TO_REL_POS );
   while(drive_MotorStatus()){
-    usleep(100);
+    usleep(1000);
   }
 }
 
