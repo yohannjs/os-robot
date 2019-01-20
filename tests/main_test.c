@@ -6,10 +6,11 @@
 #include "scan.h"
 #include "claw.h"
 #include "detect.h"
+#include "utils.h"
 
 // Include project header files
 
-#define Sleep( msec ) usleep(( msec ) * 1000 )
+
 
 #define STATE_INIT 1
 #define STATE_SEARCH 2
@@ -58,11 +59,11 @@ void handler(uint16_t command, uint16_t value)
             int samples[360];
 
             navigation_GoToThrowPosition();
-            Sleep(500);
+            utils_Sleep(500);
             claw_Throw();
             //send some kind of score message
             claw_TakeBall();
-            Sleep(500);
+            utils_Sleep(500);
             claw_Throw();
             navigation_ReturnAfterThrow();
             state = STATE_SEARCH;
@@ -202,7 +203,7 @@ void handler(uint16_t command, uint16_t value)
             navigation_ReturnFromScanPosition();
             // NEED TO CHECK BATTERY LEVEL HERE
             navigation_GoToThrowPosition();
-            Sleep(500);
+            utils_Sleep(500);
             claw_Throw();
             //send some kind of score message
             navigation_ReturnAfterThrow();

@@ -9,6 +9,7 @@
 #include "ev3_tacho.h"
 #include "ev3_sensor.h"
 #include "drive.h"
+#include "utils.h"
 
 #define DEG_TO_LIN 2.5
 #define RIGHT_PORT 67
@@ -34,7 +35,7 @@ int drive_InitTachos(){
     return ( 1 );
   }
   while ( ev3_tacho_init() < 1 ){
-    sleep( 1000 );
+    utils_Sleep( 100 );
     printf("looking for taco\n");
   }
   if (ev3_search_tacho_plugged_in( RIGHT_PORT,0 , &rsn, 0 )){
@@ -230,6 +231,7 @@ void drive_SetHeading(int desired_heading)
   int current_heading = drive_GetHeading();
   // printf("[SetHeadingY] Current heading: %d \n", current_heading);
   int degrees_to_turn = desired_heading - current_heading;
+  char* direction;
 
   if (abs(degrees_to_turn) <= 1)
   {

@@ -7,6 +7,7 @@
 #include "detect.h"
 #include "drive.h"
 #include "navigate.h"
+#include "utils.h"
 
 // static const int START_X = 60;
 // static const int START_Y = 27;//changed must measure and change
@@ -160,7 +161,7 @@ void navigation_MoveToBall(int distance_to_ball, int ball_heading){
 
 void navigation_AdjustBallDistance(int distance_to_ball){
   int to_move = distance_to_ball - 13;
-  Sleep(300);
+  utils_Sleep(300);
   drive_GoDistance(to_move);
   ball_distance = ball_distance + to_move;
 }
