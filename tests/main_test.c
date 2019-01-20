@@ -6,15 +6,17 @@
 #include "scan.h"
 #include "claw.h"
 #include "detect.h"
+#include "utils.h"
 
 // Include project header files
 
-#define Sleep( msec ) usleep(( msec ) * 1000 )
 
 #define STATE_INIT 1
 #define STATE_SEARCH 2
 #define STATE_GRAB 3
 #define STATE_SCORE 4
+
+static const char *mn = "  MAIN  ";
 
 static int state;
 int ball_heading;
@@ -198,12 +200,18 @@ void handler(uint16_t command, uint16_t value)
         case STATE_SCORE:
             /* code */
             navigation_ReturnFromScanPosition();
-            // NEED TO CHECK BATTERY LEVEL HERE
-            navigation_GoToThrowPosition();
-            Sleep(1);
-            claw_Throw();
-            //send some kind of score message
-            navigation_ReturnAfterThrow();
+            if (utils_Battery() >= 750)
+            {
+                navigation_GoToThrowPosition();
+                utils_Sleep(1);
+                claw_Throw();
+                //send some kind of score message
+                navigation_ReturnAfterThrow();
+            }
+            else
+            {
+                utils_Err(mn, "Not enough battery to throw");
+            }
             state = STATE_SEARCH;
             break;
     }
