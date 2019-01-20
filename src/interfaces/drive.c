@@ -226,9 +226,9 @@ void drive_ResetGyro(){
 
 void drive_SetHeading(int desired_heading)
 {
-  // printf("[SetHeadingY] Desired heading: %d \n", desired_heading);
+  printf("[SetHeading] Desired heading: %d \n", desired_heading);
   int current_heading = drive_GetHeading();
-  // printf("[SetHeadingY] Current heading: %d \n", current_heading);
+  printf("[SetHeading] Current heading: %d \n", current_heading);
   int degrees_to_turn = desired_heading - current_heading;
 
   if (abs(degrees_to_turn) <= 1)
@@ -237,12 +237,12 @@ void drive_SetHeading(int desired_heading)
   }
   else if (degrees_to_turn > 180 || (degrees_to_turn < 0 && degrees_to_turn > -181))
   {
-    drive_TurnLeftForever(35);
+    drive_TurnLeftForever(30);
     // printf("[SetHeadingY] Turning left \n");
   }
   else
   {
-    drive_TurnRightForever(35);
+    drive_TurnRightForever(30);
     // printf("[SetHeadingY] Turning right \n ");
   }
 
@@ -250,6 +250,7 @@ void drive_SetHeading(int desired_heading)
   {
     // printf("[SetHeadingY] desired heading - current heading = %d \n", desired_heading - current_heading);
     current_heading = drive_GetHeading();
+    printf("[SetHeading] Current heading: %d \n", current_heading);
     if (abs(current_heading - desired_heading) <= 1)
     {
       break;
