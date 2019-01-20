@@ -8,10 +8,10 @@ int main(){
   {
     printf("Initialized claw \n");
   } else return -1;
-  if (claw_TakeBall()==1)
-  {
-    sleep(1);
-    printf("Ball caught \n");
+  //if (claw_TakeBall()==1)
+  //{
+    //sleep(1);
+    //printf("Ball caught \n");
     claw_Throw();
     // claw_Drop();
     // sleep(1);
