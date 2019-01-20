@@ -1,21 +1,22 @@
 #ifndef NAVIGATE_H
 #define NAVIGATE_H
+#include <math.h>
+
+typedef enum dist{
+  MID_SIDE = 25,
+  EAST_WEST = 50,
+  NORTH_SOUTH = 30,
+  DIAGONAL = 39,
+} searchpoint_distance; 
 
 typedef enum dir{
   RIGHT = 90,
   LEFT = 270,
   UP = 0,
   DOWN = 180,
-  LEFT_DIAGONAL = 326,
-  RIGHT_DIAGONAL = 34,
+  LEFT_DIAGONAL = 320,
+  RIGHT_DIAGONAL = 40,
 } direction;
-
-typedef enum dist{
-  MID_SIDE = 20,
-  EAST_WEST = 40,
-  NORTH_SOUTH = 30,
-  DIAGONAL = 36,
-} searchpoint_distance;
 
 typedef enum {
   MIDDLE = 0,

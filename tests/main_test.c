@@ -20,9 +20,9 @@ static int state;
 int ball_heading;
 int ball_distance;
 p prev_point = SOUTH_WEST;
-const int start_threshold = 250;
+const int start_threshold = 300;
 const int corner_threshold = 150;
-const int side_threshold = 200;
+const int side_threshold = 180;
 
 
 void handler(uint16_t command, uint16_t value)
