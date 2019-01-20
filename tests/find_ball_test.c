@@ -51,7 +51,7 @@ int main(int argc, char **argv)
     
     if (argc == 1) 
     {
-        scan_Scan360(samples_START, speed_scan);
+        scan_Scan360(samples_START);
         sleep(1);
         for (int i = 0; i < 360; i++)
         {
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
     }
     else if (argc == 2)
     {
-        scan_Scan360(samples_START, speed_scan);
+        scan_Scan360(samples_START);
         sleep(1);
         if(scan_FindBall(samples_START, template_START, &heading_ball, &distance_ball) == 0)
         {
@@ -89,7 +89,7 @@ int main(int argc, char **argv)
     /*
     // LOOK FOR BALL AT POSITION SOUTH EAST
     navigation_GoToScanPosition(SIDE, RIGHT);
-    scan_Scan360(samples_SOUTH_EAST, speed_scan);
+    scan_Scan360(samples_SOUTH_EAST);
     sleep(1);
     if(scan_FindBall(samples_SOUTH_EAST, template_SOUTH_EAST, heading_ball, distance_ball) == 0)
     {
@@ -104,7 +104,7 @@ int main(int argc, char **argv)
 
     // LOOK FOR BALL AT POSITION NORTH EAST
     navigation_GoToScanPosition(SIDE, UP);
-    scan_Scan360(samples_NORTH_EAST, speed_scan);
+    scan_Scan360(samples_NORTH_EAST);
     sleep(1);
     if(scan_FindBall(samples_NORTH_EAST, template_NORTH_EAST, heading_ball, distance_ball) == 0)
     {
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
 
     // LOOK FOR BALL AT POSITION NORTH WEST
     navigation_GoToScanPosition(2*SIDE, LEFT);
-    scan_Scan360(samples_NORTH_WEST, speed_scan);
+    scan_Scan360(samples_NORTH_WEST);
     sleep(1);
     if(scan_FindBall(samples_NORTH_WEST, template_NORTH_WEST, heading_ball, distance_ball) == 0)
     {
@@ -134,7 +134,7 @@ int main(int argc, char **argv)
 
     // LOOK FOR BALL AT POSITION SOUTH WEST
     navigation_GoToScanPosition(SIDE, DOWN);
-    scan_Scan360(samples_SOUTH_WEST, speed_scan);
+    scan_Scan360(samples_SOUTH_WEST);
     sleep(1);
     if(scan_FindBall(samples_SOUTH_WEST, template_SOUTH_WEST, heading_ball, distance_ball) == 0)
     {

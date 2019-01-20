@@ -63,6 +63,9 @@ int drive_MotorStatus(){
   }
 }
 void drive_GoDistance(int distance){
+  if (distance == 0){
+    return;
+  }
   double wheel_r = 2.7;
   double dist_per_degree = (2*wheel_r*3.14159)/360;
   double turn_degrees = distance / dist_per_degree;
@@ -228,6 +231,7 @@ void drive_SetHeading(int desired_heading)
   // printf("[SetHeadingY] Current heading: %d \n", current_heading);
   int degrees_to_turn = desired_heading - current_heading;
 
+<<<<<<< HEAD
   if (degrees_to_turn > 180 || (degrees_to_turn < 0 && degrees_to_turn > -181))
   {
     drive_TurnLeftForever(40);
@@ -236,6 +240,16 @@ void drive_SetHeading(int desired_heading)
   else if (abs(degrees_to_turn) <= 2)
   {
     return;
+=======
+  if (abs(degrees_to_turn) <= 1)
+  {
+    return;
+  }
+  else if (degrees_to_turn > 180 || (degrees_to_turn < 0 && degrees_to_turn > -181))
+  {
+    drive_TurnLeftForever(40);
+    // printf("[SetHeadingY] Turning left \n");
+>>>>>>> a600d6995f6dc69e8ca91f0269ce9234757e9f3d
   }
   else
   {

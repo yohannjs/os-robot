@@ -150,7 +150,7 @@ int claw_Throw()
     get_tacho_state_flags   ( small_motor, &state_small_motor     );
   } while ( state_small_motor != 0 );
   
-  
+  claw_Reset();
   return 0;
 }
 
@@ -184,6 +184,7 @@ int claw_TakeBall()
 {
   claw_Lower();
   claw_Grab();
+  printf("is claw holding ball? %d \n", claw_HoldsBall());
   return claw_HoldsBall();
 }
 
