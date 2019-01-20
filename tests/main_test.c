@@ -191,6 +191,19 @@ void handler(uint16_t command, uint16_t value)
             {
                 printf("could not grab ball\n");
                 navigation_ReturnToScanPosition();
+                scan_Scan360(samples);
+                scan_FindBall2(samples, start_threshold, &ball_heading, &ball_distance);
+                if((ball_heading == 0) && (ball_distance == 0)) //Try again at searchpoint for lolz
+                {
+                  printf("Ball not found. \n");
+                  state = STATE_SEARCH;
+                }
+                else
+                {
+                  printf("FOUND BALL! \n");
+                  state = STATE_GRAB;
+                }
+              
                 state = STATE_SEARCH;
             }
             break;
