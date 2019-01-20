@@ -20,8 +20,8 @@ static int state;
 int ball_heading;
 int ball_distance;
 p prev_point = SOUTH_WEST;
-const int start_threshold = 250;
-const int corner_threshold = 150;
+const int start_threshold = 400;
+const int corner_threshold = 200;
 const int side_threshold = 200;
 
 
@@ -58,9 +58,11 @@ void handler(uint16_t command, uint16_t value)
             int samples[360];
 
             navigation_GoToThrowPosition();
+            Sleep(500);
             claw_Throw();
             //send some kind of score message
             claw_TakeBall();
+            Sleep(500);
             claw_Throw();
             navigation_ReturnAfterThrow();
             state = STATE_SEARCH;
@@ -200,7 +202,7 @@ void handler(uint16_t command, uint16_t value)
             navigation_ReturnFromScanPosition();
             // NEED TO CHECK BATTERY LEVEL HERE
             navigation_GoToThrowPosition();
-            Sleep(1);
+            Sleep(500);
             claw_Throw();
             //send some kind of score message
             navigation_ReturnAfterThrow();
