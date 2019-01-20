@@ -19,7 +19,7 @@
 static int state;
 int ball_heading;
 int ball_distance;
-p prev_point = SOUTH_WEST;
+p prev_point = UNINIT;
 const int start_threshold = 300;
 const int corner_threshold = 150;
 const int side_threshold = 180;
@@ -39,6 +39,7 @@ void handler(uint16_t command, uint16_t value)
     switch (state)
     {
         case STATE_INIT:
+            printf("[main]: before init \n");
             navigation_Init();
             detect_Init();
             claw_Init();
@@ -56,13 +57,18 @@ void handler(uint16_t command, uint16_t value)
             // scan_LoadSamples("template_SOUTH_WEST", template_SOUTH_WEST);
 
             int samples[360];
-
+            printf("[main]: before going to position \n");
             navigation_GoToThrowPosition();
+            printf("[main]: come to position \n");
             claw_Throw();
+            printf("[main]: done first throw \n");
             //send some kind of score message
             claw_TakeBall();
+            printf("[main]: finished with taking \n");
             claw_Throw();
+            printf("[main]: finished w clawing \n");
             navigation_ReturnAfterThrow();
+            printf("[main]: Returning after throw \n");
             state = STATE_SEARCH;
             break;
 
@@ -73,8 +79,10 @@ void handler(uint16_t command, uint16_t value)
             switch (prev_point)
             {
                 case UNINIT:
+                    printf("[main]: Starting 1st scan \n");
                     scan_Scan360(samples);
                     // if(scan_FindBall(samples, template_START, &ball_heading, &ball_distance) == 0) // Should use template here in game
+                    printf("[main]: Starting 1st findBall \n");
                     scan_FindBall2(samples, start_threshold, &ball_heading, &ball_distance);
                     if(ball_heading == 0 && ball_distance == 0)
                     {

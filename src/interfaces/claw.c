@@ -86,7 +86,7 @@ int claw_Init()
     } while ( state_big_motor != 0);
     
   }
-  printf( "Tacho is now ready \n" );
+  printf( "[Claw]: Tacho is now ready \n" );
   return 0;
 }
 

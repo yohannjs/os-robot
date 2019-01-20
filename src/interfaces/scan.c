@@ -21,6 +21,7 @@ int scan_Scan360(int* samples)
     int num = 0;
     do {
       heading = drive_GetHeading();
+      printf("[Scan360]: current heading = %d \n", heading);
       sum += detect_GetDistance();
       num++;
       usleep(10 * 1000);
