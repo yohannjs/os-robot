@@ -194,7 +194,7 @@ void handler(uint16_t command, uint16_t value)
 
         case STATE_GRAB:
             /* code */
-            printf("\n STATE_GRAB\n")
+            printf("\n STATE_GRAB\n");
             navigation_MoveToBall(ball_distance / 10, ball_heading);
             int adjust_distance = detect_GetDistance();
             utils_Sleep(200);
