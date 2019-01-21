@@ -18,12 +18,13 @@ int main(){
 
     //utils_Sleep(500);
     printf("Ball caught \n");
-    //claw_Throw();
+    utils_Sleep(1000);
+    claw_Throw();
     // claw_Drop();
     // sleep(1);
     // claw_Reset();
   } else {
-    printf("Ball not caught \n");"
+    printf("Ball not caught \n");
   }
   
   // claw_Drop();
