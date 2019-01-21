@@ -206,6 +206,7 @@ void navigation_RecalibrateFront(){
 }
 
 void navigation_RecalibrateSide(){
+  drive_SetHeading(RIGHT);
   drive_GoDistance(50);
   utils_Sleep(300);
   //drive_ResetGyro();

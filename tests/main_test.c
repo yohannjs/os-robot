@@ -96,9 +96,9 @@ void handler(uint16_t command, uint16_t value)
                     navigation_GoToScanPosition(SOUTH_EAST);
                     printf("Going to SOUTH_EAST\n");
                     printf("Trying to recalibrate now");
-                    utils_Sleep(200);
-                    deive_SetHeading(RIGHT);
-                    utils_Sleep(200);
+              //      utils_Sleep(200);
+              //      drive_SetHeading(RIGHT);
+                //    utils_Sleep(200);
                     navigation_RecalibrateSide();
                     scan_Scan360(samples);
                     scan_FindBall2(samples, side_threshold, &ball_heading, &ball_distance);
