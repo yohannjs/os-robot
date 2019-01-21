@@ -144,7 +144,7 @@ void navigation_ReturnFromScanPosition(){
       drive_BackDistance(MID_SIDE);
       break;
     default:
-      printf("[NAVIGATE] Not supposed to go here.\n");
+      printf("[ReturnFromScanPosition] Already in starting point.\n");
   }
   current_point = MIDDLE;
   drive_SetHeading(UP);

@@ -24,6 +24,7 @@ p prev_point = SOUTH_WEST;
 const int start_threshold = 400;
 const int corner_threshold = 280;
 const int side_threshold = 280;
+static int middle_count = 0;
 
 
 void handler(uint16_t command, uint16_t value)
@@ -115,6 +116,7 @@ void handler(uint16_t command, uint16_t value)
                         state = STATE_GRAB;
                     }
                     prev_point = SOUTH_EAST;
+                    middle_count = middle_count +1;
                     break;
 
                 case SOUTH_EAST:
@@ -235,6 +237,9 @@ void handler(uint16_t command, uint16_t value)
             printf("Returning after throw\n");
             navigation_ReturnAfterThrow();
             state = STATE_SEARCH;
+            if (middle_count < 3){
+              prev_point = SOUTH_WEST;
+            }
             break;
     }
 }
