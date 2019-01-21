@@ -206,10 +206,10 @@ void navigation_RecalibrateFront(){
 }
 
 void navigation_RecalibrateSide(){
-  drive_GoDistance(40);
+  drive_GoDistance(50);
   utils_Sleep(300);
-  drive_ResetGyro();
-  utils_Sleep(500);
+  //drive_ResetGyro();
+  //utils_Sleep(500);
   drive_BackDistance(30);
 }
 
