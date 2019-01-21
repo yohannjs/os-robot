@@ -198,5 +198,5 @@ void navigation_ReturnAfterDrop(){
 void navigation_RecalibrateGyro(){
   drive_GoDistance(70);
   drive_ResetGyro();
-  drive_BackDistance(61);
+  drive_BackDistance(55);
 }

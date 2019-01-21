@@ -22,8 +22,8 @@ int ball_heading;
 int ball_distance;
 p prev_point = SOUTH_WEST;
 const int start_threshold = 400;
-const int corner_threshold = 200;
-const int side_threshold = 200;
+const int corner_threshold = 280;
+const int side_threshold = 280;
 
 
 void handler(uint16_t command, uint16_t value)
@@ -202,6 +202,7 @@ void handler(uint16_t command, uint16_t value)
             /* code */
             navigation_ReturnFromScanPosition();
             // NEED TO CHECK BATTERY LEVEL HERE
+            navigation_RecalibrateGyro();
             navigation_GoToThrowPosition();
             utils_Sleep(500);
             claw_Throw();
