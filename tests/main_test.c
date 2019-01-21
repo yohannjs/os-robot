@@ -252,7 +252,7 @@ void handler(uint16_t command, uint16_t value)
             /* code */
             printf("\nSTATE_SCORE\n");
             navigation_ReturnFromScanPosition();
-            if (utils_Battery() >= 800)
+            if (utils_Battery() >= 750)
             {
                 navigation_GoToThrowPosition();
                 utils_Sleep(500);

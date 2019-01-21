@@ -185,7 +185,7 @@ void navigation_ReturnAfterThrow(){
   drive_BackDistance(START_THROWLINE_OFFSET);
 }
 
-void navitation_GoToDropPosition(){
+void navigation_GoToDropPosition(){
   int distance_to_drop_position = 55;
   drive_GoDistance(distance_to_drop_position);
 }
