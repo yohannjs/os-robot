@@ -203,6 +203,7 @@ void handler(uint16_t command, uint16_t value)
               printf("Kob-E probably detected wrong heading, no ball seems to be here\n Going back to search\n");
               navigation_ReturnToScanPosition();
               state = STATE_SEARCH;
+              middle_count = 4;
               break;
         }
         else{
@@ -242,6 +243,7 @@ void handler(uint16_t command, uint16_t value)
                   state = STATE_SEARCH;
               }
           }
+          middle_count = 4;
         }
         break;
 
