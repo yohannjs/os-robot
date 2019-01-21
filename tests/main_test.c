@@ -108,6 +108,7 @@ void handler(uint16_t command, uint16_t value)
                     if(ball_heading == 0 && ball_distance == 0)
                     {
                         printf("Ball not found. \n");
+                        middle_count = 4;
                         state = STATE_SEARCH;
                     }
                     else
