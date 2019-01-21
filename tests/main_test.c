@@ -132,7 +132,7 @@ void handler(uint16_t command, uint16_t value)
 
                 case NORTH_EAST:
                     navigation_GoToScanPosition(NORTH_WEST);
-                    printf("Going NORTH_WEST"\n");
+                    printf("Going NORTH_WEST\n");
                     scan_Scan360(samples);
                     scan_FindBall2(samples, corner_threshold, &ball_heading, &ball_distance);
                     if(ball_heading == 0 && ball_distance == 0)

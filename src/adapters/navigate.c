@@ -224,4 +224,6 @@ void navigation_RecalibrateBeforeScore(){
   while(is_on_line == false){
     is_on_line = detect_OnLine();
   }
+  drive_Stop();
+  utils_Sleep(300);
 }
