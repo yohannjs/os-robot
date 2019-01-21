@@ -179,23 +179,44 @@ void handler(uint16_t command, uint16_t value)
             }
             break;
 
-        case STATE_GRAB:
-            /* code */
-            navigation_MoveToBall(ball_distance / 10, ball_heading);
-            int adjust_distance = detect_GetDistance();
-            navigation_AdjustBallDistance(adjust_distance / 10);
-            if(claw_TakeBall())
-            {
-                state = STATE_SCORE;
-                navigation_ReturnToScanPosition();
-            }
-            else
-            {
-                printf("could not grab ball\n");
-                navigation_ReturnToScanPosition();
-                state = STATE_SEARCH;
-            }
-            break;
+      case STATE_GRAB:
+        navigation_MoveToBall(ball_distance / 10, ball_heading);
+        int adjust_distance = detect_GetDistance();
+        navigation_AdjustBallDistance(adjust_distance /
+        if(claw_TakeBall())
+        {
+            state = STATE_SCORE;
+            navigation_ReturnToScanPosition();
+        }
+        else
+        {
+          printf("could not grab ball\n");
+          navigation_ReturnToScanPosition();
+          scan_Scan360(samples);
+          scan_FindBall2(samples, start_threshold, &ball_heading, &ball_distance);
+          if((ball_heading == 0) && (ball_distance == 0)) //Try again at searchpoint for lolz
+          {
+              printf("Ball not found. \n");
+              state = STATE_SEARCH;
+          }
+          else
+          {
+              printf("FOUND BALL! \n");
+              navigation_MoveToBall(ball_distance / 10, ball_heading);
+              int adjust_distance = detect_GetDistance();
+              navigation_AdjustBallDistance(adjust_distance / 10);
+              if(claw_TakeBall())
+              {
+                  state = STATE_SCORE;
+                  navigation_ReturnToScanPosition();
+              }
+              else
+              {
+                  state = STATE_SEARCH;
+              }
+          }
+        }
+        break;
 
         case STATE_SCORE:
             /* code */
