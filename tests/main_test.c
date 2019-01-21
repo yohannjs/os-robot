@@ -94,6 +94,8 @@ void handler(uint16_t command, uint16_t value)
 
                 case MIDDLE:
                     navigation_GoToScanPosition(SOUTH_EAST);
+                    printf("Trying to recalibrate now");
+                    navigation_RecalibrateSide();
                     scan_Scan360(samples);
                     scan_FindBall2(samples, side_threshold, &ball_heading, &ball_distance);
                     if(ball_heading == 0 && ball_distance == 0)
@@ -202,8 +204,8 @@ void handler(uint16_t command, uint16_t value)
             /* code */
             navigation_ReturnFromScanPosition();
             // NEED TO CHECK BATTERY LEVEL HERE
-            navigation_RecalibrateGyro();
-            navigation_GoToThrowPosition();
+            navigation_RecalibrateBeforeScore();
+            //navigation_GoToThrowPosition();
             utils_Sleep(500);
             claw_Throw();
             //send some kind of score message

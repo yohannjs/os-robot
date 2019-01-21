@@ -195,8 +195,33 @@ void navigation_ReturnAfterDrop(){
   drive_BackDistance(distance_from_drop_position);
 }
 
-void navigation_RecalibrateGyro(){
+void navigation_RecalibrateFront(){
   drive_GoDistance(70);
+  utils_Sleep(200);
   drive_ResetGyro();
+  utils_Sleep(500);
+  //recalibrate before shooting? in that case: go less forward and
+  //stop backing when you see a black line?
   drive_BackDistance(55);
+}
+
+void navigation_RecalibrateSide(){
+  drive_GoDistance(40);
+  utils_Sleep(300);
+  drive_ResetGyro();
+  utils_Sleep(500);
+  drive_BackDistance(30);
+}
+
+
+void navigation_RecalibrateBeforeScore(){
+  drive_GoDistance(70);
+  utils_Sleep(200);
+  drive_ResetGyro();
+  utils_Sleep(500);
+  bool is_on_line = false;
+  drive_GoBackward();
+  while(is_on_line == false){
+    is_on_line = detect_OnLine();
+  }
 }
