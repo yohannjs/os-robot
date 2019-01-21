@@ -8,7 +8,7 @@
 #include "ev3_sensor.h"
 #include "claw.h"
 
-#define Sleep( msec ) usleep(( msec ) * 1000 )
+#include "utils.h"
 
 // big motor parameters
 uint8_t big_motor;
@@ -27,22 +27,25 @@ FLAGS_T state_small_motor;
 int big_motor_pos;
 int small_motor_pos;
 
+static const char *mn = "  CLAW  ";
+
 // initialization
 int claw_Init()
 {
   if ( ev3_init() == -1 ){
-    printf("Could not initialize robot or claw\n");
+    utils_Err(mn, "Could not initialize robot or claw");
     return 1;
   }
   
   while ( ev3_tacho_init() < 1 ){
-    sleep( 10 );
-    printf("looking for taco\n");
+    utils_Sleep(1000);
+    utils_Log(mn, "Looking for tacos...");
+    
   }
   
   // init of small motor
   if (ev3_search_tacho_plugged_in(port_small_motor, 0, &small_motor, 0 )){
-    
+    utils_Log(mn, "Small motor found"); 
     get_tacho_max_speed       ( small_motor, &max_speed_small_motor   );
     
     // moving motor to default position
@@ -62,11 +65,18 @@ int claw_Init()
     } while ( state_small_motor != 0 );
     
   }
+  else
+  {
+      utils_Err(mn, "Small motor not found");
+      return 2;
+  }
+  
   
   
   // init of big motor
   if ( ev3_search_tacho_plugged_in( port_big_motor, 0, &big_motor, 0 )){
-    
+    utils_Log(mn, "Large motor found");
+
     get_tacho_max_speed       ( big_motor, &max_speed_big_motor   );
     
     // moving motor to default postion
@@ -86,17 +96,23 @@ int claw_Init()
     } while ( state_big_motor != 0);
     
   }
-  printf( "Tacho is now ready \n" );
+  else
+  {
+      utils_Err(mn, "Large motor not found");
+      return 3;
+  }
+  utils_Log(mn, "Ready");
   return 0;
 }
 
 int claw_Lower()
 {
+  printf("[claw_Lower]: In function, before motor-com \n");
   set_tacho_speed_sp  ( big_motor, max_speed_big_motor/15       );
   set_tacho_stop_action_inx ( big_motor, TACHO_COAST            );
   set_tacho_position_sp     ( big_motor, 100                    );
   set_tacho_command_inx     ( big_motor, TACHO_RUN_TO_ABS_POS   );
-  
+  printf("[claw_Lower]: Com with motors finished \n");
   do {
     get_tacho_state_flags   ( big_motor, &state_big_motor       );
   } while ( state_big_motor != 0 );
@@ -104,20 +120,18 @@ int claw_Lower()
   return 0;
 }
 
-
-
-
 int claw_Grab()
 {
   set_tacho_speed_sp        ( big_motor, max_speed_big_motor/10     );
   set_tacho_speed_sp        ( small_motor, max_speed_small_motor/10 );
   
   set_tacho_stop_action_inx ( small_motor, TACHO_HOLD               );
-  set_tacho_position_sp     ( small_motor, -100                     );
+  set_tacho_position_sp     ( small_motor, -200                     );
   
   set_tacho_command_inx     ( small_motor, TACHO_RUN_TO_REL_POS     );
   do {
     get_tacho_state_flags   ( small_motor, &state_small_motor       );
+    //printf("State while grabbing: %X \n", state_small_motor);
   } while ( state_small_motor == TACHO_RUNNING || state_small_motor == TACHO_RAMPING );
   
   set_tacho_stop_action_inx (big_motor, TACHO_COAST                 );
@@ -134,7 +148,7 @@ int claw_Grab()
 int claw_HoldsBall()
 {
   get_tacho_state_flags (small_motor, &state_small_motor);
-  
+ // printf("State when checking: %X \n", state_small_motor);
   return ((state_small_motor & 0x10) == 0x10);
 }
 
@@ -150,7 +164,7 @@ int claw_Throw()
     get_tacho_state_flags   ( small_motor, &state_small_motor     );
   } while ( state_small_motor != 0 );
   
-  
+  //claw_Reset();
   return 0;
 }
 
@@ -183,8 +197,16 @@ int claw_Drop()
 int claw_TakeBall()
 {
   claw_Lower();
+
+  utils_Sleep(500);
   claw_Grab();
-  return claw_HoldsBall();
+  utils_Sleep(1000);
+  int holds = claw_HoldsBall();
+  if (!holds) 
+  {
+      utils_Log(mn, "Failed to take ball");
+  }
+  return holds;
 }
 
 int claw_Reset()

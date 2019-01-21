@@ -1,21 +1,30 @@
 #include <stdio.h>
 #include <unistd.h>
-
+#include "utils.h"
 #include "claw.h"
 
+const char *mn = "  TEST  ";
+
 int main(){
-  if(claw_Init() == 0)
+  if(claw_Init())
   {
-    printf("Initialized claw \n");
-  } else return -1;
-  if (claw_TakeBall()==1)
+    utils_Err(mn, "Could not initialize claw");
+    return -1;
+  } 
+
+  //utils_Sleep(500); 
+  if (claw_TakeBall())
   {
-    sleep(1);
+
+    //utils_Sleep(500);
     printf("Ball caught \n");
+    utils_Sleep(1000);
     claw_Throw();
     // claw_Drop();
     // sleep(1);
     // claw_Reset();
+  } else {
+    printf("Ball not caught \n");
   }
   
   // claw_Drop();

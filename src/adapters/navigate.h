@@ -1,32 +1,37 @@
 #ifndef NAVIGATE_H
 #define NAVIGATE_H
+#include <math.h>
+
 
 typedef enum dir{
   RIGHT = 90,
   LEFT = 270,
   UP = 0,
   DOWN = 180,
-  LEFT_DIAGONAL = 326,
-  RIGHT_DIAGONAL = 34,
+  LEFT_DIAGONAL = 315,
+  RIGHT_DIAGONAL = 45,
 } direction;
 
 typedef enum dist{
   MID_SIDE = 20,
   EAST_WEST = 40,
-  NORTH_SOUTH = 30,
-  DIAGONAL = 36,
+  NORTH_SOUTH = 20,
+  DIAGONAL = 28,
 } searchpoint_distance;
 
 typedef enum {
+  MIDDLE = 0,
   SOUTH_EAST = 1,
   NORTH_EAST = 2,
   NORTH_WEST = 3,
   SOUTH_WEST = 4,
-  MIDDLE = 5,
+  UNINIT = 5,
 } p;
 
 void navigation_Init();
-void navigation_RecalibrateGyro();
+void navigation_RecalibrateFront();
+void navigation_RecalibrateSide();
+void navigation_RecalibrateBeforeScore();
 //void navigation_GoToStart();
 
 void navigation_GoToScanPosition(p search_point);
@@ -42,5 +47,4 @@ void navitation_GoToDropPosition();
 void navigation_ReturnAfterDrop();
 void navigation_AdjustBallDistance(int distance_to_ball);
 //void navigation_GoToSideOfObject(direction heading, direction side );
-
 #endif

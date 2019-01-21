@@ -6,14 +6,14 @@
 #include "drive.h"
 #include "detect.h"
 
-int scan_Scan360(int* samples, int speed)
+int scan_Scan360(int* samples)
 {
   //FILE* f;
   //f = fopen("samples.txt", "w");
   int heading = drive_GetHeading();
   //int new_samples[360];
-  drive_TurnDegrees(365, speed);
-    
+  drive_TurnRightForever(30);
+
   for (int i=0; i<360; i++)
   {
     int current_heading = heading;
@@ -27,6 +27,8 @@ int scan_Scan360(int* samples, int speed)
     } while (current_heading == heading);
     samples[current_heading] = sum / num;
   }
+
+  drive_Stop();
   //samples = new_samples;
   //int heading;
   //while(get)
@@ -49,7 +51,7 @@ int scan_WriteSamplesToFile(int* samples, char *file_name)
   }
   printf("[  SCAN  ] Samples written to file %s\n", file_name);
   fclose(f);
-  
+
   return 0;
 }
 
@@ -79,7 +81,7 @@ int scan_FindBall(int* samples, int* template, int *head, int *dist)
   int threshold = 100;
   int min_length = 20;
   int diff[360];
-  
+
   int start_heading;
   int end_heading = 0;
   for (int i=0; i<360; i++)
@@ -101,14 +103,14 @@ int scan_FindBall(int* samples, int* template, int *head, int *dist)
       *dist = samples[*head];
 
       printf("Found ball at heading: %d and distance: %d\n", *head, *dist);
-      // return 0; 
+      // return 0;
     }
   }
-  if (end_heading == 0) 
+  if (end_heading == 0)
   {
     return 1;
-  } 
-  else 
+  }
+  else
   {
     return 0;
   }
@@ -126,7 +128,7 @@ int scan_LoadSamples(char *file_name, int *samples)
   //int loaded_samples[360];
   for (int i=0; i<360; i++)
   {
-    int val; 
+    int val;
     fscanf(f, "%d", &val);
     // printf("%d\n", val);
     samples[i] = val;
@@ -165,7 +167,42 @@ int scan_FindBallHeading(int NUM_SAMPLES, int* head, int* dist){
   }
   printf("distance to ball = %d \n associated heading = %d \n", minimum_distance, index_counter);
   *head = index_counter;
-  *dist = minimum_distance; 
+  *dist = minimum_distance;
   fclose(f);
   return 0;
+}
+
+int scan_FindBall2(int* samples, int threshold, int *head, int *dist)
+{
+  int min_length = 15;
+  int start_heading;
+  int end_heading = 0;
+  *head = 0;
+  *dist = 0;
+  for (int i=0; i<360; i++)
+  {
+    start_heading = i;
+    while (samples[i] <= threshold)
+    {
+      end_heading = i;
+      i++;
+    }
+    if (end_heading > start_heading + min_length)
+    {
+      int length = end_heading - start_heading;
+      *head = start_heading + length / 2;
+      *dist = samples[*head];
+
+      printf("Found ball at heading: %d and distance: %d\n", *head, *dist);
+      // return 0;
+    }
+  }
+  if (end_heading == 0)
+  {
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
 }

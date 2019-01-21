@@ -9,6 +9,7 @@
 #include "ev3_tacho.h"
 #include "ev3_sensor.h"
 #include "drive.h"
+#include "utils.h"
 
 #define DEG_TO_LIN 2.5
 #define RIGHT_PORT 67
@@ -34,20 +35,20 @@ int drive_InitTachos(){
     return ( 1 );
   }
   while ( ev3_tacho_init() < 1 ){
-    sleep( 1000 );
+    utils_Sleep( 100 );
     printf("looking for taco\n");
   }
   if (ev3_search_tacho_plugged_in( RIGHT_PORT,0 , &rsn, 0 )){
     get_tacho_max_speed( rsn, &max_speed );
     set_tacho_stop_action_inx(rsn, TACHO_HOLD);
-    set_tacho_ramp_up_sp( rsn, 100 );
-    set_tacho_ramp_down_sp( rsn, 100 );
+    set_tacho_ramp_up_sp( rsn, 1000 );
+    set_tacho_ramp_down_sp( rsn, 1000 );
     printf("found motor connected to port: %d\n", RIGHT_PORT);
   }
   if (ev3_search_tacho_plugged_in(LEFT_PORT, 0, &lsn, 0 )){
     set_tacho_stop_action_inx(lsn, TACHO_HOLD);
-    set_tacho_ramp_up_sp( lsn, 100 );
-    set_tacho_ramp_down_sp( lsn, 100 );
+    set_tacho_ramp_up_sp( lsn, 1000 );
+    set_tacho_ramp_down_sp( lsn, 1000 );
     printf("found motor connected to port: %d\n",LEFT_PORT);
   }
   printf( "Tacho is now ready \n" );
@@ -63,6 +64,15 @@ int drive_MotorStatus(){
   }
 }
 void drive_GoDistance(int distance){
+  if (distance == 0){
+    return;
+  }else if (abs(distance) < 10){
+    set_tacho_speed_sp( rsn, max_speed * 1 / 5 );
+    set_tacho_speed_sp( lsn, max_speed * 1 / 5 );
+  }else{
+    set_tacho_speed_sp( rsn, max_speed * 1 / 3 );
+    set_tacho_speed_sp( lsn, max_speed * 1 / 3 );
+  }
   double wheel_r = 2.7;
   double dist_per_degree = (2*wheel_r*3.14159)/360;
   double turn_degrees = distance / dist_per_degree;
@@ -70,11 +80,9 @@ void drive_GoDistance(int distance){
   set_tacho_position_sp(lsn, turn_degrees_int);
   set_tacho_position_sp(rsn, turn_degrees_int);
   // printf("turning wheels %d degrees\n", turn_degrees_int);
-  set_tacho_speed_sp( rsn, max_speed * 1 / 3 );
-  set_tacho_speed_sp( lsn, max_speed * 1 / 3 );
   multi_set_tacho_command_inx(lr_sn, TACHO_RUN_TO_REL_POS );
   while(drive_MotorStatus()){
-    usleep(100);
+    usleep(1000);
   }
 }
 
@@ -138,10 +146,6 @@ void drive_TurnDegrees(int deg, int speed){
   set_tacho_speed_sp(lsn, max_speed * speed/100);
   set_tacho_speed_sp(rsn, max_speed * speed/100);
   multi_set_tacho_command_inx(lr_sn, TACHO_RUN_TO_REL_POS);
-  while(drive_MotorStatus()){
-    usleep(100000);
-  }
-  usleep(300000);
 }
 
 void drive_TurnLeftForever(int speed){
@@ -160,15 +164,15 @@ void drive_TurnRightForever(int speed){
 
 
 void drive_GoForward(){
-  set_tacho_speed_sp( rsn, max_speed * 1 / 6 );
-  set_tacho_speed_sp( lsn, max_speed * 1 / 6 );
+  set_tacho_speed_sp( rsn, max_speed * 1 / 8 );
+  set_tacho_speed_sp( lsn, max_speed * 1 / 8 );
 
   multi_set_tacho_command_inx(lr_sn, TACHO_RUN_FOREVER);
 }
 
 void drive_GoBackward(){
-  set_tacho_speed_sp( rsn, -max_speed * 1 / 6 );
-  set_tacho_speed_sp( lsn, -max_speed * 1 / 6 );
+  set_tacho_speed_sp( rsn, -max_speed * 1 / 8 );
+  set_tacho_speed_sp( lsn, -max_speed * 1 / 8 );
 
   multi_set_tacho_command_inx(lr_sn, TACHO_RUN_FOREVER );
 }
@@ -231,19 +235,31 @@ void drive_SetHeading(int desired_heading)
   int current_heading = drive_GetHeading();
   // printf("[SetHeadingY] Current heading: %d \n", current_heading);
   int degrees_to_turn = desired_heading - current_heading;
-  
-  if (degrees_to_turn > 180 || (degrees_to_turn < 0 && degrees_to_turn > -181))
-  {
-    drive_TurnLeftForever(40);
-    // printf("[SetHeadingY] Turning left \n");
-  } 
-  else if (abs(degrees_to_turn) <= 2)
+  char* direction;
+
+  if (abs(degrees_to_turn) <= 1)
   {
     return;
   }
+
+  else if (degrees_to_turn > 180 || (degrees_to_turn < 0 && degrees_to_turn > -181))
+  {
+    direction = "left";
+    if (abs(degrees_to_turn) > 10){
+      drive_TurnLeftForever(40);
+    }else {
+      drive_TurnLeftForever(20);
+    }
+    // printf("[SetHeadingY] Turning left \n");
+  }
   else
   {
-    drive_TurnRightForever(40);
+    direction = "right";
+    if (abs(degrees_to_turn) > 10){
+      drive_TurnRightForever(40);
+    }else {
+      drive_TurnRightForever(20);
+    }
     // printf("[SetHeadingY] Turning right \n ");
   }
 
@@ -251,7 +267,14 @@ void drive_SetHeading(int desired_heading)
   {
     // printf("[SetHeadingY] desired heading - current heading = %d \n", desired_heading - current_heading);
     current_heading = drive_GetHeading();
-    if (abs(current_heading - desired_heading) <= 1) 
+    if (abs(current_heading -desired_heading) <= 10){
+      if (direction =="left"){
+        drive_TurnLeftForever(20);
+      }else{
+        drive_TurnRightForever(20);
+      }
+    }
+    if (abs(current_heading - desired_heading) <= 1)
     {
       break;
     }
@@ -260,4 +283,3 @@ void drive_SetHeading(int desired_heading)
   drive_Stop();
   usleep(500000);
 }
-

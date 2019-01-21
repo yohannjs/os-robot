@@ -1,6 +1,6 @@
 #ifndef DETECT_H
 #define DETECT_H
-
+#include <stdbool.h>
 /**
  * Initializes the detection module.
  *
