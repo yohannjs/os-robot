@@ -107,20 +107,18 @@ int claw_Init()
 
 int claw_Lower()
 {
+  printf("[claw_Lower]: In function, before motor-com \n");
   set_tacho_speed_sp  ( big_motor, max_speed_big_motor/15       );
   set_tacho_stop_action_inx ( big_motor, TACHO_COAST            );
   set_tacho_position_sp     ( big_motor, 100                    );
   set_tacho_command_inx     ( big_motor, TACHO_RUN_TO_ABS_POS   );
-  
+  printf("[claw_Lower]: Com with motors finished \n");
   do {
     get_tacho_state_flags   ( big_motor, &state_big_motor       );
   } while ( state_big_motor != 0 );
 
   return 0;
 }
-
-
-
 
 int claw_Grab()
 {
@@ -198,6 +196,7 @@ int claw_Drop()
 int claw_TakeBall()
 {
   claw_Lower();
+
   utils_Sleep(500);
   claw_Grab();
   int holds = claw_HoldsBall();

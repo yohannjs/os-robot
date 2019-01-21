@@ -29,7 +29,9 @@ typedef enum {
 } p;
 
 void navigation_Init();
-void navigation_RecalibrateGyro();
+void navigation_RecalibrateFront();
+void navigation_RecalibrateSide();
+void navigation_RecalibrateBeforeScore();
 //void navigation_GoToStart();
 
 void navigation_GoToScanPosition(p search_point);
@@ -45,5 +47,4 @@ void navitation_GoToDropPosition();
 void navigation_ReturnAfterDrop();
 void navigation_AdjustBallDistance(int distance_to_ball);
 //void navigation_GoToSideOfObject(direction heading, direction side );
-
 #endif
