@@ -205,7 +205,10 @@ void handler(uint16_t command, uint16_t value)
               state = STATE_SEARCH;
               break;
         }
-        navigation_AdjustBallDistance(adjust_distance/10);
+        else{
+          navigation_AdjustBallDistance(adjust_distance/10);
+        }
+
         if(claw_TakeBall())
         {
             state = STATE_SCORE;
