@@ -238,6 +238,7 @@ void handler(uint16_t command, uint16_t value)
               }
               else
               {
+                  navigation_ReturnToScanPosition();
                   state = STATE_SEARCH;
               }
           }
