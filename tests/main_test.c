@@ -40,6 +40,7 @@ void handler(uint16_t command, uint16_t value)
     switch (state)
     {
         case STATE_INIT:
+          printf("\nSTATE_INIT\n");
             navigation_Init();
             detect_Init();
             claw_Init();
@@ -70,6 +71,7 @@ void handler(uint16_t command, uint16_t value)
             break;
 
         case STATE_SEARCH:
+            printf("\nSTATE_SEARCH\n");
             /* code */
             //have some kind of counter that counts defines which positions
             //is to be scanned (if 0, MIDDLE, UP, if 1, LEFT, SIDE etc?)
@@ -95,7 +97,7 @@ void handler(uint16_t command, uint16_t value)
                 case MIDDLE:
                     navigation_GoToScanPosition(SOUTH_EAST);
                     printf("Going to SOUTH_EAST\n");
-                    printf("Trying to recalibrate now");
+                    printf("Trying to recalibrate now\n");
               //      utils_Sleep(200);
               //      drive_SetHeading(RIGHT);
                 //    utils_Sleep(200);
@@ -145,7 +147,7 @@ void handler(uint16_t command, uint16_t value)
                     }
                     else
                     {
-                        printf("FOUND BALL! \n");
+                        printf("\nFOUND BALL! \n");
                         state = STATE_GRAB;
                     }
                     prev_point = NORTH_WEST;
@@ -153,7 +155,7 @@ void handler(uint16_t command, uint16_t value)
 
                 case NORTH_WEST:
                     navigation_GoToScanPosition(SOUTH_WEST);
-                    printf("Going SOUTH_WEST\n");
+                    printf("\nGoing SOUTH_WEST\n");
                     scan_Scan360(samples);
                     scan_FindBall2(samples, side_threshold, &ball_heading, &ball_distance);
                     if(ball_heading == 0 && ball_distance == 0)
@@ -163,7 +165,7 @@ void handler(uint16_t command, uint16_t value)
                     }
                     else
                     {
-                        printf("FOUND BALL! \n");
+                        printf("Found ball! \n");
                         state = STATE_GRAB;
                     }
                     prev_point = SOUTH_WEST;
@@ -171,7 +173,7 @@ void handler(uint16_t command, uint16_t value)
 
                 case SOUTH_WEST:
                     navigation_GoToScanPosition(MIDDLE);
-                    printf("Going to MIDDLE\n");
+                    printf("\nGoing to MIDDLE\n");
                     scan_Scan360(samples);
                     scan_FindBall2(samples, start_threshold, &ball_heading, &ball_distance);
                     if((ball_heading == 0) && (ball_distance == 0))
@@ -192,6 +194,7 @@ void handler(uint16_t command, uint16_t value)
 
         case STATE_GRAB:
             /* code */
+            printf("\n STATE_GRAB\n")
             navigation_MoveToBall(ball_distance / 10, ball_heading);
             int adjust_distance = detect_GetDistance();
             utils_Sleep(200);
@@ -203,6 +206,7 @@ void handler(uint16_t command, uint16_t value)
               break;
             }
             navigation_AdjustBallDistance(adjust_distance / 10);
+            printf("Trying to grab ball\n");
             if(claw_TakeBall())
             {
                 state = STATE_SCORE;
@@ -210,7 +214,7 @@ void handler(uint16_t command, uint16_t value)
             }
             else
             {
-                printf("could not grab ball\n");
+                printf("Could not grab ball\n");
                 navigation_ReturnToScanPosition();
                 state = STATE_SEARCH;
             }
@@ -218,13 +222,17 @@ void handler(uint16_t command, uint16_t value)
 
         case STATE_SCORE:
             /* code */
+            printf("\nSTATE_SCORE\n");
             navigation_ReturnFromScanPosition();
             // NEED TO CHECK BATTERY LEVEL HERE
+            printf("Recalibrating\n");
             navigation_RecalibrateBeforeScore();
             //navigation_GoToThrowPosition();
             utils_Sleep(500);
+            printf("Scoring\n");
             claw_Throw();
             //send some kind of score message
+            printf("Returning after throw\n");
             navigation_ReturnAfterThrow();
             state = STATE_SEARCH;
             break;
