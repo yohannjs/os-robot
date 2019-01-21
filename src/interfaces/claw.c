@@ -199,6 +199,7 @@ int claw_TakeBall()
 
   utils_Sleep(500);
   claw_Grab();
+  utils_Sleep(1000);
   int holds = claw_HoldsBall();
   if (!holds) 
   {

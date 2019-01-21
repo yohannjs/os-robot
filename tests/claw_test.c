@@ -12,15 +12,18 @@ int main(){
     return -1;
   } 
 
-  utils_Sleep(500); 
+  //utils_Sleep(500); 
   if (claw_TakeBall())
   {
-    utils_Sleep(500);
-    //printf("Ball caught \n");
-    claw_Throw();
+
+    //utils_Sleep(500);
+    printf("Ball caught \n");
+    //claw_Throw();
     // claw_Drop();
     // sleep(1);
     // claw_Reset();
+  } else {
+    printf("Ball not caught \n");"
   }
   
   // claw_Drop();
