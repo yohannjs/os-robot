@@ -10,12 +10,17 @@
 
 // Include project header files
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> feature/batterytest
 
 #define STATE_INIT 1
 #define STATE_SEARCH 2
 #define STATE_GRAB 3
 #define STATE_SCORE 4
+
+static const char *mn = "  MAIN  ";
 
 static int state;
 int ball_heading;
@@ -251,6 +256,7 @@ void handler(uint16_t command, uint16_t value)
             /* code */
             printf("\nSTATE_SCORE\n");
             navigation_ReturnFromScanPosition();
+<<<<<<< HEAD
             // NEED TO CHECK BATTERY LEVEL HERE
             printf("Recalibrating\n");
             navigation_RecalibrateBeforeScore();
@@ -261,6 +267,20 @@ void handler(uint16_t command, uint16_t value)
             //send some kind of score message
             printf("Returning after throw\n");
             navigation_ReturnAfterThrow();
+=======
+            if (utils_Battery() >= 750)
+            {
+                navigation_GoToThrowPosition();
+                utils_Sleep(1);
+                claw_Throw();
+                //send some kind of score message
+                navigation_ReturnAfterThrow();
+            }
+            else
+            {
+                utils_Err(mn, "Not enough battery to throw");
+            }
+>>>>>>> feature/batterytest
             state = STATE_SEARCH;
             if (middle_count < 3){
               prev_point = SOUTH_WEST;
