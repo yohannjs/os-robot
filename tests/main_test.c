@@ -96,6 +96,9 @@ void handler(uint16_t command, uint16_t value)
                     navigation_GoToScanPosition(SOUTH_EAST);
                     printf("Going to SOUTH_EAST\n");
                     printf("Trying to recalibrate now");
+                    utils_Sleep(200);
+                    deive_SetHeading(RIGHT);
+                    utils_Sleep(200);
                     navigation_RecalibrateSide();
                     scan_Scan360(samples);
                     scan_FindBall2(samples, side_threshold, &ball_heading, &ball_distance);
@@ -191,6 +194,11 @@ void handler(uint16_t command, uint16_t value)
             /* code */
             navigation_MoveToBall(ball_distance / 10, ball_heading);
             int adjust_distance = detect_GetDistance();
+            if (adjust_distance > 18){
+              printf("Kob-E probably detected wrong heading, no ball seems to be here\n Going back to search\n");
+              state = STATE_SEARCH;
+              break;
+            }
             navigation_AdjustBallDistance(adjust_distance / 10);
             if(claw_TakeBall())
             {

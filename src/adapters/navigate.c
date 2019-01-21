@@ -210,7 +210,7 @@ void navigation_RecalibrateSide(){
   utils_Sleep(300);
   //drive_ResetGyro();
   //utils_Sleep(500);
-  drive_BackDistance(30);
+  drive_BackDistance(29);
 }
 
 
@@ -219,6 +219,7 @@ void navigation_RecalibrateBeforeScore(){
   utils_Sleep(200);
   drive_ResetGyro();
   utils_Sleep(500);
+  drive_BackDistance(20);
   bool is_on_line = false;
   drive_GoBackward();
   while(is_on_line == false){
