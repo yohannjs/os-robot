@@ -19,7 +19,7 @@ includes = -I./lib -I./src/interfaces -I./src/adapters
 defines = -D _DEFAULT_SOURCE
 
 # Other libraries
-libraries = -lrt -lpthread
+libraries = -lrt -lpthread -lbluetooth
 
 CC = arm-linux-gnueabi-gcc
 CFLAGS = -O2 -g -std=gnu99 -W -Wall -Wno-comment $(includes) $(libraries) $(defines)

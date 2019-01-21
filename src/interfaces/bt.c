@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #include "utils.h"
 #include "bt.h"
@@ -27,37 +28,38 @@ static int ReadMessage(char *buffer)
     return bytes_read;
 }
 
-int bt_Connect(char *server_address, int team_id)
+int bt_Connect(const char *server_address, int team_id)
 {
     bt_server_address = server_address;
     bt_team_id = team_id;
 
-    struct sockaddr_rc addr;
+    struct sockaddr_rc addr = {0};
     bt_socket = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
     addr.rc_family = AF_BLUETOOTH;
     addr.rc_channel = (uint8_t) 1;
-    str2ba(BT_SERVER_ADDRESS, &addr.rc_bdaddr);
+    str2ba(server_address, &addr.rc_bdaddr);
     int status = connect(bt_socket, (struct sockaddr *) &addr, sizeof(addr));
-    if (status) 
+    if (status == 0) 
     {
-        utils_Err(mn, "Could not connect to server");
-        bt_Disconnect();
-        return 1;
+        utils_Log(mn, "Connected to server");
+        return 0;
     }
-    utils_Log(mn, "Connected to server");
-    return 0;
+    utils_Err(mn, "Could not connect to server");
+    close(bt_socket);
+    return 1;
 }
 
 int bt_WaitForStartMessage()
+{
     char msg[58];
     do 
     {
-        if (ReadMessage(msg, BT_MAX_MSG_LENGTH) <= 0)
+        if (ReadMessage(msg) <= 0)
         {
             return 1;
         }
     }
-    while(string[4] != BT_MSG_START);
+    while(msg[4] != BT_MSG_START);
     utils_Log(mn, "Received start message.");
     return 0;
 }

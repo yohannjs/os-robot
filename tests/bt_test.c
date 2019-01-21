@@ -8,7 +8,7 @@ const char* mn = "  TEST  ";
 const char* server_address = "38:BA:F8:F5:6B:9D";
 const int team_id = 5;
 
-int main(int argc, char **argv)
+int main()
 {
     utils_Log(mn, "Server address:");
     utils_Log(mn, server_address);
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     utils_Sleep(500);
 
     utils_Log(mn, "Disconnecting from server");
-    if (bt_DeInit())
+    if (bt_Disconnect())
     {
         utils_Err(mn, "Something went wrong, quitting...");
         return 1;

@@ -20,7 +20,7 @@
  *      0 = success
  *      1 = failure
  */
-int bt_Connect(char *server_address, int team_id);
+int bt_Connect(const char *server_address, int team_id);
 
 /**
  * Waits (blocks program execution) until the module receives a start message
@@ -37,7 +37,7 @@ int bt_WaitForStartMessage();
  * @returns int The number of bytes sent to the server or a negative number if
  * something went wrong
  */
-int bt_sendScoreMessage(int long_shot);
+int bt_SendScoreMessage(int long_shot);
 
 /**
  * Disconnects from server
