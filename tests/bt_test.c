@@ -14,7 +14,7 @@ int main()
     utils_Log(mn, server_address);
     utils_LogInt(mn, "Team ID:", team_id);
 
-    if (bt_Connect(server_address, team_id))
+    if (bt_Connect())
     {
         utils_Err(mn, "Error, quitting...");
         return 1;

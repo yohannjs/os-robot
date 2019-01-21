@@ -14,13 +14,11 @@
 /**
  * Initializes the bluetooth module and sets the desired server address and
  * team id.
- * @param server_address The address of the server (a string)
- * @param team_id The id of the group (integer)
  * @returns int
  *      0 = success
  *      1 = failure
  */
-int bt_Connect(const char *server_address, int team_id);
+int bt_Connect();
 
 /**
  * Waits (blocks program execution) until the module receives a start message

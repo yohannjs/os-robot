@@ -9,7 +9,7 @@
 #include "utils.h"
 #include "bt.h"
 
-#define BT_SERVER_ADDRESS "38:BA:F8:F5:6B:9D"
+#define BT_SERVER_ADDRESS "38:ba:f8:f5:6b:9d"
 #define BT_TEAM_ID 1
 
 static const char *mn = "   BT   ";
