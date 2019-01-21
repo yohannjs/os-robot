@@ -9,9 +9,11 @@
 #include "utils.h"
 #include "bt.h"
 
+#define BT_SERVER_ADDRESS "38:BA:F8:F5:6B:9D"
+#define BT_TEAM_ID 1
+
 static const char *mn = "   BT   ";
 
-static int bt_server_address;
 static int bt_team_id; 
 
 static int bt_socket;
@@ -28,17 +30,19 @@ static int ReadMessage(char *buffer)
     return bytes_read;
 }
 
-int bt_Connect(const char *server_address, int team_id)
+int bt_Connect()
 {
-    bt_server_address = server_address;
-    bt_team_id = team_id;
+    struct sockaddr_rc addr = { 0 };
+    int status;
 
-    struct sockaddr_rc addr = {0};
     bt_socket = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+    
     addr.rc_family = AF_BLUETOOTH;
     addr.rc_channel = (uint8_t) 1;
-    str2ba(server_address, &addr.rc_bdaddr);
-    int status = connect(bt_socket, (struct sockaddr *) &addr, sizeof(addr));
+    str2ba(BT_SERVER_ADDRESS, &addr.rc_bdaddr);
+    
+    status = connect(bt_socket, (struct sockaddr *)&addr, sizeof(addr));
+    
     if (status == 0) 
     {
         utils_Log(mn, "Connected to server");
