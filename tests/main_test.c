@@ -1,6 +1,7 @@
 // Include standard C-libraries
 #include <stdio.h>
 #include <stdint.h>
+#include <pthread.h>
 
 #include "navigate.h"
 #include "scan.h"
@@ -9,7 +10,7 @@
 #include "utils.h"
 
 // Include project header files
-
+pthread_t bt_thread;
 
 #define STATE_INIT 1
 #define STATE_SEARCH 2
@@ -283,9 +284,18 @@ int main()
     state = STATE_INIT;
     uint16_t command;
     int16_t value;
+    pthread_create(&bt_thread, NULL, bt_listener);
     for(;;)
     {
         handler(command, value);
     }
     return 0;
+}
+
+void *bt_listener(){
+  while(1){
+    utils_Sleep(500);
+    printf("I am a good thread.");
+
+  }
 }
