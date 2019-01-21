@@ -196,6 +196,7 @@ void handler(uint16_t command, uint16_t value)
             int adjust_distance = detect_GetDistance();
             if (adjust_distance > 18){
               printf("Kob-E probably detected wrong heading, no ball seems to be here\n Going back to search\n");
+              navigation_ReturnToScanPosition();
               state = STATE_SEARCH;
               break;
             }
