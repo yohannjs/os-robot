@@ -126,11 +126,12 @@ int claw_Grab()
   set_tacho_speed_sp        ( small_motor, max_speed_small_motor/10 );
   
   set_tacho_stop_action_inx ( small_motor, TACHO_HOLD               );
-  set_tacho_position_sp     ( small_motor, -100                     );
+  set_tacho_position_sp     ( small_motor, -200                     );
   
   set_tacho_command_inx     ( small_motor, TACHO_RUN_TO_REL_POS     );
   do {
     get_tacho_state_flags   ( small_motor, &state_small_motor       );
+    //printf("State while grabbing: %X \n", state_small_motor);
   } while ( state_small_motor == TACHO_RUNNING || state_small_motor == TACHO_RAMPING );
   
   set_tacho_stop_action_inx (big_motor, TACHO_COAST                 );
@@ -147,7 +148,7 @@ int claw_Grab()
 int claw_HoldsBall()
 {
   get_tacho_state_flags (small_motor, &state_small_motor);
-  
+ // printf("State when checking: %X \n", state_small_motor);
   return ((state_small_motor & 0x10) == 0x10);
 }
 
@@ -199,6 +200,7 @@ int claw_TakeBall()
 
   utils_Sleep(500);
   claw_Grab();
+  utils_Sleep(1000);
   int holds = claw_HoldsBall();
   if (!holds) 
   {
