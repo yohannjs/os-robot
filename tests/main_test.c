@@ -199,7 +199,13 @@ void handler(uint16_t command, uint16_t value)
       case STATE_GRAB:
         navigation_MoveToBall(ball_distance / 10, ball_heading);
         int adjust_distance = detect_GetDistance();
-        navigation_AdjustBallDistance(adjust_distance /
+        if (adjust_distance > 250){
+              printf("Kob-E probably detected wrong heading, no ball seems to be here\n Going back to search\n");
+              navigation_ReturnToScanPosition();
+              state = STATE_SEARCH;
+              break;
+        }
+        navigation_AdjustBallDistance(adjust_distance/10)
         if(claw_TakeBall())
         {
             state = STATE_SCORE;
@@ -234,7 +240,7 @@ void handler(uint16_t command, uint16_t value)
           }
         }
         break;
-                                      
+
         case STATE_SCORE:
             /* code */
             printf("\nSTATE_SCORE\n");
