@@ -195,34 +195,46 @@ void handler(uint16_t command, uint16_t value)
             }
             break;
 
-        case STATE_GRAB:
-            /* code */
-            printf("\n STATE_GRAB\n");
-            navigation_MoveToBall(ball_distance / 10, ball_heading);
-            int adjust_distance = detect_GetDistance();
-            utils_Sleep(200);
-            printf("Adjust_distance to ball = %d\n", adjust_distance);
-            if (adjust_distance > 300){
-              printf("Kob-E probably detected wrong heading, no ball seems to be here\n Going back to search\n");
-              navigation_ReturnToScanPosition();
-              state = STATE_SEARCH;
-              break;
-            }
-            navigation_AdjustBallDistance(adjust_distance / 10);
-            printf("Trying to grab ball\n");
-            if(claw_TakeBall())
-            {
-                state = STATE_SCORE;
-                navigation_ReturnToScanPosition();
-            }
-            else
-            {
-                printf("Could not grab ball\n");
-                navigation_ReturnToScanPosition();
-                state = STATE_SEARCH;
-            }
-            break;
 
+      case STATE_GRAB:
+        navigation_MoveToBall(ball_distance / 10, ball_heading);
+        int adjust_distance = detect_GetDistance();
+        navigation_AdjustBallDistance(adjust_distance /
+        if(claw_TakeBall())
+        {
+            state = STATE_SCORE;
+            navigation_ReturnToScanPosition();
+        }
+        else
+        {
+          printf("could not grab ball\n");
+          navigation_ReturnToScanPosition();
+          scan_Scan360(samples);
+          scan_FindBall2(samples, start_threshold, &ball_heading, &ball_distance);
+          if((ball_heading == 0) && (ball_distance == 0)) //Try again at searchpoint for lolz
+          {
+              printf("Ball not found. \n");
+              state = STATE_SEARCH;
+          }
+          else
+          {
+              printf("FOUND BALL! \n");
+              navigation_MoveToBall(ball_distance / 10, ball_heading);
+              int adjust_distance = detect_GetDistance();
+              navigation_AdjustBallDistance(adjust_distance / 10);
+              if(claw_TakeBall())
+              {
+                  state = STATE_SCORE;
+                  navigation_ReturnToScanPosition();
+              }
+              else
+              {
+                  state = STATE_SEARCH;
+              }
+          }
+        }
+        break;
+                                      
         case STATE_SCORE:
             /* code */
             printf("\nSTATE_SCORE\n");
