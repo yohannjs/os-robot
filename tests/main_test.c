@@ -200,7 +200,7 @@ void handler(uint16_t command, uint16_t value)
             navigation_MoveToBall(ball_distance / 10, ball_heading);
             int adjust_distance = detect_GetDistance();
             utils_Sleep(200);
-            printf("Adjust_distance to ball = $d\n", adjust_distance);
+            printf("Adjust_distance to ball = %d\n", adjust_distance);
             if (adjust_distance > 300){
               printf("Kob-E probably detected wrong heading, no ball seems to be here\n Going back to search\n");
               navigation_ReturnToScanPosition();
