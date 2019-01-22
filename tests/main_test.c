@@ -27,7 +27,9 @@ p prev_point = SOUTH_WEST;
 const int start_threshold = 400;
 const int corner_threshold = 280;
 const int side_threshold = 280;
-static int middle_count = 0;
+int middle_count = 0;
+
+int run_flag = 1;
 
 const char *mn = "  KOBE  ";
 
@@ -67,10 +69,11 @@ void handler(uint16_t command, uint16_t value)
             navigation_GoToThrowPosition();
             utils_Sleep(500);
             claw_Throw();
-            //send some kind of score message
+            bt_SendScoreMessage(1);
             claw_TakeBall();
             utils_Sleep(500);
             claw_Throw();
+            bt_SendScoreMessage(1);
             navigation_ReturnAfterThrow();
             state = STATE_SEARCH;
             break;
@@ -260,7 +263,7 @@ void handler(uint16_t command, uint16_t value)
                 navigation_GoToThrowPosition();
                 utils_Sleep(500);
                 claw_Throw();
-                //send some kind of score message
+                bt_SendScoreMessage(1);
                 navigation_ReturnAfterThrow();
             }
             else
@@ -269,6 +272,7 @@ void handler(uint16_t command, uint16_t value)
                 navigation_GoToDropPosition();
                 utils_Sleep(200);
                 claw_Drop();
+                bt_SendScoreMessage(0);
                 claw_Reset();
                 navigation_ReturnAfterDrop();
             }
@@ -280,12 +284,11 @@ void handler(uint16_t command, uint16_t value)
     }
 }
 void *bt_listener(){
-  while(1){
-    utils_Sleep(500);
-    printf("I am a good thread.");
-
-  }
+  bt_WaitForStopMessage();
+  run_flag = 0;
 }
+
+
 int main()
 {
     utils_Log(mn, "Initializing");
@@ -297,17 +300,27 @@ int main()
         bt_Disconnect();
         return 1;
     }
+    utils_Log(mn, "Connected.");
 
     state = STATE_INIT;
     uint16_t command;
     int16_t value;
+
+    utils_Log(mn, "Waiting for start message...");
+    bt_WaitForStartMessage();
+    utils_Log(mn, "Start message received, starting monitor thread");
     pthread_create(&bt_thread, NULL, bt_listener, (void*) "hei");
-    for(;;)
+    
+    utils_Log(mn, "Starting state machine");
+    while(run_flag)
     {
         handler(command, value);
     }
-
+    
+    utils_Log(mn, "Stop message received, quitting");
+    drive_Stop();
     bt_Disconnect();
+    utils_Log(mn, "Bye ;)");
     return 0;
 }
 
