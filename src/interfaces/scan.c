@@ -5,6 +5,11 @@
 
 #include "drive.h"
 #include "detect.h"
+#include "utils.h"
+
+#define SCAN_MAX
+
+static const char *mn = "  SCAN  ";
 
 int scan_Scan360(int* samples)
 {
@@ -13,6 +18,12 @@ int scan_Scan360(int* samples)
   int heading = drive_GetHeading();
   //int new_samples[360];
   drive_TurnRightForever(30);
+
+  // Set all indices in sample array to invalid value
+  for (int i=0; i<360; i++) 
+  {
+    samples[i] = -1;
+  }
 
   for (int i=0; i<360; i++)
   {
@@ -29,15 +40,15 @@ int scan_Scan360(int* samples)
   }
 
   drive_Stop();
-  //samples = new_samples;
-  //int heading;
-  //while(get)
-  //{
-  //  heading = drive_GetHeading();
-  //  fprintf(f, "%d\t%d\n", heading, detect_GetDistance());
-  //  usleep(10 * 1000);
-  //}
-  //fclose(f);
+
+  for (int i=0; i<360; i++)
+  {
+    if (samples[i] < 0)
+    {
+      utils_Err(mn, "Invalid distances in scan");
+      return 1;
+    }
+  }
   return 0;
 }
 
