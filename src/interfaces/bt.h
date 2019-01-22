@@ -27,7 +27,9 @@ int bt_Connect();
  *      0 = success
  *      1 = something went wrong
  */
-int bt_WaitForStartMessage();
+void bt_WaitForStartMessage();
+
+void bt_WaitForStopMessage();
 
 /**
  * Sends a score message to the server, either for a short or a long shot.
@@ -43,6 +45,6 @@ int bt_SendScoreMessage(int long_shot);
  *      0 = success
  *      1 = failure
  */
-int bt_Disconnect();
+void bt_Disconnect();
 
 #endif
