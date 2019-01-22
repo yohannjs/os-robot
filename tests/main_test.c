@@ -261,7 +261,12 @@ void handler(uint16_t command, uint16_t value)
             navigation_ReturnFromScanPosition();
             if (utils_Battery() >= battery_threshold)
             {
-                navigation_GoToThrowPosition();
+                //navigation_ReturnFromScanPosition();
+                // NEED TO CHECK BATTERY LEVEL HERE
+                printf("Recalibrating\n");
+                navigation_RecalibrateBeforeScore();
+                //navigation_GoToThrowPosition();
+                //
                 utils_Sleep(500);
                 claw_Throw();
                 bt_SendScoreMessage(1);
