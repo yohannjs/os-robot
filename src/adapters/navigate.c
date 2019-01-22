@@ -216,6 +216,13 @@ void navigation_RecalibrateSide(direction side){
   //drive_ResetGyro();
   //utils_Sleep(500);
   drive_BackDistance(29);
+  utils_Sleep(300);
+  if (side == RIGHT){
+      drive_SetHeading(LEFT);
+  }else{
+  drive_SetHeading(RIGHT);
+  }
+  drive_ResetGyro();
 }
 
 
@@ -223,7 +230,7 @@ void navigation_RecalibrateBeforeScore(){
   drive_GoDistance(30);
   drive_SetHeading(UP);
   drive_GoDistance(40);
-  utils_Sleep(200);
+  utils_Sleep(300);
   drive_ResetGyro();
   utils_Sleep(500);
   drive_BackDistance(20);
