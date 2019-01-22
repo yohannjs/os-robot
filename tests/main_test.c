@@ -1,15 +1,19 @@
 // Include standard C-libraries
 #include <stdio.h>
 #include <stdint.h>
+#include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
 
+// Include project header files
 #include "navigate.h"
 #include "scan.h"
 #include "claw.h"
 #include "detect.h"
 #include "utils.h"
 #include "bt.h"
+
+pthread_t bt_thread;
 
 #define STATE_INIT 1
 #define STATE_SEARCH 2
@@ -23,10 +27,10 @@ p prev_point = SOUTH_WEST;
 const int start_threshold = 400;
 const int corner_threshold = 280;
 const int side_threshold = 280;
-static int middle_count = 0;
+const int battery_threshold = 750;
+int middle_count = 0;
 
-static int bt_socket;
-static unsigned int bt_msg_id = 0;
+int run_flag = 1;
 
 const char *mn = "  KOBE  ";
 
@@ -66,10 +70,11 @@ void handler(uint16_t command, uint16_t value)
             navigation_GoToThrowPosition();
             utils_Sleep(500);
             claw_Throw();
-            //send some kind of score message
+            bt_SendScoreMessage(1);
             claw_TakeBall();
             utils_Sleep(500);
             claw_Throw();
+            bt_SendScoreMessage(1);
             navigation_ReturnAfterThrow();
             state = STATE_SEARCH;
             break;
@@ -105,13 +110,12 @@ void handler(uint16_t command, uint16_t value)
               //      utils_Sleep(200);
               //      drive_SetHeading(RIGHT);
                 //    utils_Sleep(200);
-                    navigation_RecalibrateSide();
+                    navigation_RecalibrateSide(RIGHT);
                     scan_Scan360(samples);
                     scan_FindBall2(samples, side_threshold, &ball_heading, &ball_distance);
                     if(ball_heading == 0 && ball_distance == 0)
                     {
                         printf("Ball not found. \n");
-                        middle_count = 4;
                         state = STATE_SEARCH;
                     }
                     else
@@ -143,6 +147,7 @@ void handler(uint16_t command, uint16_t value)
                 case NORTH_EAST:
                     navigation_GoToScanPosition(NORTH_WEST);
                     printf("Going NORTH_WEST\n");
+                    navigation_RecalibrateSide(LEFT);
                     scan_Scan360(samples);
                     scan_FindBall2(samples, corner_threshold, &ball_heading, &ball_distance);
                     if(ball_heading == 0 && ball_distance == 0)
@@ -186,6 +191,7 @@ void handler(uint16_t command, uint16_t value)
                     {
                         printf("Ball not found. \n");
                         state = STATE_SEARCH;
+                        middle_count = 4;
                     }
                     else
                     {
@@ -206,9 +212,13 @@ void handler(uint16_t command, uint16_t value)
               printf("Kob-E probably detected wrong heading, no ball seems to be here\n Going back to search\n");
               navigation_ReturnToScanPosition();
               state = STATE_SEARCH;
+              middle_count = 4;
               break;
         }
-        navigation_AdjustBallDistance(adjust_distance/10);
+        else{
+          navigation_AdjustBallDistance(adjust_distance/10);
+        }
+
         if(claw_TakeBall())
         {
             state = STATE_SCORE;
@@ -238,9 +248,11 @@ void handler(uint16_t command, uint16_t value)
               }
               else
               {
+                  navigation_ReturnToScanPosition();
                   state = STATE_SEARCH;
               }
           }
+          middle_count = 4;
         }
         break;
 
@@ -248,16 +260,29 @@ void handler(uint16_t command, uint16_t value)
             /* code */
             printf("\nSTATE_SCORE\n");
             navigation_ReturnFromScanPosition();
-            // NEED TO CHECK BATTERY LEVEL HERE
-            printf("Recalibrating\n");
-            navigation_RecalibrateBeforeScore();
-            //navigation_GoToThrowPosition();
-            utils_Sleep(500);
-            printf("Scoring\n");
-            claw_Throw();
-            //send some kind of score message
-            printf("Returning after throw\n");
-            navigation_ReturnAfterThrow();
+            if (utils_Battery() >= battery_threshold)
+            {
+                //navigation_ReturnFromScanPosition();
+                // NEED TO CHECK BATTERY LEVEL HERE
+                printf("Recalibrating\n");
+                navigation_RecalibrateBeforeScore();
+                //navigation_GoToThrowPosition();
+                //
+                utils_Sleep(500);
+                claw_Throw();
+                bt_SendScoreMessage(1);
+                navigation_ReturnAfterThrow();
+            }
+            else
+            {
+                utils_Err(mn, "Not enough battery to throw");
+                navigation_GoToDropPosition();
+                utils_Sleep(200);
+                claw_Drop();
+                bt_SendScoreMessage(0);
+                claw_Reset();
+                navigation_ReturnAfterDrop();
+            }
             state = STATE_SEARCH;
             if (middle_count < 3){
               prev_point = SOUTH_WEST;
@@ -265,11 +290,16 @@ void handler(uint16_t command, uint16_t value)
             break;
     }
 }
+void *bt_listener(){
+  bt_WaitForStopMessage();
+  run_flag = 0;
+}
+
 
 int main()
 {
     utils_Log(mn, "Initializing");
-    
+
     utils_Log(mn, "Connection to server...");
     if (bt_Connect())
     {
@@ -277,13 +307,26 @@ int main()
         bt_Disconnect();
         return 1;
     }
+    utils_Log(mn, "Connected.");
 
     state = STATE_INIT;
     uint16_t command;
     int16_t value;
-    for(;;)
+
+    utils_Log(mn, "Waiting for start message...");
+    bt_WaitForStartMessage();
+    utils_Log(mn, "Start message received, starting monitor thread");
+    pthread_create(&bt_thread, NULL, bt_listener, (void*) "hei");
+
+    utils_Log(mn, "Starting state machine");
+    while(run_flag)
     {
         handler(command, value);
     }
+
+    utils_Log(mn, "Stop message received, quitting");
+    drive_Stop();
+    bt_Disconnect();
+    utils_Log(mn, "Bye ;)");
     return 0;
 }

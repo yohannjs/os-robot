@@ -185,13 +185,17 @@ void navigation_ReturnAfterThrow(){
   drive_BackDistance(START_THROWLINE_OFFSET);
 }
 
-void navitation_GoToDropPosition(){
-  int distance_to_drop_position = 55;
+void navigation_GoToDropPosition(){
+  int distance_to_drop_position = 59;
   drive_GoDistance(distance_to_drop_position);
+  utils_Sleep(200);
+  drive_ResetGyro();
+  utils_Sleep(200);
+  drive_BackDistance(2);
 }
 
 void navigation_ReturnAfterDrop(){
-  int distance_from_drop_position = 55;
+  int distance_from_drop_position = 53;
   drive_BackDistance(distance_from_drop_position);
 }
 
@@ -205,19 +209,28 @@ void navigation_RecalibrateFront(){
   drive_BackDistance(55);
 }
 
-void navigation_RecalibrateSide(){
-  drive_SetHeading(RIGHT);
+void navigation_RecalibrateSide(direction side){
+  drive_SetHeading(side);
   drive_GoDistance(50);
   utils_Sleep(300);
   //drive_ResetGyro();
   //utils_Sleep(500);
   drive_BackDistance(29);
+  utils_Sleep(300);
+  if (side == RIGHT){
+      drive_SetHeading(LEFT);
+  }else{
+  drive_SetHeading(RIGHT);
+  }
+  drive_ResetGyro();
 }
 
 
 void navigation_RecalibrateBeforeScore(){
-  drive_GoDistance(70);
-  utils_Sleep(200);
+  drive_GoDistance(30);
+  drive_SetHeading(UP);
+  drive_GoDistance(40);
+  utils_Sleep(300);
   drive_ResetGyro();
   utils_Sleep(500);
   drive_BackDistance(20);
