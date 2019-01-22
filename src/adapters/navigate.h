@@ -30,7 +30,7 @@ typedef enum {
 
 void navigation_Init();
 void navigation_RecalibrateFront();
-void navigation_RecalibrateSide(dir side);
+void navigation_RecalibrateSide(direction side);
 void navigation_RecalibrateBeforeScore();
 //void navigation_GoToStart();
 
