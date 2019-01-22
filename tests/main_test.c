@@ -1,16 +1,15 @@
 // Include standard C-libraries
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 #include "navigate.h"
 #include "scan.h"
 #include "claw.h"
 #include "detect.h"
 #include "utils.h"
-
-// Include project header files
-
-
+#include "bt.h"
 
 #define STATE_INIT 1
 #define STATE_SEARCH 2
@@ -26,6 +25,10 @@ const int corner_threshold = 280;
 const int side_threshold = 280;
 static int middle_count = 0;
 
+static int bt_socket;
+static unsigned int bt_msg_id = 0;
+
+const char *mn = "  KOBE  ";
 
 void handler(uint16_t command, uint16_t value)
 {
@@ -205,7 +208,7 @@ void handler(uint16_t command, uint16_t value)
               state = STATE_SEARCH;
               break;
         }
-        navigation_AdjustBallDistance(adjust_distance/10)
+        navigation_AdjustBallDistance(adjust_distance/10);
         if(claw_TakeBall())
         {
             state = STATE_SCORE;
@@ -265,7 +268,16 @@ void handler(uint16_t command, uint16_t value)
 
 int main()
 {
-    printf("Kob-e\n");
+    utils_Log(mn, "Initializing");
+    
+    utils_Log(mn, "Connection to server...");
+    if (bt_Connect())
+    {
+        utils_Err(mn, "Could not connect to server");
+        bt_Disconnect();
+        return 1;
+    }
+
     state = STATE_INIT;
     uint16_t command;
     int16_t value;
