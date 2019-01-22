@@ -20,8 +20,6 @@ pthread_t bt_thread;
 #define STATE_GRAB 3
 #define STATE_SCORE 4
 
-static const char *mn = "  MAIN  ";
-
 static int state;
 int ball_heading;
 int ball_distance;
@@ -281,7 +279,13 @@ void handler(uint16_t command, uint16_t value)
             break;
     }
 }
+void *bt_listener(){
+  while(1){
+    utils_Sleep(500);
+    printf("I am a good thread.");
 
+  }
+}
 int main()
 {
     utils_Log(mn, "Initializing");
@@ -297,7 +301,7 @@ int main()
     state = STATE_INIT;
     uint16_t command;
     int16_t value;
-    pthread_create(&bt_thread, NULL, bt_listener);
+    pthread_create(&bt_thread, NULL, bt_listener, (void*) "hei");
     for(;;)
     {
         handler(command, value);
@@ -307,10 +311,4 @@ int main()
     return 0;
 }
 
-void *bt_listener(){
-  while(1){
-    utils_Sleep(500);
-    printf("I am a good thread.");
 
-  }
-}
