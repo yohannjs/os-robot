@@ -216,13 +216,17 @@ void navigation_RecalibrateSide(direction side){
   //drive_ResetGyro();
   //utils_Sleep(500);
   drive_BackDistance(29);
-  utils_Sleep(300);
+  utils_Sleep(200);
+  drive_ResetGyro();
+  utils_Sleep(200);
   if (side == RIGHT){
       drive_SetHeading(LEFT);
   }else{
   drive_SetHeading(RIGHT);
   }
+  utils_Sleep(200);
   drive_ResetGyro();
+  utils_Sleep(200);
 }
 
 
