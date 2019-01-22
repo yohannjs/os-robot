@@ -220,7 +220,9 @@ void navigation_RecalibrateSide(dir side){
 
 
 void navigation_RecalibrateBeforeScore(){
-  drive_GoDistance(70);
+  drive_GoDistance(30);
+  drive_SetHeading(UP);
+  drive_GoDistance(40);
   utils_Sleep(200);
   drive_ResetGyro();
   utils_Sleep(500);
