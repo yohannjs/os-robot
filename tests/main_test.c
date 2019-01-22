@@ -2,14 +2,17 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <pthread.h>
+#include <stdlib.h>
+#include <unistd.h>
 
+// Include project header files
 #include "navigate.h"
 #include "scan.h"
 #include "claw.h"
 #include "detect.h"
 #include "utils.h"
+#include "bt.h"
 
-// Include project header files
 pthread_t bt_thread;
 
 #define STATE_INIT 1
@@ -28,6 +31,7 @@ const int corner_threshold = 280;
 const int side_threshold = 280;
 static int middle_count = 0;
 
+const char *mn = "  KOBE  ";
 
 void handler(uint16_t command, uint16_t value)
 {
@@ -280,7 +284,16 @@ void handler(uint16_t command, uint16_t value)
 
 int main()
 {
-    printf("Kob-e\n");
+    utils_Log(mn, "Initializing");
+    
+    utils_Log(mn, "Connection to server...");
+    if (bt_Connect())
+    {
+        utils_Err(mn, "Could not connect to server");
+        bt_Disconnect();
+        return 1;
+    }
+
     state = STATE_INIT;
     uint16_t command;
     int16_t value;
@@ -289,6 +302,8 @@ int main()
     {
         handler(command, value);
     }
+
+    bt_Disconnect();
     return 0;
 }
 
