@@ -110,7 +110,7 @@ void handler(uint16_t command, uint16_t value)
               //      utils_Sleep(200);
               //      drive_SetHeading(RIGHT);
                 //    utils_Sleep(200);
-                    navigation_RecalibrateSide();
+                    navigation_RecalibrateSide(RIGHT);
                     scan_Scan360(samples);
                     scan_FindBall2(samples, side_threshold, &ball_heading, &ball_distance);
                     if(ball_heading == 0 && ball_distance == 0)
@@ -147,6 +147,7 @@ void handler(uint16_t command, uint16_t value)
                 case NORTH_EAST:
                     navigation_GoToScanPosition(NORTH_WEST);
                     printf("Going NORTH_WEST\n");
+                    navigation_RecalibrateSide(LEFT);
                     scan_Scan360(samples);
                     scan_FindBall2(samples, corner_threshold, &ball_heading, &ball_distance);
                     if(ball_heading == 0 && ball_distance == 0)

@@ -209,8 +209,8 @@ void navigation_RecalibrateFront(){
   drive_BackDistance(55);
 }
 
-void navigation_RecalibrateSide(){
-  drive_SetHeading(RIGHT);
+void navigation_RecalibrateSide(dir side){
+  drive_SetHeading(side);
   drive_GoDistance(50);
   utils_Sleep(300);
   //drive_ResetGyro();
