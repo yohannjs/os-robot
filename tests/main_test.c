@@ -181,25 +181,30 @@ void handler(uint16_t command, uint16_t value)
                     prev_point = SOUTH_WEST;
                     break;
 
-                case SOUTH_WEST:
-                    navigation_GoToScanPosition(MIDDLE);
-                    printf("\nGoing to MIDDLE\n");
-                    middle_count = middle_count +1;
-                    scan_Scan360(samples);
-                    scan_FindBall2(samples, start_threshold, &ball_heading, &ball_distance);
-                    if((ball_heading == 0) && (ball_distance == 0))
-                    {
-                        printf("Ball not found. \n");
-                        state = STATE_SEARCH;
-                        middle_count = 4;
-                    }
-                    else
-                    {
-                        printf("FOUND BALL! \n");
-                        state = STATE_GRAB;
-                    }
-                    prev_point = MIDDLE;
-                    break;
+                    case SOUTH_WEST:
+                        navigation_GoToScanPosition(MIDDLE);
+                        printf("\nGoing to MIDDLE\n");
+                        middle_count = middle_count +1;
+                        scan_Scan360(samples);
+                        scan_FindBall2(samples, start_threshold, &ball_heading, &ball_distance);
+                        if((ball_heading == 0) && (ball_distance == 0))
+                        {
+                            printf("Ball not found. \n");
+                            state = STATE_SEARCH;
+                            middle_count = 4;
+                        }
+                        else
+                        {
+                            printf("FOUND BALL! \n");
+                            if (ball_heading > 135 && ball_heading < 225 && ball_distance > 30){
+                              state = STATE_SEARCH;
+                              middle_count = 4;
+                            }else{
+                            state = STATE_GRAB;
+                          }
+                        }
+                        prev_point = MIDDLE;
+                        break;
 
             }
             break;
