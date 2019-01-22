@@ -27,6 +27,7 @@ p prev_point = SOUTH_WEST;
 const int start_threshold = 400;
 const int corner_threshold = 280;
 const int side_threshold = 280;
+const int battery_threshold = 750;
 int middle_count = 0;
 
 int run_flag = 1;
@@ -115,7 +116,6 @@ void handler(uint16_t command, uint16_t value)
                     if(ball_heading == 0 && ball_distance == 0)
                     {
                         printf("Ball not found. \n");
-                        middle_count = 4;
                         state = STATE_SEARCH;
                     }
                     else
@@ -190,6 +190,7 @@ void handler(uint16_t command, uint16_t value)
                     {
                         printf("Ball not found. \n");
                         state = STATE_SEARCH;
+                        middle_count = 4;
                     }
                     else
                     {
@@ -258,7 +259,7 @@ void handler(uint16_t command, uint16_t value)
             /* code */
             printf("\nSTATE_SCORE\n");
             navigation_ReturnFromScanPosition();
-            if (utils_Battery() >= 800)
+            if (utils_Battery() >= battery_threshold)
             {
                 navigation_GoToThrowPosition();
                 utils_Sleep(500);
@@ -292,7 +293,7 @@ void *bt_listener(){
 int main()
 {
     utils_Log(mn, "Initializing");
-    
+
     utils_Log(mn, "Connection to server...");
     if (bt_Connect())
     {
@@ -310,18 +311,16 @@ int main()
     bt_WaitForStartMessage();
     utils_Log(mn, "Start message received, starting monitor thread");
     pthread_create(&bt_thread, NULL, bt_listener, (void*) "hei");
-    
+
     utils_Log(mn, "Starting state machine");
     while(run_flag)
     {
         handler(command, value);
     }
-    
+
     utils_Log(mn, "Stop message received, quitting");
     drive_Stop();
     bt_Disconnect();
     utils_Log(mn, "Bye ;)");
     return 0;
 }
-
-
