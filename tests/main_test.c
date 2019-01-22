@@ -3,26 +3,13 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/socket.h>
-#include <bluetooth/bluetooth.h>
-#include <bluetooth/rfcomm.h>
 
 #include "navigate.h"
 #include "scan.h"
 #include "claw.h"
 #include "detect.h"
 #include "utils.h"
-
-
-#define BT_SERVER_ADDRESS "38:ba:f8:5a:6b:9d"     
-#define BT_TEAM_ID 1                       
-
-#define BT_MSG_ACK      0
-#define BT_MSG_START    1
-#define BT_MSG_STOP     2
-#define BT_MSG_KICK     3
-#define BT_MSG_SCORE    4
-#define BT_MSG_CUSTOM 	8
+#include "bt.h"
 
 #define STATE_INIT 1
 #define STATE_SEARCH 2
@@ -42,17 +29,6 @@ static int bt_socket;
 static unsigned int bt_msg_id = 0;
 
 const char *mn = "  KOBE  ";
-
-
-void deinitialize()
-{
-   close(bt_socket);
-   drive_Stop();
-   utils_Log(mn, "Everyting is disabled");
-   utils_Log(mn, "Bye");
-    
-   exit(0);
-}
 
 void handler(uint16_t command, uint16_t value)
 {
@@ -295,26 +271,12 @@ int main()
     utils_Log(mn, "Initializing");
     
     utils_Log(mn, "Connection to server...");
-    struct sockaddr_rc addr = { 0 };
-
-    bt_socket = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
-    
-    addr.rc_family = AF_BLUETOOTH;
-    addr.rc_channel = (uint8_t) 1;
-    str2ba(BT_SERVER_ADDRESS, &addr.rc_bdaddr);
-    
-    if (connect(bt_socket, (struct sockaddr *)&addr, sizeof(addr))) 
-    {
-        utils_Log(mn, "Connected to server");
-    }
-    else
+    if (bt_Connect())
     {
         utils_Err(mn, "Could not connect to server");
-        close(bt_socket);
+        bt_Disconnect();
         return 1;
     }
-
-    deinitialize();
 
     state = STATE_INIT;
     uint16_t command;
