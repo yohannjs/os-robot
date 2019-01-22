@@ -30,7 +30,7 @@ typedef enum {
 
 void navigation_Init();
 void navigation_RecalibrateFront();
-void navigation_RecalibrateSide();
+void navigation_RecalibrateSide(direction side);
 void navigation_RecalibrateBeforeScore();
 //void navigation_GoToStart();
 
@@ -43,7 +43,7 @@ void navigation_ReturnToScanPosition();
 void navigation_GoToThrowPosition();
 void navigation_ReturnAfterThrow();
 
-void navitation_GoToDropPosition();
+void navigation_GoToDropPosition();
 void navigation_ReturnAfterDrop();
 void navigation_AdjustBallDistance(int distance_to_ball);
 //void navigation_GoToSideOfObject(direction heading, direction side );
