@@ -196,7 +196,11 @@ void handler(uint16_t command, uint16_t value)
                     else
                     {
                         printf("FOUND BALL! \n");
+                        if (heading > 135 && heading < 225 && distance > 30){
+                          state = STATE_SEARCH;
+                        }else{
                         state = STATE_GRAB;
+                      }
                     }
                     prev_point = MIDDLE;
                     break;
